@@ -3,6 +3,7 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Battle</title>
+
 <style>
 html,body{
   margin:0;
@@ -19,6 +20,7 @@ html,body{
   flex-direction:column;
   justify-content:center;
   align-items:center;
+  text-align:center;
 }
 button{
   background:#ff3b3b;
@@ -26,28 +28,187 @@ button{
   padding:14px 22px;
   border-radius:16px;
   font-size:16px;
+  margin-top:12px;
+}
+button.locked{
+  background:#333;
+  color:#777;
 }
 .hidden{display:none}
+.small{opacity:.7;font-size:14px}
+.card{
+  border:1px solid #222;
+  border-radius:14px;
+  padding:16px;
+  margin:10px;
+  width:90%;
+  max-width:420px;
+}
 </style>
 </head>
+
 <body>
 
-<div id="screen1" class="center">
-  <div>Choose your battle.</div><br>
-  <button onclick="enterApp()">Enter</button>
+<div id="home" class="center">
+  <h2>Choose your battle.</h2>
+  <div id="list"></div>
 </div>
 
-<div id="screen2" class="center hidden">
-  <h2>IT WORKS.</h2>
-  <p>You’re in.</p>
+<div id="battle" class="center hidden">
+  <h2 id="battleTitle"></h2>
+  <p id="battleTime"></p>
+  <p class="small">Time never pauses.</p>
+  <button onclick="giveUp()">Give up</button>
+</div>
+
+<div id="result" class="center hidden">
+  <h2 id="resultTitle"></h2>
+  <p id="resultText"></p>
+  <button onclick="goHome()">Continue</button>
 </div>
 
 <script>
-function enterApp(){
-  document.getElementById("screen1").classList.add("hidden");
-  document.getElementById("screen2").classList.remove("hidden");
+/* ========= DATA ========= */
+
+const battles = [
+ {id:"soldier", name:"Soldiers", hrs:0.5, hum:[
+  "That was all?",
+  "Even recruits do better.",
+  "You folded at the lowest level."
+ ]},
+ {id:"inosuke", name:"Inosuke", hrs:2},
+ {id:"zenitsu", name:"Zenitsu", hrs:2},
+ {id:"zen11", name:"Zenitsu 11th Form", hrs:1, req:"zenitsu"},
+ {id:"rengoku", name:"Rengoku", hrs:5},
+ {id:"rengokuFinal", name:"Rengoku Final", hrs:2, req:"rengoku"},
+ {id:"sanemi", name:"Sanemi", hrs:6},
+ {id:"toji", name:"Toji", hrs:8},
+ {id:"koku", name:"Kokushibo", hrs:11},
+ {id:"dkoku", name:"Demon Kokushibo", hrs:13, req:"koku"},
+ {id:"yori", name:"Evil Yoriichi", hrs:16, req:"dkoku"},
+ {id:"secret", name:"???", hrs:16, req:"yori", secret:true}
+];
+
+let state = JSON.parse(localStorage.getItem("state") || "{}");
+if(!state.done) state.done={};
+if(!state.active) state.active=null;
+
+/* ========= UI ========= */
+
+const list = document.getElementById("list");
+const home = document.getElementById("home");
+const battle = document.getElementById("battle");
+const result = document.getElementById("result");
+
+function render(){
+  list.innerHTML="";
+  battles.forEach(b=>{
+    if(b.secret && !state.done["yori"]) return;
+
+    let locked = b.req && !state.done[b.req];
+    let btn = document.createElement("button");
+    btn.textContent = b.name+" ("+b.hrs+"h)";
+    btn.className = locked?"locked":"";
+    btn.onclick = ()=> locked?null:startBattle(b.id);
+    let card = document.createElement("div");
+    card.className="card";
+    card.appendChild(btn);
+    list.appendChild(card);
+  });
+}
+
+/* ========= BATTLE ========= */
+
+function startBattle(id){
+  const b = battles.find(x=>x.id===id);
+
+  // Secret boss 5AM rule
+  if(b.secret){
+    const now = new Date();
+    if(now.getHours()!==5){
+      alert("You missed dawn.");
+      return;
+    }
+  }
+
+  state.active={
+    id,
+    start:Date.now(),
+    end:Date.now()+b.hrs*3600000
+  };
+  save();
+  showBattle();
+}
+
+function showBattle(){
+  home.classList.add("hidden");
+  result.classList.add("hidden");
+  battle.classList.remove("hidden");
+
+  const b = battles.find(x=>x.id===state.active.id);
+  document.getElementById("battleTitle").textContent=b.name;
+  tick();
+}
+
+function tick(){
+  if(!state.active) return;
+  let left = state.active.end - Date.now();
+  if(left<=0){
+    win();
+    return;
+  }
+  document.getElementById("battleTime").textContent =
+    "Time left: "+Math.ceil(left/60000)+" min";
+  setTimeout(tick,1000);
+}
+
+/* ========= RESULT ========= */
+
+function win(){
+  const b = battles.find(x=>x.id===state.active.id);
+  state.done[b.id]=true;
+  state.active=null;
+  save();
+  showResult("DEFEATED.", b.name+" has fallen.");
+}
+
+function giveUp(){
+  const b = battles.find(x=>x.id===state.active.id);
+  state.active=null;
+  save();
+  let msg = b.hum ? b.hum[Math.floor(Math.random()*b.hum.length)]
+                  : "You weren’t ready.";
+  showResult("DEFEAT.", msg);
+}
+
+function showResult(title,text){
+  battle.classList.add("hidden");
+  result.classList.remove("hidden");
+  document.getElementById("resultTitle").textContent=title;
+  document.getElementById("resultText").textContent=text;
+}
+
+function goHome(){
+  result.classList.add("hidden");
+  home.classList.remove("hidden");
+  render();
+}
+
+/* ========= STORAGE ========= */
+
+function save(){
+  localStorage.setItem("state",JSON.stringify(state));
+}
+
+/* ========= BOOT ========= */
+
+if(state.active){
+  showBattle();
+}else{
+  render();
 }
 </script>
 
 </body>
 </html>
+
