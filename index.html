@@ -1,185 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Battle</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Battle Path</title>
 
 <style>
-html,body{
-  margin:0;height:100%;
-  background:#000;color:#fff;
-  font-family:-apple-system;
-  overflow:hidden;
-}
-.hidden{display:none}
-.scene{
-  position:fixed;inset:0;
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center;padding:20px;
-}
-button{
-  background:#ff3b3b;border:none;color:#000;
-  padding:14px 24px;border-radius:14px;
-  font-size:16px;
-}
-.card{
-  border:1px solid #222;border-radius:16px;
-  padding:18px;width:280px;
-}
-.blur{filter:blur(8px);opacity:.4}
-#timer{font-size:22px;margin:12px 0}
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: black;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .screen {
+    display: none;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .screen.active {
+    display: flex;
+  }
+
+  h1 { margin-bottom: 20px; }
+  button {
+    background: #ff3b3b;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 14px;
+    color: black;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+  }
+
+  .level {
+    width: 260px;
+  }
+
+  .locked {
+    opacity: 0.3;
+    filter: blur(4px);
+    pointer-events: none;
+  }
+
+  #timer {
+    font-size: 32px;
+    margin: 20px 0;
+  }
 </style>
 </head>
 
 <body>
 
-<div id="intro" class="scene">
+<!-- SCREEN 1 -->
+<div id="screen-start" class="screen active">
   <h1>Hi.</h1>
-  <p>Choose your battle.</p>
-  <button onclick="enter()">Enter</button>
+  <button onclick="go('screen-menu')">Enter</button>
 </div>
 
-<div id="home" class="scene hidden">
-  <h2>Battle Path</h2>
-  <div id="card"></div>
+<!-- SCREEN 2 -->
+<div id="screen-menu" class="screen">
+  <h1>Battle Path</h1>
+
+  <button class="level" onclick="startBattle(1800)">Soldiers (30 min)</button>
+  <button class="level locked">Inosuke (2h)</button>
+  <button class="level locked">Zenitsu (2h)</button>
+  <button class="level locked">Rengoku (5h)</button>
 </div>
 
-<div id="battle" class="scene hidden">
-  <h2 id="battleName"></h2>
-  <div id="timer">00:00:00</div>
+<!-- SCREEN 3 -->
+<div id="screen-battle" class="screen">
+  <h1>Battle Ongoing</h1>
+  <div id="timer">00:00</div>
   <button onclick="giveUp()">Give up</button>
 </div>
 
-<div id="result" class="scene hidden">
-  <h2 id="resTitle"></h2>
-  <p id="resText"></p>
-  <button onclick="goHome()">Continue</button>
+<!-- SCREEN 4 -->
+<div id="screen-result" class="screen">
+  <h1 id="resultText"></h1>
+  <button onclick="go('screen-menu')">Continue</button>
 </div>
 
 <script>
-/* ===== DATA ===== */
-const battles=[
- {id:"soldier",name:"Soldiers",h:0.5,hum:[
-  "That was pathetic.",
-  "You lost to fodder.",
-  "Embarrassing."
- ]},
- {id:"inosuke",name:"Inosuke",h:2,hum:[
-  "I thought you were tougher.",
-  "You’re loud but weak."
- ]},
- {id:"zenitsu",name:"Zenitsu",h:2,hum:[
-  "You froze again.",
-  "Fear won."
- ]},
- {id:"rengoku",name:"Rengoku",h:5,hum:[
-  "Your flame was weak.",
-  "Train harder."
- ]},
- {id:"sanemi",name:"Sanemi",h:6,hum:[
-  "You disgust me.",
-  "Come back stronger."
- ]},
- {id:"secret",name:"???",h:16,hum:[
-  "You were never worthy."
- ]}
-];
+let currentTimer;
+let remaining;
 
-let state;
-if(location.search.includes("reset")){
-  localStorage.removeItem("battle_state");
-}
-state=JSON.parse(localStorage.getItem("battle_state")||"{}");
-if(!state.done) state.done={};
-state.active=null;
-
-/* ===== SCENE ===== */
-function show(id){
-  ["intro","home","battle","result"].forEach(x=>{
-    document.getElementById(x).classList.add("hidden");
-  });
-  document.getElementById(id).classList.remove("hidden");
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-/* ===== INTRO ===== */
-function enter(){ show("home"); renderHome(); }
-
-/* ===== HOME ===== */
-function renderHome(){
-  const box=document.getElementById("card");
-  box.innerHTML="";
-  let i=0;
-  while(battles[i] && state.done[battles[i].id]) i++;
-
-  const cur=battles[i];
-  const next=battles[i+1];
-
-  const c=document.createElement("div");
-  c.className="card";
-  const b=document.createElement("button");
-  b.textContent=`${cur.name} (${cur.h}h)`;
-  b.onclick=()=>startBattle(cur);
-  c.appendChild(b);
-  box.appendChild(c);
-
-  if(next){
-    const n=document.createElement("div");
-    n.className="card blur";
-    n.textContent="???";
-    box.appendChild(n);
-  }
+function startBattle(seconds) {
+  remaining = seconds;
+  go('screen-battle');
+  updateTimer();
+  currentTimer = setInterval(() => {
+    remaining--;
+    updateTimer();
+    if (remaining <= 0) {
+      clearInterval(currentTimer);
+      win();
+    }
+  }, 1000);
 }
 
-/* ===== BATTLE ===== */
-let intv;
-function startBattle(b){
-  state.active={id:b.id,end:Date.now()+b.h*3600000};
-  localStorage.setItem("battle_state",JSON.stringify(state));
-  document.getElementById("battleName").textContent=b.name;
-  show("battle");
-  intv=setInterval(()=>{
-    const left=state.active.end-Date.now();
-    if(left<=0){clearInterval(intv);win();return;}
-    document.getElementById("timer").textContent=format(left);
-  },1000);
+function updateTimer() {
+  const m = Math.floor(remaining / 60).toString().padStart(2,'0');
+  const s = (remaining % 60).toString().padStart(2,'0');
+  document.getElementById('timer').innerText = `${m}:${s}`;
 }
 
-function format(ms){
-  let s=Math.floor(ms/1000);
-  const h=String(Math.floor(s/3600)).padStart(2,"0");
-  s%=3600;
-  const m=String(Math.floor(s/60)).padStart(2,"0");
-  const sec=String(s%60).padStart(2,"0");
-  return `${h}:${m}:${sec}`;
+function giveUp() {
+  clearInterval(currentTimer);
+  document.getElementById('resultText').innerText = "Defeated.\nToo weak.";
+  go('screen-result');
 }
 
-/* ===== RESULT ===== */
-function win(){
-  state.done[state.active.id]=true;
-  state.active=null;
-  localStorage.setItem("battle_state",JSON.stringify(state));
-  document.getElementById("resTitle").textContent="DEFEATED.";
-  document.getElementById("resText").textContent="You moved forward.";
-  show("result");
+function win() {
+  document.getElementById('resultText').innerText = "Victory.\nYou endured.";
+  go('screen-result');
 }
-
-function giveUp(){
-  const b=battles.find(x=>x.id===state.active.id);
-  state.active=null;
-  localStorage.setItem("battle_state",JSON.stringify(state));
-  document.getElementById("resTitle").textContent="DEFEAT.";
-  document.getElementById("resText").textContent=
-    b.hum[Math.floor(Math.random()*b.hum.length)];
-  show("result");
-}
-
-function goHome(){ show("home"); renderHome(); }
-
-/* ===== BOOT ===== */
-show("intro");
 </script>
 
 </body>
 </html>
+
