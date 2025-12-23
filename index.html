@@ -8,22 +8,16 @@
 <style>
 *{box-sizing:border-box}
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  background:#000;
-  color:#fff;
+  margin:0;width:100%;height:100%;
+  background:#000;color:#fff;
   font-family:-apple-system,BlinkMacSystemFont;
   overflow:hidden;
 }
-
 .hidden{display:none}
 
-/* ---------- SCENES ---------- */
+/* SCENES */
 .scene{
-  position:fixed;
-  inset:0;
-  background:#000;
+  position:fixed;inset:0;
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -32,7 +26,7 @@ html,body{
   padding:24px;
 }
 
-/* ---------- BUTTON ---------- */
+/* BUTTONS */
 button{
   background:#ff3b3b;
   border:none;
@@ -41,33 +35,14 @@ button{
   border-radius:16px;
   font-size:16px;
 }
-button.locked{
-  background:#222;
-  color:#666;
-}
+button.locked{background:#222;color:#666}
 
-/* ---------- INTRO ---------- */
-#intro h1{
-  font-size:42px;
-  margin:0;
-}
-#intro p{
-  opacity:.8;
-  margin:12px 0 24px;
-}
-
-/* ---------- HOME ---------- */
-#home{
-  justify-content:flex-start;
-}
-#home h2{
-  margin-bottom:16px;
-}
+/* HOME MENU */
+#home{justify-content:flex-start}
 #list{
   width:100%;
   max-width:420px;
-  overflow-y:auto;
-  max-height:70vh;
+  margin-top:20px;
 }
 .card{
   border:1px solid #222;
@@ -75,26 +50,17 @@ button.locked{
   padding:16px;
   margin-bottom:14px;
 }
-.card button{width:100%}
-
-/* ---------- BATTLE ---------- */
-#battle h2{
-  font-size:28px;
+.card.blur{
+  filter:blur(8px);
+  opacity:.4;
+  pointer-events:none;
 }
+
+/* BATTLE */
 #timer{
-  font-size:20px;
-  margin:12px 0;
-  letter-spacing:1px;
-  opacity:.9;
-}
-
-/* ---------- RESULT ---------- */
-#result h2{
-  font-size:32px;
-}
-#result p{
-  opacity:.8;
-  margin:14px 0 22px;
+  font-size:22px;
+  margin:14px 0;
+  letter-spacing:2px;
 }
 </style>
 </head>
@@ -110,7 +76,7 @@ button.locked{
 
 <!-- HOME -->
 <div id="home" class="scene hidden">
-  <h2>Choose your battle</h2>
+  <h2>Battle Path</h2>
   <div id="list"></div>
 </div>
 
@@ -130,42 +96,30 @@ button.locked{
 </div>
 
 <script>
-/* ---------- DATA ---------- */
+/* ===== DATA (ORDER MATTERS) ===== */
 const battles=[
- {id:"soldier",name:"Soldiers",hrs:0.5,hum:[
-  "That was embarrassing.",
-  "You lost at the lowest level.",
-  "Even recruits last longer."
- ]},
+ {id:"soldier",name:"Soldiers",hrs:0.5},
  {id:"inosuke",name:"Inosuke",hrs:2},
  {id:"zenitsu",name:"Zenitsu",hrs:2},
- {id:"zen11",name:"Zenitsu 11th Form",hrs:1,req:"zenitsu"},
+ {id:"zen11",name:"Zenitsu 11th Form",hrs:1},
  {id:"rengoku",name:"Rengoku",hrs:5},
- {id:"rengokuF",name:"Rengoku Final",hrs:2,req:"rengoku"},
  {id:"sanemi",name:"Sanemi",hrs:6},
  {id:"toji",name:"Toji",hrs:8},
  {id:"koku",name:"Kokushibo",hrs:11},
- {id:"dkoku",name:"Demon Kokushibo",hrs:13,req:"koku"},
- {id:"yori",name:"Evil Yoriichi",hrs:16,req:"dkoku"}
+ {id:"dkoku",name:"Demon Kokushibo",hrs:13},
+ {id:"yori",name:"Evil Yoriichi",hrs:16},
+ {id:"secret",name:"???",hrs:16,secret:true}
 ];
 
 let state;
-
-/* ---------- RESET ---------- */
 if(location.search.includes("reset")){
   localStorage.removeItem("battle_state");
 }
+state=JSON.parse(localStorage.getItem("battle_state")||"{}");
+if(!state.done) state.done={};
+if(!state.active) state.active=null;
 
-try{
-  state=JSON.parse(localStorage.getItem("battle_state"));
-}catch(e){
-  state=null;
-}
-if(!state || typeof state!=="object"){
-  state={done:{},active:null};
-}
-
-/* ---------- SCENE CONTROL ---------- */
+/* SCENE CONTROL */
 function show(id){
   ["intro","home","battle","result"].forEach(s=>{
     document.getElementById(s).classList.add("hidden");
@@ -173,38 +127,48 @@ function show(id){
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* ---------- INTRO ---------- */
+/* INTRO */
 function enter(){
   show("home");
   render();
 }
 
-/* ---------- HOME ---------- */
+/* HOME – PROGRESSIVE REVEAL */
 function render(){
   const list=document.getElementById("list");
   list.innerHTML="";
-  battles.forEach(b=>{
-    const locked=b.req && !state.done[b.req];
+  let unlockedIndex=0;
+  while(battles[unlockedIndex] && state.done[battles[unlockedIndex].id]){
+    unlockedIndex++;
+  }
+
+  for(let i=0;i<=unlockedIndex+1 && i<battles.length;i++){
+    const b=battles[i];
     const card=document.createElement("div");
     card.className="card";
-    const btn=document.createElement("button");
-    btn.textContent=`${b.name} (${b.hrs}h)`;
-    if(locked) btn.className="locked";
-    else btn.onclick=()=>startBattle(b.id);
-    card.appendChild(btn);
+
+    if(i===unlockedIndex){
+      const btn=document.createElement("button");
+      btn.textContent=`${b.name} (${b.hrs}h)`;
+      btn.onclick=()=>startBattle(b.id);
+      card.appendChild(btn);
+    }
+    else if(i===unlockedIndex+1){
+      card.classList.add("blur");
+      card.textContent="???";
+    }
+    else{
+      continue;
+    }
     list.appendChild(card);
-  });
+  }
 }
 
-/* ---------- BATTLE ---------- */
-let timerInterval=null;
-
+/* BATTLE */
+let interval=null;
 function startBattle(id){
   const b=battles.find(x=>x.id===id);
-  state.active={
-    id,
-    end:Date.now()+b.hrs*3600000
-  };
+  state.active={id,end:Date.now()+b.hrs*3600000};
   save();
   document.getElementById("battleTitle").textContent=b.name;
   show("battle");
@@ -212,20 +176,15 @@ function startBattle(id){
 }
 
 function startTimer(){
-  clearInterval(timerInterval);
-  timerInterval=setInterval(()=>{
-    if(!state.active) return;
+  clearInterval(interval);
+  interval=setInterval(()=>{
     const left=state.active.end-Date.now();
-    if(left<=0){
-      clearInterval(timerInterval);
-      win();
-      return;
-    }
-    document.getElementById("timer").textContent=formatTime(left);
+    if(left<=0){clearInterval(interval);win();return;}
+    document.getElementById("timer").textContent=format(left);
   },1000);
 }
 
-function formatTime(ms){
+function format(ms){
   let s=Math.floor(ms/1000);
   const h=String(Math.floor(s/3600)).padStart(2,"0");
   s%=3600;
@@ -234,21 +193,18 @@ function formatTime(ms){
   return `${h}:${m}:${sec}`;
 }
 
-/* ---------- RESULT ---------- */
+/* RESULT */
 function win(){
-  const b=battles.find(x=>x.id===state.active.id);
-  state.done[b.id]=true;
+  state.done[state.active.id]=true;
   state.active=null;
   save();
-  showResult("DEFEATED.",`${b.name} has fallen.`);
+  showResult("DEFEATED.","You survived this battle.");
 }
 
 function giveUp(){
-  const b=battles.find(x=>x.id===state.active.id);
   state.active=null;
   save();
-  const msg=b.hum?b.hum[Math.floor(Math.random()*b.hum.length)]:"You weren’t ready.";
-  showResult("DEFEAT.",msg);
+  showResult("DEFEAT.","You weren’t ready.");
 }
 
 function showResult(t,m){
@@ -262,16 +218,13 @@ function goHome(){
   render();
 }
 
-/* ---------- STORAGE ---------- */
 function save(){
   localStorage.setItem("battle_state",JSON.stringify(state));
 }
 
-/* ---------- BOOT ---------- */
+/* BOOT */
 show("intro");
 </script>
 
 </body>
 </html>
-
-
