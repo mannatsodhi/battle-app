@@ -6,178 +6,142 @@
 <title>Battle</title>
 
 <style>
-*{box-sizing:border-box}
 html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  background:#000;
-  color:#fff;
-  font-family:-apple-system,BlinkMacSystemFont;
+  margin:0;height:100%;
+  background:#000;color:#fff;
+  font-family:-apple-system;
   overflow:hidden;
 }
 .hidden{display:none}
-
 .scene{
-  position:fixed;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:24px;
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;padding:20px;
 }
-
-/* buttons */
 button{
-  background:#ff3b3b;
-  border:none;
-  color:#000;
-  padding:14px 26px;
-  border-radius:16px;
+  background:#ff3b3b;border:none;color:#000;
+  padding:14px 24px;border-radius:14px;
   font-size:16px;
 }
-button.locked{
-  background:#222;
-  color:#666;
-}
-
-/* home */
-#home h2{margin-bottom:20px}
 .card{
-  width:100%;
-  max-width:380px;
-  border:1px solid #222;
-  border-radius:18px;
-  padding:18px;
+  border:1px solid #222;border-radius:16px;
+  padding:18px;width:280px;
 }
-.blur{
-  filter:blur(8px);
-  opacity:.4;
-}
-
-/* timer */
-#timer{
-  font-size:26px;
-  letter-spacing:2px;
-  margin:14px 0;
-}
+.blur{filter:blur(8px);opacity:.4}
+#timer{font-size:22px;margin:12px 0}
 </style>
 </head>
 
 <body>
 
-<!-- INTRO -->
 <div id="intro" class="scene">
   <h1>Hi.</h1>
   <p>Choose your battle.</p>
   <button onclick="enter()">Enter</button>
 </div>
 
-<!-- HOME -->
 <div id="home" class="scene hidden">
   <h2>Battle Path</h2>
-  <div id="homeCard"></div>
+  <div id="card"></div>
 </div>
 
-<!-- BATTLE -->
 <div id="battle" class="scene hidden">
-  <h2 id="battleTitle"></h2>
+  <h2 id="battleName"></h2>
   <div id="timer">00:00:00</div>
-  <p>Time never pauses.</p>
   <button onclick="giveUp()">Give up</button>
 </div>
 
-<!-- RESULT -->
 <div id="result" class="scene hidden">
-  <h2 id="resultTitle"></h2>
-  <p id="resultText"></p>
+  <h2 id="resTitle"></h2>
+  <p id="resText"></p>
   <button onclick="goHome()">Continue</button>
 </div>
 
 <script>
 /* ===== DATA ===== */
 const battles=[
- {id:"soldier",name:"Soldiers",hrs:0.5},
- {id:"inosuke",name:"Inosuke",hrs:2},
- {id:"zenitsu",name:"Zenitsu",hrs:2},
- {id:"rengoku",name:"Rengoku",hrs:5},
- {id:"sanemi",name:"Sanemi",hrs:6},
- {id:"toji",name:"Toji",hrs:8},
- {id:"koku",name:"Kokushibo",hrs:11},
- {id:"dkoku",name:"Demon Kokushibo",hrs:13},
- {id:"yori",name:"Evil Yoriichi",hrs:16},
- {id:"secret",name:"???",hrs:16,hidden:true}
+ {id:"soldier",name:"Soldiers",h:0.5,hum:[
+  "That was pathetic.",
+  "You lost to fodder.",
+  "Embarrassing."
+ ]},
+ {id:"inosuke",name:"Inosuke",h:2,hum:[
+  "I thought you were tougher.",
+  "You’re loud but weak."
+ ]},
+ {id:"zenitsu",name:"Zenitsu",h:2,hum:[
+  "You froze again.",
+  "Fear won."
+ ]},
+ {id:"rengoku",name:"Rengoku",h:5,hum:[
+  "Your flame was weak.",
+  "Train harder."
+ ]},
+ {id:"sanemi",name:"Sanemi",h:6,hum:[
+  "You disgust me.",
+  "Come back stronger."
+ ]},
+ {id:"secret",name:"???",h:16,hum:[
+  "You were never worthy."
+ ]}
 ];
 
-let state = JSON.parse(localStorage.getItem("battle_state") || "{}");
+let state;
+if(location.search.includes("reset")){
+  localStorage.removeItem("battle_state");
+}
+state=JSON.parse(localStorage.getItem("battle_state")||"{}");
 if(!state.done) state.done={};
-state.active=null; // HARD RULE: never resume battle automatically
+state.active=null;
 
-/* ===== SCENE CONTROL ===== */
+/* ===== SCENE ===== */
 function show(id){
-  ["intro","home","battle","result"].forEach(s=>{
-    document.getElementById(s).classList.add("hidden");
+  ["intro","home","battle","result"].forEach(x=>{
+    document.getElementById(x).classList.add("hidden");
   });
   document.getElementById(id).classList.remove("hidden");
 }
 
 /* ===== INTRO ===== */
-function enter(){
-  show("home");
-  renderHome();
-}
+function enter(){ show("home"); renderHome(); }
 
 /* ===== HOME ===== */
 function renderHome(){
-  const cardBox=document.getElementById("homeCard");
-  cardBox.innerHTML="";
+  const box=document.getElementById("card");
+  box.innerHTML="";
+  let i=0;
+  while(battles[i] && state.done[battles[i].id]) i++;
 
-  let index=0;
-  while(battles[index] && state.done[battles[index].id]) index++;
+  const cur=battles[i];
+  const next=battles[i+1];
 
-  const current=battles[index];
-  const next=battles[index+1];
-
-  // current
   const c=document.createElement("div");
   c.className="card";
-  const btn=document.createElement("button");
-  btn.textContent=`${current.name} (${current.hrs}h)`;
-  btn.onclick=()=>startBattle(current);
-  c.appendChild(btn);
-  cardBox.appendChild(c);
+  const b=document.createElement("button");
+  b.textContent=`${cur.name} (${cur.h}h)`;
+  b.onclick=()=>startBattle(cur);
+  c.appendChild(b);
+  box.appendChild(c);
 
-  // next (blurred)
-  if(next && !next.hidden){
+  if(next){
     const n=document.createElement("div");
     n.className="card blur";
     n.textContent="???";
-    cardBox.appendChild(n);
+    box.appendChild(n);
   }
 }
 
 /* ===== BATTLE ===== */
-let interval=null;
+let intv;
 function startBattle(b){
-  state.active={
-    id:b.id,
-    end:Date.now()+b.hrs*3600000
-  };
+  state.active={id:b.id,end:Date.now()+b.h*3600000};
   localStorage.setItem("battle_state",JSON.stringify(state));
-
-  document.getElementById("battleTitle").textContent=b.name;
+  document.getElementById("battleName").textContent=b.name;
   show("battle");
-
-  clearInterval(interval);
-  interval=setInterval(()=>{
+  intv=setInterval(()=>{
     const left=state.active.end-Date.now();
-    if(left<=0){
-      clearInterval(interval);
-      win();
-      return;
-    }
+    if(left<=0){clearInterval(intv);win();return;}
     document.getElementById("timer").textContent=format(left);
   },1000);
 }
@@ -196,23 +160,22 @@ function win(){
   state.done[state.active.id]=true;
   state.active=null;
   localStorage.setItem("battle_state",JSON.stringify(state));
-  document.getElementById("resultTitle").textContent="DEFEATED.";
-  document.getElementById("resultText").textContent="You moved forward.";
+  document.getElementById("resTitle").textContent="DEFEATED.";
+  document.getElementById("resText").textContent="You moved forward.";
   show("result");
 }
 
 function giveUp(){
+  const b=battles.find(x=>x.id===state.active.id);
   state.active=null;
   localStorage.setItem("battle_state",JSON.stringify(state));
-  document.getElementById("resultTitle").textContent="DEFEAT.";
-  document.getElementById("resultText").textContent="You weren’t ready.";
+  document.getElementById("resTitle").textContent="DEFEAT.";
+  document.getElementById("resText").textContent=
+    b.hum[Math.floor(Math.random()*b.hum.length)];
   show("result");
 }
 
-function goHome(){
-  show("home");
-  renderHome();
-}
+function goHome(){ show("home"); renderHome(); }
 
 /* ===== BOOT ===== */
 show("intro");
@@ -220,4 +183,3 @@ show("intro");
 
 </body>
 </html>
-
