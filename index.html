@@ -8,20 +8,22 @@
 <style>
 *{box-sizing:border-box}
 html,body{
-  margin:0;padding:0;width:100%;min-height:100%;
-  background:#000;color:#fff;
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  color:#fff;
   font-family:-apple-system,BlinkMacSystemFont;
+  overflow:hidden;
 }
-.hidden{display:none}
-button{
-  background:#ff3b3b;border:none;color:#000;
-  padding:14px 24px;border-radius:16px;font-size:16px;
-}
-button.locked{background:#222;color:#666}
 
-/* Screens */
-.screen{
-  min-height:100vh;
+.hidden{display:none}
+
+/* ---------- SCENES ---------- */
+.scene{
+  position:fixed;
+  inset:0;
+  background:#000;
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -29,36 +31,99 @@ button.locked{background:#222;color:#666}
   text-align:center;
   padding:24px;
 }
-#home{justify-content:flex-start}
+
+/* ---------- BUTTON ---------- */
+button{
+  background:#ff3b3b;
+  border:none;
+  color:#000;
+  padding:14px 26px;
+  border-radius:16px;
+  font-size:16px;
+}
+button.locked{
+  background:#222;
+  color:#666;
+}
+
+/* ---------- INTRO ---------- */
+#intro h1{
+  font-size:42px;
+  margin:0;
+}
+#intro p{
+  opacity:.8;
+  margin:12px 0 24px;
+}
+
+/* ---------- HOME ---------- */
+#home{
+  justify-content:flex-start;
+}
+#home h2{
+  margin-bottom:16px;
+}
+#list{
+  width:100%;
+  max-width:420px;
+  overflow-y:auto;
+  max-height:70vh;
+}
 .card{
-  width:100%;max-width:420px;
-  border:1px solid #222;border-radius:18px;
-  padding:18px;margin-bottom:16px;
+  border:1px solid #222;
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+}
+.card button{width:100%}
+
+/* ---------- BATTLE ---------- */
+#battle h2{
+  font-size:28px;
+}
+#timer{
+  font-size:20px;
+  margin:12px 0;
+  letter-spacing:1px;
+  opacity:.9;
+}
+
+/* ---------- RESULT ---------- */
+#result h2{
+  font-size:32px;
+}
+#result p{
+  opacity:.8;
+  margin:14px 0 22px;
 }
 </style>
 </head>
 
 <body>
 
-<div id="intro" class="screen">
+<!-- INTRO -->
+<div id="intro" class="scene">
   <h1>Hi.</h1>
   <p>Choose your battle.</p>
   <button onclick="enter()">Enter</button>
 </div>
 
-<div id="home" class="screen hidden">
+<!-- HOME -->
+<div id="home" class="scene hidden">
   <h2>Choose your battle</h2>
   <div id="list"></div>
 </div>
 
-<div id="battle" class="screen hidden">
+<!-- BATTLE -->
+<div id="battle" class="scene hidden">
   <h2 id="battleTitle"></h2>
-  <p id="battleTime"></p>
+  <div id="timer">00:00:00</div>
   <p>Time never pauses.</p>
   <button onclick="giveUp()">Give up</button>
 </div>
 
-<div id="result" class="screen hidden">
+<!-- RESULT -->
+<div id="result" class="scene hidden">
   <h2 id="resultTitle"></h2>
   <p id="resultText"></p>
   <button onclick="goHome()">Continue</button>
@@ -86,7 +151,7 @@ const battles=[
 
 let state;
 
-/* ---------- HARD RESET ---------- */
+/* ---------- RESET ---------- */
 if(location.search.includes("reset")){
   localStorage.removeItem("battle_state");
 }
@@ -96,12 +161,11 @@ try{
 }catch(e){
   state=null;
 }
-
 if(!state || typeof state!=="object"){
   state={done:{},active:null};
 }
 
-/* ---------- SCREEN CONTROL ---------- */
+/* ---------- SCENE CONTROL ---------- */
 function show(id){
   ["intro","home","battle","result"].forEach(s=>{
     document.getElementById(s).classList.add("hidden");
@@ -133,22 +197,41 @@ function render(){
 }
 
 /* ---------- BATTLE ---------- */
+let timerInterval=null;
+
 function startBattle(id){
   const b=battles.find(x=>x.id===id);
-  state.active={id,end:Date.now()+b.hrs*3600000};
+  state.active={
+    id,
+    end:Date.now()+b.hrs*3600000
+  };
   save();
   document.getElementById("battleTitle").textContent=b.name;
   show("battle");
-  tick();
+  startTimer();
 }
 
-function tick(){
-  if(!state.active) return;
-  const left=state.active.end-Date.now();
-  if(left<=0){win();return;}
-  document.getElementById("battleTime").textContent=
-    `Time left: ${Math.ceil(left/60000)} min`;
-  setTimeout(tick,1000);
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    if(!state.active) return;
+    const left=state.active.end-Date.now();
+    if(left<=0){
+      clearInterval(timerInterval);
+      win();
+      return;
+    }
+    document.getElementById("timer").textContent=formatTime(left);
+  },1000);
+}
+
+function formatTime(ms){
+  let s=Math.floor(ms/1000);
+  const h=String(Math.floor(s/3600)).padStart(2,"0");
+  s%=3600;
+  const m=String(Math.floor(s/60)).padStart(2,"0");
+  const sec=String(s%60).padStart(2,"0");
+  return `${h}:${m}:${sec}`;
 }
 
 /* ---------- RESULT ---------- */
@@ -157,7 +240,7 @@ function win(){
   state.done[b.id]=true;
   state.active=null;
   save();
-  result("DEFEATED.",`${b.name} has fallen.`);
+  showResult("DEFEATED.",`${b.name} has fallen.`);
 }
 
 function giveUp(){
@@ -165,10 +248,10 @@ function giveUp(){
   state.active=null;
   save();
   const msg=b.hum?b.hum[Math.floor(Math.random()*b.hum.length)]:"You weren’t ready.";
-  result("DEFEAT.",msg);
+  showResult("DEFEAT.",msg);
 }
 
-function result(t,m){
+function showResult(t,m){
   document.getElementById("resultTitle").textContent=t;
   document.getElementById("resultText").textContent=m;
   show("result");
@@ -190,4 +273,5 @@ show("intro");
 
 </body>
 </html>
+
 
