@@ -1,19 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Battle</title>
 
 <style>
+/* ---------- BASE ---------- */
+*{box-sizing:border-box}
 html,body{
   margin:0;
+  padding:0;
   width:100%;
-  height:100%;
-  background:black;
-  color:white;
-  font-family:-apple-system, BlinkMacSystemFont;
+  min-height:100%;
+  background:#000;
+  color:#fff;
+  font-family:-apple-system,BlinkMacSystemFont;
+  overflow-x:hidden;
 }
-.center{
+.hidden{display:none}
+
+/* ---------- ANIMATIONS ---------- */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes pulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+@keyframes flash{
+  0%{background:#fff;color:#000}
+  100%{background:#000;color:#fff}
+}
+.fade{animation:fadeIn .8s ease forwards}
+
+/* ---------- INTRO ---------- */
+#intro{
   position:fixed;
   inset:0;
   display:flex;
@@ -22,193 +45,240 @@ html,body{
   align-items:center;
   text-align:center;
 }
-button{
+#intro h1{
+  font-size:42px;
+  margin:0;
+  opacity:0;
+  animation:fadeIn 1s ease forwards;
+}
+#intro p{
+  opacity:0;
+  margin-top:12px;
+  animation:fadeIn 1s ease forwards;
+  animation-delay:.8s;
+}
+#intro button{
+  margin-top:24px;
+  padding:14px 26px;
+  border-radius:16px;
   background:#ff3b3b;
   border:none;
-  padding:14px 22px;
-  border-radius:16px;
   font-size:16px;
-  margin-top:12px;
+  animation:pulse 1.6s infinite;
 }
-button.locked{
-  background:#333;
-  color:#777;
+
+/* ---------- HOME ---------- */
+#home{
+  padding:32px 0;
+  min-height:100vh;
 }
-.hidden{display:none}
-.small{opacity:.7;font-size:14px}
+#home h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+#list{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 .card{
-  border:1px solid #222;
-  border-radius:14px;
-  padding:16px;
-  margin:10px;
   width:90%;
   max-width:420px;
+  border:1px solid #222;
+  border-radius:16px;
+  padding:18px;
+  margin:10px 0;
+  animation:fadeIn .6s ease forwards;
 }
+.card button{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:none;
+  background:#ff3b3b;
+  font-size:16px;
+}
+.card button.locked{
+  background:#222;
+  color:#666;
+}
+
+/* ---------- BATTLE ---------- */
+#battle{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+#battle p{opacity:.8}
+
+/* ---------- RESULT ---------- */
+#result{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+}
+#result.win{animation:flash .4s}
 </style>
 </head>
 
 <body>
 
-<div id="home" class="center">
-  <h2>Choose your battle.</h2>
+<!-- INTRO -->
+<div id="intro">
+  <h1>Hi.</h1>
+  <p>Choose your battle.</p>
+  <button onclick="enterApp()">Enter</button>
+</div>
+
+<!-- HOME -->
+<div id="home" class="hidden">
+  <h2>Choose your battle</h2>
   <div id="list"></div>
 </div>
 
-<div id="battle" class="center hidden">
+<!-- BATTLE -->
+<div id="battle" class="hidden">
   <h2 id="battleTitle"></h2>
   <p id="battleTime"></p>
-  <p class="small">Time never pauses.</p>
+  <p>Time never pauses.</p>
   <button onclick="giveUp()">Give up</button>
 </div>
 
-<div id="result" class="center hidden">
+<!-- RESULT -->
+<div id="result" class="hidden">
   <h2 id="resultTitle"></h2>
   <p id="resultText"></p>
   <button onclick="goHome()">Continue</button>
 </div>
 
 <script>
-/* ========= DATA ========= */
-
-const battles = [
- {id:"soldier", name:"Soldiers", hrs:0.5, hum:[
-  "That was all?",
-  "Even recruits do better.",
-  "You folded at the lowest level."
+/* ---------- DATA ---------- */
+const battles=[
+ {id:"soldier",name:"Soldiers",hrs:0.5,hum:[
+  "That was embarrassing.",
+  "You lost at the lowest level.",
+  "Even recruits last longer."
  ]},
- {id:"inosuke", name:"Inosuke", hrs:2},
- {id:"zenitsu", name:"Zenitsu", hrs:2},
- {id:"zen11", name:"Zenitsu 11th Form", hrs:1, req:"zenitsu"},
- {id:"rengoku", name:"Rengoku", hrs:5},
- {id:"rengokuFinal", name:"Rengoku Final", hrs:2, req:"rengoku"},
- {id:"sanemi", name:"Sanemi", hrs:6},
- {id:"toji", name:"Toji", hrs:8},
- {id:"koku", name:"Kokushibo", hrs:11},
- {id:"dkoku", name:"Demon Kokushibo", hrs:13, req:"koku"},
- {id:"yori", name:"Evil Yoriichi", hrs:16, req:"dkoku"},
- {id:"secret", name:"???", hrs:16, req:"yori", secret:true}
+ {id:"inosuke",name:"Inosuke",hrs:2},
+ {id:"zenitsu",name:"Zenitsu",hrs:2},
+ {id:"zen11",name:"Zenitsu 11th Form",hrs:1,req:"zenitsu"},
+ {id:"rengoku",name:"Rengoku",hrs:5},
+ {id:"rengokuF",name:"Rengoku Final",hrs:2,req:"rengoku"},
+ {id:"sanemi",name:"Sanemi",hrs:6},
+ {id:"toji",name:"Toji",hrs:8},
+ {id:"koku",name:"Kokushibo",hrs:11},
+ {id:"dkoku",name:"Demon Kokushibo",hrs:13,req:"koku"},
+ {id:"yori",name:"Evil Yoriichi",hrs:16,req:"dkoku"}
 ];
 
-let state = JSON.parse(localStorage.getItem("state") || "{}");
-if(!state.done) state.done={};
-if(!state.active) state.active=null;
+let state=JSON.parse(localStorage.getItem("battle_state")||"{}");
+if(!state.done)state.done={};
+if(!state.active)state.active=null;
 
-/* ========= UI ========= */
+/* ---------- INTRO ---------- */
+function enterApp(){
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("home").classList.remove("hidden");
+  render();
+}
 
-const list = document.getElementById("list");
-const home = document.getElementById("home");
-const battle = document.getElementById("battle");
-const result = document.getElementById("result");
-
+/* ---------- HOME ---------- */
 function render(){
+  const list=document.getElementById("list");
   list.innerHTML="";
   battles.forEach(b=>{
-    if(b.secret && !state.done["yori"]) return;
-
-    let locked = b.req && !state.done[b.req];
-    let btn = document.createElement("button");
-    btn.textContent = b.name+" ("+b.hrs+"h)";
-    btn.className = locked?"locked":"";
-    btn.onclick = ()=> locked?null:startBattle(b.id);
-    let card = document.createElement("div");
+    if(b.req && !state.done[b.req]){locked=true}else locked=false;
+    let card=document.createElement("div");
     card.className="card";
+    let btn=document.createElement("button");
+    btn.textContent=`${b.name} (${b.hrs}h)`;
+    if(locked){
+      btn.className="locked";
+    }else{
+      btn.onclick=()=>startBattle(b.id);
+    }
     card.appendChild(btn);
     list.appendChild(card);
   });
 }
 
-/* ========= BATTLE ========= */
-
+/* ---------- BATTLE ---------- */
 function startBattle(id){
-  const b = battles.find(x=>x.id===id);
-
-  // Secret boss 5AM rule
-  if(b.secret){
-    const now = new Date();
-    if(now.getHours()!==5){
-      alert("You missed dawn.");
-      return;
-    }
-  }
-
+  const b=battles.find(x=>x.id===id);
   state.active={
     id,
-    start:Date.now(),
     end:Date.now()+b.hrs*3600000
   };
   save();
-  showBattle();
-}
-
-function showBattle(){
-  home.classList.add("hidden");
-  result.classList.add("hidden");
-  battle.classList.remove("hidden");
-
-  const b = battles.find(x=>x.id===state.active.id);
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("battle").classList.remove("hidden");
   document.getElementById("battleTitle").textContent=b.name;
   tick();
 }
 
 function tick(){
-  if(!state.active) return;
-  let left = state.active.end - Date.now();
-  if(left<=0){
-    win();
-    return;
-  }
-  document.getElementById("battleTime").textContent =
-    "Time left: "+Math.ceil(left/60000)+" min";
+  if(!state.active)return;
+  let left=state.active.end-Date.now();
+  if(left<=0){win();return;}
+  document.getElementById("battleTime").textContent=
+    `Time left: ${Math.ceil(left/60000)} min`;
   setTimeout(tick,1000);
 }
 
-/* ========= RESULT ========= */
-
+/* ---------- RESULT ---------- */
 function win(){
-  const b = battles.find(x=>x.id===state.active.id);
+  const b=battles.find(x=>x.id===state.active.id);
   state.done[b.id]=true;
   state.active=null;
   save();
-  showResult("DEFEATED.", b.name+" has fallen.");
+  showResult("DEFEATED.",`${b.name} has fallen.`,true);
 }
 
 function giveUp(){
-  const b = battles.find(x=>x.id===state.active.id);
+  const b=battles.find(x=>x.id===state.active.id);
   state.active=null;
   save();
-  let msg = b.hum ? b.hum[Math.floor(Math.random()*b.hum.length)]
-                  : "You weren’t ready.";
-  showResult("DEFEAT.", msg);
+  let msg=b.hum?b.hum[Math.floor(Math.random()*b.hum.length)]:"You weren’t ready.";
+  showResult("DEFEAT.",msg,false);
 }
 
-function showResult(title,text){
-  battle.classList.add("hidden");
-  result.classList.remove("hidden");
+function showResult(title,text,win){
+  document.getElementById("battle").classList.add("hidden");
+  const r=document.getElementById("result");
+  r.classList.remove("hidden");
+  r.className=win?"win":"";
   document.getElementById("resultTitle").textContent=title;
   document.getElementById("resultText").textContent=text;
 }
 
 function goHome(){
-  result.classList.add("hidden");
-  home.classList.remove("hidden");
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("home").classList.remove("hidden");
   render();
 }
 
-/* ========= STORAGE ========= */
-
+/* ---------- STORAGE ---------- */
 function save(){
-  localStorage.setItem("state",JSON.stringify(state));
+  localStorage.setItem("battle_state",JSON.stringify(state));
 }
 
-/* ========= BOOT ========= */
-
+/* ---------- RESUME ---------- */
 if(state.active){
-  showBattle();
-}else{
-  render();
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("battle").classList.remove("hidden");
+  const b=battles.find(x=>x.id===state.active.id);
+  document.getElementById("battleTitle").textContent=b.name;
+  tick();
 }
 </script>
 
 </body>
 </html>
-
