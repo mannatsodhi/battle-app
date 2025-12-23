@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Battle</title>
+<style>
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:black;
+  color:white;
+  font-family:-apple-system, BlinkMacSystemFont;
+}
+.center{
+  position:fixed;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+button{
+  background:#ff3b3b;
+  border:none;
+  padding:14px 22px;
+  border-radius:16px;
+  font-size:16px;
+}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div id="screen1" class="center">
+  <div>Choose your battle.</div><br>
+  <button onclick="enterApp()">Enter</button>
+</div>
+
+<div id="screen2" class="center hidden">
+  <h2>IT WORKS.</h2>
+  <p>You’re in.</p>
+</div>
+
+<script>
+function enterApp(){
+  document.getElementById("screen1").classList.add("hidden");
+  document.getElementById("screen2").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
