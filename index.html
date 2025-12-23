@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Battle</title>
 
 <style>
-/* ---------- BASE ---------- */
 *{box-sizing:border-box}
 html,body{
   margin:0;
@@ -22,18 +21,24 @@ html,body{
 
 /* ---------- ANIMATIONS ---------- */
 @keyframes fadeIn{
-  from{opacity:0;transform:translateY(10px)}
+  from{opacity:0;transform:translateY(12px)}
   to{opacity:1;transform:translateY(0)}
 }
-@keyframes pulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.05)}
+.fade{animation:fadeIn .6s ease forwards}
+
+/* ---------- BUTTON ---------- */
+button{
+  background:#ff3b3b;
+  border:none;
+  color:#000;
+  padding:14px 24px;
+  border-radius:16px;
+  font-size:16px;
 }
-@keyframes flash{
-  0%{background:#fff;color:#000}
-  100%{background:#000;color:#fff}
+button.locked{
+  background:#222;
+  color:#666;
 }
-.fade{animation:fadeIn .8s ease forwards}
 
 /* ---------- INTRO ---------- */
 #intro{
@@ -45,36 +50,17 @@ html,body{
   align-items:center;
   text-align:center;
 }
-#intro h1{
-  font-size:42px;
-  margin:0;
-  opacity:0;
-  animation:fadeIn 1s ease forwards;
-}
-#intro p{
-  opacity:0;
-  margin-top:12px;
-  animation:fadeIn 1s ease forwards;
-  animation-delay:.8s;
-}
-#intro button{
-  margin-top:24px;
-  padding:14px 26px;
-  border-radius:16px;
-  background:#ff3b3b;
-  border:none;
-  font-size:16px;
-  animation:pulse 1.6s infinite;
-}
+#intro h1{font-size:42px;margin:0}
+#intro p{opacity:.8;margin:10px 0 20px}
 
 /* ---------- HOME ---------- */
 #home{
-  padding:32px 0;
   min-height:100vh;
+  padding:40px 0;
 }
 #home h2{
   text-align:center;
-  margin-bottom:20px;
+  margin-bottom:24px;
 }
 #list{
   display:flex;
@@ -85,47 +71,32 @@ html,body{
   width:90%;
   max-width:420px;
   border:1px solid #222;
-  border-radius:16px;
+  border-radius:18px;
   padding:18px;
-  margin:10px 0;
-  animation:fadeIn .6s ease forwards;
+  margin-bottom:16px;
+  animation:fadeIn .4s ease forwards;
 }
-.card button{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  background:#ff3b3b;
-  font-size:16px;
-}
-.card button.locked{
-  background:#222;
-  color:#666;
-}
+.card button{width:100%}
 
 /* ---------- BATTLE ---------- */
-#battle{
+#battle, #result{
   position:fixed;
   inset:0;
+  background:#000;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
+  padding:20px;
 }
 #battle p{opacity:.8}
 
 /* ---------- RESULT ---------- */
-#result{
-  position:fixed;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
+#result.win{
+  background:#fff;
+  color:#000;
 }
-#result.win{animation:flash .4s}
 </style>
 </head>
 
@@ -183,10 +154,17 @@ let state=JSON.parse(localStorage.getItem("battle_state")||"{}");
 if(!state.done)state.done={};
 if(!state.active)state.active=null;
 
+/* ---------- SCREEN CONTROL ---------- */
+function show(screen){
+  ["intro","home","battle","result"].forEach(id=>{
+    document.getElementById(id).classList.add("hidden");
+  });
+  document.getElementById(screen).classList.remove("hidden");
+}
+
 /* ---------- INTRO ---------- */
 function enterApp(){
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("home").classList.remove("hidden");
+  show("home");
   render();
 }
 
@@ -195,10 +173,10 @@ function render(){
   const list=document.getElementById("list");
   list.innerHTML="";
   battles.forEach(b=>{
-    if(b.req && !state.done[b.req]){locked=true}else locked=false;
-    let card=document.createElement("div");
+    const locked=b.req && !state.done[b.req];
+    const card=document.createElement("div");
     card.className="card";
-    let btn=document.createElement("button");
+    const btn=document.createElement("button");
     btn.textContent=`${b.name} (${b.hrs}h)`;
     if(locked){
       btn.className="locked";
@@ -213,20 +191,16 @@ function render(){
 /* ---------- BATTLE ---------- */
 function startBattle(id){
   const b=battles.find(x=>x.id===id);
-  state.active={
-    id,
-    end:Date.now()+b.hrs*3600000
-  };
+  state.active={id,end:Date.now()+b.hrs*3600000};
   save();
-  document.getElementById("home").classList.add("hidden");
-  document.getElementById("battle").classList.remove("hidden");
   document.getElementById("battleTitle").textContent=b.name;
+  show("battle");
   tick();
 }
 
 function tick(){
   if(!state.active)return;
-  let left=state.active.end-Date.now();
+  const left=state.active.end-Date.now();
   if(left<=0){win();return;}
   document.getElementById("battleTime").textContent=
     `Time left: ${Math.ceil(left/60000)} min`;
@@ -246,22 +220,20 @@ function giveUp(){
   const b=battles.find(x=>x.id===state.active.id);
   state.active=null;
   save();
-  let msg=b.hum?b.hum[Math.floor(Math.random()*b.hum.length)]:"You weren’t ready.";
+  const msg=b.hum?b.hum[Math.floor(Math.random()*b.hum.length)]:"You weren’t ready.";
   showResult("DEFEAT.",msg,false);
 }
 
 function showResult(title,text,win){
-  document.getElementById("battle").classList.add("hidden");
   const r=document.getElementById("result");
-  r.classList.remove("hidden");
   r.className=win?"win":"";
   document.getElementById("resultTitle").textContent=title;
   document.getElementById("resultText").textContent=text;
+  show("result");
 }
 
 function goHome(){
-  document.getElementById("result").classList.add("hidden");
-  document.getElementById("home").classList.remove("hidden");
+  show("home");
   render();
 }
 
@@ -272,10 +244,9 @@ function save(){
 
 /* ---------- RESUME ---------- */
 if(state.active){
-  document.getElementById("intro").classList.add("hidden");
-  document.getElementById("battle").classList.remove("hidden");
   const b=battles.find(x=>x.id===state.active.id);
   document.getElementById("battleTitle").textContent=b.name;
+  show("battle");
   tick();
 }
 </script>
