@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,16 +8,19 @@
 <style>
 *{box-sizing:border-box}
 html,body{
-  margin:0;width:100%;height:100%;
-  background:#000;color:#fff;
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  color:#fff;
   font-family:-apple-system,BlinkMacSystemFont;
   overflow:hidden;
 }
 .hidden{display:none}
 
-/* SCENES */
 .scene{
-  position:fixed;inset:0;
+  position:fixed;
+  inset:0;
   display:flex;
   flex-direction:column;
   justify-content:center;
@@ -26,7 +29,7 @@ html,body{
   padding:24px;
 }
 
-/* BUTTONS */
+/* buttons */
 button{
   background:#ff3b3b;
   border:none;
@@ -35,32 +38,30 @@ button{
   border-radius:16px;
   font-size:16px;
 }
-button.locked{background:#222;color:#666}
-
-/* HOME MENU */
-#home{justify-content:flex-start}
-#list{
-  width:100%;
-  max-width:420px;
-  margin-top:20px;
+button.locked{
+  background:#222;
+  color:#666;
 }
+
+/* home */
+#home h2{margin-bottom:20px}
 .card{
+  width:100%;
+  max-width:380px;
   border:1px solid #222;
   border-radius:18px;
-  padding:16px;
-  margin-bottom:14px;
+  padding:18px;
 }
-.card.blur{
+.blur{
   filter:blur(8px);
   opacity:.4;
-  pointer-events:none;
 }
 
-/* BATTLE */
+/* timer */
 #timer{
-  font-size:22px;
-  margin:14px 0;
+  font-size:26px;
   letter-spacing:2px;
+  margin:14px 0;
 }
 </style>
 </head>
@@ -77,7 +78,7 @@ button.locked{background:#222;color:#666}
 <!-- HOME -->
 <div id="home" class="scene hidden">
   <h2>Battle Path</h2>
-  <div id="list"></div>
+  <div id="homeCard"></div>
 </div>
 
 <!-- BATTLE -->
@@ -96,30 +97,25 @@ button.locked{background:#222;color:#666}
 </div>
 
 <script>
-/* ===== DATA (ORDER MATTERS) ===== */
+/* ===== DATA ===== */
 const battles=[
  {id:"soldier",name:"Soldiers",hrs:0.5},
  {id:"inosuke",name:"Inosuke",hrs:2},
  {id:"zenitsu",name:"Zenitsu",hrs:2},
- {id:"zen11",name:"Zenitsu 11th Form",hrs:1},
  {id:"rengoku",name:"Rengoku",hrs:5},
  {id:"sanemi",name:"Sanemi",hrs:6},
  {id:"toji",name:"Toji",hrs:8},
  {id:"koku",name:"Kokushibo",hrs:11},
  {id:"dkoku",name:"Demon Kokushibo",hrs:13},
  {id:"yori",name:"Evil Yoriichi",hrs:16},
- {id:"secret",name:"???",hrs:16,secret:true}
+ {id:"secret",name:"???",hrs:16,hidden:true}
 ];
 
-let state;
-if(location.search.includes("reset")){
-  localStorage.removeItem("battle_state");
-}
-state=JSON.parse(localStorage.getItem("battle_state")||"{}");
+let state = JSON.parse(localStorage.getItem("battle_state") || "{}");
 if(!state.done) state.done={};
-if(!state.active) state.active=null;
+state.active=null; // HARD RULE: never resume battle automatically
 
-/* SCENE CONTROL */
+/* ===== SCENE CONTROL ===== */
 function show(id){
   ["intro","home","battle","result"].forEach(s=>{
     document.getElementById(s).classList.add("hidden");
@@ -127,59 +123,61 @@ function show(id){
   document.getElementById(id).classList.remove("hidden");
 }
 
-/* INTRO */
+/* ===== INTRO ===== */
 function enter(){
   show("home");
-  render();
+  renderHome();
 }
 
-/* HOME – PROGRESSIVE REVEAL */
-function render(){
-  const list=document.getElementById("list");
-  list.innerHTML="";
-  let unlockedIndex=0;
-  while(battles[unlockedIndex] && state.done[battles[unlockedIndex].id]){
-    unlockedIndex++;
-  }
+/* ===== HOME ===== */
+function renderHome(){
+  const cardBox=document.getElementById("homeCard");
+  cardBox.innerHTML="";
 
-  for(let i=0;i<=unlockedIndex+1 && i<battles.length;i++){
-    const b=battles[i];
-    const card=document.createElement("div");
-    card.className="card";
+  let index=0;
+  while(battles[index] && state.done[battles[index].id]) index++;
 
-    if(i===unlockedIndex){
-      const btn=document.createElement("button");
-      btn.textContent=`${b.name} (${b.hrs}h)`;
-      btn.onclick=()=>startBattle(b.id);
-      card.appendChild(btn);
-    }
-    else if(i===unlockedIndex+1){
-      card.classList.add("blur");
-      card.textContent="???";
-    }
-    else{
-      continue;
-    }
-    list.appendChild(card);
+  const current=battles[index];
+  const next=battles[index+1];
+
+  // current
+  const c=document.createElement("div");
+  c.className="card";
+  const btn=document.createElement("button");
+  btn.textContent=`${current.name} (${current.hrs}h)`;
+  btn.onclick=()=>startBattle(current);
+  c.appendChild(btn);
+  cardBox.appendChild(c);
+
+  // next (blurred)
+  if(next && !next.hidden){
+    const n=document.createElement("div");
+    n.className="card blur";
+    n.textContent="???";
+    cardBox.appendChild(n);
   }
 }
 
-/* BATTLE */
+/* ===== BATTLE ===== */
 let interval=null;
-function startBattle(id){
-  const b=battles.find(x=>x.id===id);
-  state.active={id,end:Date.now()+b.hrs*3600000};
-  save();
+function startBattle(b){
+  state.active={
+    id:b.id,
+    end:Date.now()+b.hrs*3600000
+  };
+  localStorage.setItem("battle_state",JSON.stringify(state));
+
   document.getElementById("battleTitle").textContent=b.name;
   show("battle");
-  startTimer();
-}
 
-function startTimer(){
   clearInterval(interval);
   interval=setInterval(()=>{
     const left=state.active.end-Date.now();
-    if(left<=0){clearInterval(interval);win();return;}
+    if(left<=0){
+      clearInterval(interval);
+      win();
+      return;
+    }
     document.getElementById("timer").textContent=format(left);
   },1000);
 }
@@ -193,38 +191,33 @@ function format(ms){
   return `${h}:${m}:${sec}`;
 }
 
-/* RESULT */
+/* ===== RESULT ===== */
 function win(){
   state.done[state.active.id]=true;
   state.active=null;
-  save();
-  showResult("DEFEATED.","You survived this battle.");
+  localStorage.setItem("battle_state",JSON.stringify(state));
+  document.getElementById("resultTitle").textContent="DEFEATED.";
+  document.getElementById("resultText").textContent="You moved forward.";
+  show("result");
 }
 
 function giveUp(){
   state.active=null;
-  save();
-  showResult("DEFEAT.","You weren’t ready.");
-}
-
-function showResult(t,m){
-  document.getElementById("resultTitle").textContent=t;
-  document.getElementById("resultText").textContent=m;
+  localStorage.setItem("battle_state",JSON.stringify(state));
+  document.getElementById("resultTitle").textContent="DEFEAT.";
+  document.getElementById("resultText").textContent="You weren’t ready.";
   show("result");
 }
 
 function goHome(){
   show("home");
-  render();
+  renderHome();
 }
 
-function save(){
-  localStorage.setItem("battle_state",JSON.stringify(state));
-}
-
-/* BOOT */
+/* ===== BOOT ===== */
 show("intro");
 </script>
 
 </body>
 </html>
+
