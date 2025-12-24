@@ -536,6 +536,9 @@
         <source src="https://files.catbox.moe/4bbwn0.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- Character Voice Lines -->
+    <audio id="characterVoice"></audio>
+
     <script>
         const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
 
@@ -546,6 +549,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-soldiers',
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
+                voiceLine: 'https://files.catbox.moe/idsp2v.mp3',
                 quote: "Discipline is doing what needs to be done, even when you don't want to.",
                 victoryMessage: "Not bad... for a beginner.\nYou showed basic discipline.\nNow prove it wasn't luck.",
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
@@ -556,6 +560,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-inosuke',
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
+                voiceLine: 'https://files.catbox.moe/ycdvin.mp3',
                 quote: "I'm the king of the mountains! Show me your strength!",
                 victoryMessage: "HAHAHAHA! You got guts!\nI respect that raw endurance!\nKeep that wild spirit burning!",
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
@@ -566,6 +571,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-zenitsu',
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
+                voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
                 quote: "Even when you're scared, keep moving forward.",
                 victoryMessage: "You... you actually did it!\nEven when it got hard, you didn't run away.\nThat takes real courage.",
                 defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
@@ -577,6 +583,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-zenitsu-11',
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
+                voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
                 quote: "When you have no choice, you discover your true power.",
                 victoryMessage: "Incredible...\nYou pushed beyond your limits when it mattered most.\nThis is what true strength looks like.",
                 defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
@@ -589,6 +596,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku',
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
+                voiceLine: 'https://files.catbox.moe/omycwe.mp3',
                 quote: "Set your heart ablaze!",
                 victoryMessage: "MAGNIFICENT!\nYour flame burned bright and true!\nYou have a warrior's spirit! Well done!",
                 defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
@@ -600,6 +608,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku-final',
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
+                voiceLine: 'https://files.catbox.moe/nd8ic3.mp3',
                 quote: "Go ahead and live with your head held high.",
                 victoryMessage: "You stood your ground until the very end.\nYour resolve is unbreakable.\nI'm proud of you.",
                 defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
@@ -612,6 +621,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-sanemi',
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
+                voiceLine: 'https://files.catbox.moe/jfx6zv.mp3',
                 quote: "Survive. No matter what it takes.",
                 victoryMessage: "Hm. You're tougher than you look.\nYou survived when others would've quit.\nRespect.",
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
@@ -622,6 +632,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-toji',
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
+                voiceLine: 'https://files.catbox.moe/f8g7bl.mp3',
                 quote: "I don't believe in hard work. I believe in results.",
                 victoryMessage: "You delivered results.\nNo excuses, no drama.\nThat's what I call efficient.",
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
@@ -632,6 +643,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-kokushibo',
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
+                voiceLine: 'https://files.catbox.moe/708qso.mp3',
                 quote: "Perfection is achieved through endless pursuit.",
                 victoryMessage: "Impressive...\nYou've demonstrated discipline worthy of recognition.\nContinue this pursuit.",
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
@@ -642,6 +654,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-demon-koku',
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
+                voiceLine: 'https://files.catbox.moe/jl7v03.mp3',
                 quote: "The strong devour the weak. That is the law of nature.",
                 victoryMessage: "You have proven yourself strong.\nYour endurance rivals that of demons.\nYou have earned my acknowledgment.",
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
@@ -652,19 +665,21 @@
                 duration: 1 * 60,
                 colorClass: 'card-evil-yoriichi',
                 image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
+                voiceLine: 'https://files.catbox.moe/bdnb4b.mp3',
                 quote: "Talent without discipline is nothing.",
                 victoryMessage: "...\nYou have transcended.\nFew reach this level.\nYou may proceed.",
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
             {
                 id: 'secret',
-                name: '???',
+                name: 'YOU',
                 duration: 1 * 60,
                 colorClass: 'card-secret',
-                image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
-                quote: "The ultimate test awaits...",
-                victoryMessage: "You have conquered all.\nYour discipline is absolute.\nYou are worthy.\n\nThere is nothing left to prove.",
-                defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
+                image: 'https://files.catbox.moe/f1hggk.jpg',
+                voiceLine: '',
+                quote: "Your only true enemy has always been yourself.",
+                victoryMessage: "You defeated yourself.\n\nYour greatest obstacle.\nYour harshest critic.\nYour final test.\n\nYou are now unstoppable.",
+                defeatMessage: "You couldn't even beat yourself.\n\nThe excuses.\nThe doubt.\nThe weakness.\n\nThey won."
             }
         ];
 
@@ -675,6 +690,7 @@
                 this.battleStartTime = null;
                 this.timerInterval = null;
                 this.bgMusic = document.getElementById('bgMusic');
+                this.characterVoice = document.getElementById('characterVoice');
                 this.musicToggle = document.getElementById('musicToggle');
                 this.musicPlaying = false;
                 this.loadProgress();
@@ -733,6 +749,28 @@
                         console.log('Music play error:', e);
                     });
                 }
+            }
+
+            playCharacterVoice(voiceUrl) {
+                if (!voiceUrl) return;
+                
+                // Lower background music volume
+                if (this.musicPlaying) {
+                    this.bgMusic.volume = 0.2;
+                }
+                
+                this.characterVoice.src = voiceUrl;
+                this.characterVoice.load();
+                this.characterVoice.play().catch(e => {
+                    console.log('Voice play error:', e);
+                });
+
+                // Restore music volume after voice line
+                this.characterVoice.onended = () => {
+                    if (this.musicPlaying) {
+                        this.bgMusic.volume = 1.0;
+                    }
+                };
             }
 
             showScreen(screenId) {
@@ -819,6 +857,9 @@
                         return;
                     }
                 }
+
+                // Play character voice line
+                this.playCharacterVoice(character.voiceLine);
 
                 this.currentCharacterIndex = characterIndex;
                 this.battleStartTime = Date.now();
@@ -912,6 +953,7 @@
     </script>
 </body>
 </html>
+
 
 
 
