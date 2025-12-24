@@ -84,11 +84,14 @@
         .battle-card {
             background: #1a1a1a;
             border: 2px solid;
-            padding: 30px;
+            padding: 20px;
             margin: 20px 0;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .battle-card.locked {
@@ -108,27 +111,47 @@
             box-shadow: 0 0 20px currentColor;
         }
 
+        .battle-card-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid currentColor;
+            flex-shrink: 0;
+        }
+
+        .battle-card-content {
+            flex: 1;
+        }
+
         .battle-card h2 {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
         }
 
         .battle-card .duration {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.7;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .battle-card .status {
             position: absolute;
             top: 10px;
             right: 10px;
-            font-size: 0.8rem;
-            padding: 5px 10px;
+            font-size: 0.7rem;
+            padding: 4px 8px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 3px;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .battle-card .same-day-warning {
+            font-size: 0.8rem;
+            color: #fbbf24;
+            margin-top: 5px;
+            font-style: italic;
         }
 
         /* Character Colors */
@@ -154,16 +177,25 @@
             text-align: center;
         }
 
+        .battle-character-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 30px;
+            border: 3px solid #fff;
+        }
+
         .battle-name {
             font-size: 3rem;
-            margin-bottom: 60px;
+            margin-bottom: 40px;
             letter-spacing: 2px;
         }
 
         .timer {
             font-size: 4rem;
             font-weight: 300;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
             font-family: 'Courier New', monospace;
         }
 
@@ -214,6 +246,23 @@
         audio {
             display: none;
         }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .battle-name {
+                font-size: 2rem;
+            }
+            .timer {
+                font-size: 3rem;
+            }
+            .battle-character-image {
+                width: 150px;
+                height: 150px;
+            }
+            .battle-card h2 {
+                font-size: 1.4rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -231,6 +280,7 @@
     <!-- BATTLE SCREEN -->
     <div id="battleScreen" class="screen">
         <div class="battle-container">
+            <img id="battleImage" class="battle-character-image" src="" alt="" style="display:none;">
             <h2 class="battle-name" id="battleName"></h2>
             <div class="timer" id="timer">00:00:00</div>
             <button class="give-up-btn" onclick="game.giveUp()">Give Up</button>
@@ -251,85 +301,103 @@
             {
                 id: 'soldiers',
                 name: 'Soldiers',
-                duration: 30 * 60, // 30 minutes in seconds
+                duration: 1 * 60,
                 colorClass: 'card-soldiers',
+                image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
             },
             {
                 id: 'inosuke',
                 name: 'Inosuke',
-                duration: 2 * 60 * 60, // 2 hours
+                duration: 1 * 60,
                 colorClass: 'card-inosuke',
+                image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
             },
             {
                 id: 'zenitsu',
                 name: 'Zenitsu',
-                duration: 2 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-zenitsu',
-                defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose."
+                image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
+                defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
+                requiresSameDay: false
             },
             {
                 id: 'zenitsu-11',
                 name: 'Zenitsu – 11th Form',
-                duration: 3 * 60 * 60, // +1 hour
+                duration: 60 * 60,
                 colorClass: 'card-zenitsu-11',
-                defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered."
+                image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
+                defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
+                requiresSameDay: true,
+                parentCharacter: 'zenitsu'
             },
             {
                 id: 'rengoku',
                 name: 'Rengoku',
-                duration: 5 * 60 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-rengoku',
-                defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back."
+                image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
+                defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
+                requiresSameDay: false
             },
             {
                 id: 'rengoku-final',
                 name: 'Rengoku – Final',
-                duration: 7 * 60 * 60, // +2 hours
+                duration: 2 * 60 * 60,
                 colorClass: 'card-rengoku-final',
-                defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real."
+                image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
+                defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
+                requiresSameDay: true,
+                parentCharacter: 'rengoku'
             },
             {
                 id: 'sanemi',
                 name: 'Sanemi',
-                duration: 7 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-sanemi',
+                image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
             },
             {
                 id: 'toji',
                 name: 'Toji',
-                duration: 8 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-toji',
+                image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
             },
             {
                 id: 'kokushibo',
                 name: 'Kokushibo',
-                duration: 11 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-kokushibo',
+                image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
             },
             {
                 id: 'demon-koku',
                 name: 'Demon Kokushibo',
-                duration: 13 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-demon-koku',
+                image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
             },
             {
                 id: 'evil-yoriichi',
                 name: 'Evil Yoriichi',
-                duration: 16 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-evil-yoriichi',
+                image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
             {
                 id: 'secret',
                 name: '???',
-                duration: 16 * 60 * 60,
+                duration: 2 * 60,
                 colorClass: 'card-secret',
+                image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
                 specialRule: 'Must start at 5:00 AM',
                 defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
             }
@@ -346,7 +414,6 @@
             }
 
             init() {
-                // Check if battle is in progress on page load
                 const savedBattle = localStorage.getItem('currentBattle');
                 if (savedBattle) {
                     const battleData = JSON.parse(savedBattle);
@@ -354,13 +421,12 @@
                     const character = CHARACTERS[battleData.characterIndex];
                     
                     if (elapsed >= character.duration) {
-                        // Auto victory
                         this.completeVictory(battleData.characterIndex);
                     } else {
-                        // Resume battle
                         this.currentCharacterIndex = battleData.characterIndex;
                         this.battleStartTime = battleData.startTime;
                         this.showScreen('battleScreen');
+                        this.loadBattleScreen(character);
                         this.startBattleTimer();
                     }
                 }
@@ -400,19 +466,23 @@
                     card.className = `battle-card ${char.colorClass}`;
 
                     let statusBadge = '';
+                    let sameDayWarning = '';
                     
-                    // Determine card state - ALL VISIBLE NOW
+                    if (char.requiresSameDay) {
+                        const parentCompleted = this.checkParentCompletedToday(char.parentCharacter);
+                        if (!parentCompleted && index === this.currentCharacterIndex) {
+                            sameDayWarning = '<div class="same-day-warning">⚠️ Must complete on same day as ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + '</div>';
+                        }
+                    }
+                    
                     if (index < this.currentCharacterIndex) {
-                        // Completed characters
                         card.classList.add('completed');
                         statusBadge = '<div class="status">COMPLETED</div>';
                     } else if (index === this.currentCharacterIndex) {
-                        // Current unlocked character
                         card.classList.add('unlocked');
                         card.onclick = () => this.startBattle(index);
                         statusBadge = '<div class="status">AVAILABLE</div>';
                     } else {
-                        // Locked future characters
                         card.classList.add('locked');
                         statusBadge = '<div class="status">LOCKED</div>';
                     }
@@ -423,21 +493,44 @@
                     if (hours > 0) durationText += `${hours}h `;
                     if (minutes > 0) durationText += `${minutes}m`;
 
+                    const imageHtml = char.image ? `<img src="${char.image}" class="battle-card-image" alt="${char.name}" onerror="this.style.display='none'">` : '';
+
                     card.innerHTML = `
                         ${statusBadge}
-                        <h2>${char.name}</h2>
-                        <div class="duration">${durationText.trim()}</div>
-                        ${char.specialRule ? `<div class="duration">${char.specialRule}</div>` : ''}
+                        ${imageHtml}
+                        <div class="battle-card-content">
+                            <h2>${char.name}</h2>
+                            <div class="duration">${durationText.trim()}</div>
+                            ${char.specialRule ? `<div class="duration">${char.specialRule}</div>` : ''}
+                            ${sameDayWarning}
+                        </div>
                     `;
 
                     container.appendChild(card);
                 });
             }
 
+            checkParentCompletedToday(parentId) {
+                const completionData = localStorage.getItem(`completed_${parentId}`);
+                if (!completionData) return false;
+                
+                const completionDate = new Date(parseInt(completionData));
+                const today = new Date();
+                
+                return completionDate.toDateString() === today.toDateString();
+            }
+
             startBattle(characterIndex) {
                 const character = CHARACTERS[characterIndex];
                 
-                // Check secret boss timing
+                if (character.requiresSameDay) {
+                    const parentCompleted = this.checkParentCompletedToday(character.parentCharacter);
+                    if (!parentCompleted) {
+                        alert(`You must complete ${character.parentCharacter.charAt(0).toUpperCase() + character.parentCharacter.slice(1)} first, on the same day!`);
+                        return;
+                    }
+                }
+                
                 if (character.id === 'secret') {
                     const now = new Date();
                     const hour = now.getHours();
@@ -452,15 +545,27 @@
                 this.currentCharacterIndex = characterIndex;
                 this.battleStartTime = Date.now();
                 
-                // Save battle state
                 localStorage.setItem('currentBattle', JSON.stringify({
                     characterIndex: characterIndex,
                     startTime: this.battleStartTime
                 }));
 
-                document.getElementById('battleName').textContent = character.name;
+                this.loadBattleScreen(character);
                 this.showScreen('battleScreen');
                 this.startBattleTimer();
+            }
+
+            loadBattleScreen(character) {
+                document.getElementById('battleName').textContent = character.name;
+                
+                const battleImage = document.getElementById('battleImage');
+                if (character.image) {
+                    battleImage.src = character.image;
+                    battleImage.style.display = 'block';
+                    battleImage.onerror = function() { this.style.display = 'none'; };
+                } else {
+                    battleImage.style.display = 'none';
+                }
             }
 
             startBattleTimer() {
@@ -506,7 +611,8 @@
             completeVictory(characterIndex) {
                 const character = CHARACTERS[characterIndex];
                 
-                // Unlock next character
+                localStorage.setItem(`completed_${character.id}`, Date.now().toString());
+                
                 if (this.currentCharacterIndex === characterIndex) {
                     this.currentCharacterIndex++;
                     this.saveProgress();
@@ -532,11 +638,11 @@
             }
         }
 
-        // Initialize game
         const game = new DisciplineGame();
     </script>
 </body>
 </html>
+
 
 
 
