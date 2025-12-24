@@ -11,21 +11,23 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #000;
             color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         .screen {
             display: none;
             min-height: 100vh;
             padding: 20px;
-            animation: fadeIn 0.8s ease-in;
+            animation: fadeIn 0.6s ease-out;
         }
 
         .screen.active {
@@ -38,7 +40,7 @@
         @keyframes fadeIn {
             from { 
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(15px);
             }
             to { 
                 opacity: 1;
@@ -49,42 +51,39 @@
         /* Music Control Button */
         .music-toggle {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            bottom: 25px;
+            right: 25px;
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             z-index: 1000;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
-        .music-toggle:hover {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-            transform: scale(1.15);
-            box-shadow: 0 0 40px rgba(255, 255, 255, 0.4);
+        .music-toggle:active {
+            transform: scale(0.9);
         }
 
         .music-toggle.playing {
             animation: musicPulse 2s ease-in-out infinite;
+            background: rgba(255, 255, 255, 0.18);
         }
 
         @keyframes musicPulse {
             0%, 100% { 
-                box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
             }
             50% { 
-                box-shadow: 0 0 50px rgba(255, 255, 255, 0.8), 0 0 80px rgba(255, 255, 255, 0.4);
-                transform: scale(1.1);
+                box-shadow: 0 0 0 8px rgba(255, 255, 255, 0);
             }
         }
 
@@ -94,123 +93,53 @@
         }
 
         #startScreen h1 {
-            font-size: 5rem;
-            font-weight: 300;
-            margin-bottom: 60px;
-            letter-spacing: 12px;
-            animation: titleGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes titleGlow {
-            0%, 100% {
-                text-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff;
-                transform: scale(1);
-            }
-            50% {
-                text-shadow: 0 0 30px #fff, 0 0 60px #fff, 0 0 90px #fff, 0 0 120px rgba(255, 255, 255, 0.5);
-                transform: scale(1.03);
-            }
+            font-size: 3.5rem;
+            font-weight: 200;
+            margin-bottom: 50px;
+            letter-spacing: 10px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
         .btn {
-            padding: 20px 80px;
-            font-size: 1.4rem;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02));
+            padding: 18px 70px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            border: 3px solid #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 5px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
-            margin: 10px;
+            letter-spacing: 4px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin: 8px;
+            border-radius: 12px;
+            font-weight: 500;
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.8));
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:hover::before {
-            width: 400px;
-            height: 400px;
-        }
-
-        .btn:hover {
-            color: #000;
-            box-shadow: 0 0 50px rgba(255, 255, 255, 0.6), 0 0 80px rgba(255, 255, 255, 0.3);
-            transform: translateY(-8px);
-            border-color: #fff;
-        }
-
-        .btn span {
-            position: relative;
-            z-index: 1;
+        .btn:active {
+            transform: scale(0.96);
         }
 
         .reset-btn, .rules-btn {
-            padding: 12px 40px;
+            padding: 14px 40px;
             font-size: 1rem;
-            background: linear-gradient(135deg, rgba(139, 0, 0, 0.4), rgba(139, 0, 0, 0.1));
-            color: rgba(255, 255, 255, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.7);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
             letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            margin: 10px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            margin: 8px;
+            border-radius: 10px;
+            font-weight: 400;
         }
 
-        .rules-btn {
-            background: linear-gradient(135deg, rgba(0, 100, 200, 0.4), rgba(0, 50, 150, 0.1));
-        }
-
-        .reset-btn::before, .rules-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(139, 0, 0, 0.6);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .rules-btn::before {
-            background: rgba(0, 100, 200, 0.6);
-        }
-
-        .reset-btn:hover::before, .rules-btn:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .reset-btn:hover, .rules-btn:hover {
-            border-color: rgba(255, 255, 255, 0.8);
-            color: #fff;
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px currentColor;
-        }
-
-        .reset-btn span, .rules-btn span {
-            position: relative;
-            z-index: 1;
+        .btn:active, .reset-btn:active, .rules-btn:active {
+            opacity: 0.8;
         }
 
         /* Rules Popup */
@@ -221,85 +150,74 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.96);
             z-index: 2000;
             animation: fadeIn 0.3s ease-in;
             overflow-y: auto;
-            padding: 40px 20px;
+            -webkit-overflow-scrolling: touch;
+            padding: 60px 20px 30px 20px;
         }
 
         .rules-popup.active {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            display: block;
         }
 
         .rules-content {
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            background: rgba(20, 20, 20, 0.9);
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            padding: 40px;
-            max-width: 800px;
-            position: relative;
-            box-shadow: 0 0 100px rgba(255, 255, 255, 0.2);
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            padding: 30px 25px;
+            max-width: 500px;
+            margin: 0 auto;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .rules-close {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             transition: all 0.3s;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
-        .rules-close:hover {
-            background: rgba(255, 0, 0, 0.3);
-            transform: rotate(90deg);
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        .rules-close:active {
+            transform: scale(0.9);
         }
 
         .rules-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
+            font-size: 2rem;
+            margin-bottom: 25px;
             text-align: center;
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            font-weight: 300;
         }
 
         .rules-section {
-            margin: 30px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 4px solid #fff;
+            margin: 25px 0;
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 8px;
         }
 
         .rules-section h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
             color: #fff;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
+            font-weight: 500;
         }
 
         .rules-section ul {
@@ -308,127 +226,113 @@
         }
 
         .rules-section li {
-            padding: 8px 0;
-            padding-left: 30px;
+            padding: 6px 0;
+            padding-left: 22px;
             position: relative;
             line-height: 1.6;
+            font-size: 0.95rem;
+            opacity: 0.9;
         }
 
         .rules-section li::before {
             content: '→';
             position: absolute;
             left: 0;
-            color: #fff;
+            opacity: 0.6;
         }
 
         .pause-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 15px 0;
+            font-size: 0.85rem;
         }
 
         .pause-table th, .pause-table td {
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
 
         .pause-table th {
-            background: rgba(255, 255, 255, 0.1);
-            font-weight: bold;
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 500;
         }
 
         /* BATTLE PATH */
         #battlePath {
             background: radial-gradient(circle at center, #0f0f0f 0%, #000 100%);
-            padding: 60px 20px;
+            padding: 80px 20px 30px 20px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .battle-cards {
-            max-width: 700px;
+            max-width: 500px;
             width: 100%;
+            margin: 0 auto;
         }
 
         .battle-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(10, 10, 10, 0.95));
-            border: 3px solid;
-            padding: 25px;
-            margin: 25px 0;
+            background: rgba(20, 20, 20, 0.8);
+            border: 2px solid;
+            padding: 20px;
+            margin: 18px 0;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             display: flex;
             align-items: center;
-            gap: 25px;
-            backdrop-filter: blur(15px);
+            gap: 18px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             overflow: hidden;
-            border-radius: 15px;
-        }
-
-        .battle-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
-            transition: left 0.6s;
-        }
-
-        .battle-card:hover::before {
-            left: 100%;
+            border-radius: 16px;
         }
 
         .battle-card.locked {
-            opacity: 0.25;
-            filter: grayscale(100%) blur(2px);
+            opacity: 0.3;
+            filter: grayscale(100%) blur(1.5px);
             pointer-events: none;
-            transform: scale(0.95);
         }
 
         .battle-card.completed {
-            opacity: 0.6;
-            filter: grayscale(50%);
+            opacity: 0.5;
+            filter: grayscale(60%);
             pointer-events: none;
         }
 
-        .battle-card.unlocked:hover {
-            transform: translateX(20px) scale(1.05);
-            box-shadow: 0 0 60px currentColor, 0 0 100px currentColor, 0 10px 40px rgba(0, 0, 0, 0.8);
+        .battle-card.unlocked:active {
+            transform: scale(0.97);
         }
 
         .battle-card.unlocked {
-            animation: cardGlow 4s ease-in-out infinite;
+            animation: cardGlow 3.5s ease-in-out infinite;
         }
 
         @keyframes cardGlow {
             0%, 100% {
-                box-shadow: 0 0 20px currentColor, 0 5px 30px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 0 15px currentColor, 0 4px 20px rgba(0, 0, 0, 0.6);
                 border-color: currentColor;
             }
             50% {
-                box-shadow: 0 0 50px currentColor, 0 0 80px currentColor, 0 5px 40px rgba(0, 0, 0, 0.8);
-                border-color: currentColor;
-                filter: brightness(1.4);
+                box-shadow: 0 0 35px currentColor, 0 0 55px currentColor, 0 4px 25px rgba(0, 0, 0, 0.8);
+                filter: brightness(1.25);
             }
         }
 
         .battle-card-image {
-            width: 100px;
-            height: 100px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid currentColor;
+            border: 2.5px solid currentColor;
             flex-shrink: 0;
-            transition: all 0.4s;
-            box-shadow: 0 0 30px currentColor;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .battle-card.unlocked:hover .battle-card-image {
-            transform: rotate(360deg) scale(1.2);
-            box-shadow: 0 0 60px currentColor, 0 0 90px currentColor;
+        .battle-card.unlocked .battle-card-image {
+            box-shadow: 0 0 20px currentColor;
         }
 
         .battle-card-content {
@@ -436,51 +340,46 @@
         }
 
         .battle-card h2 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            text-shadow: 0 0 15px currentColor;
-            letter-spacing: 2px;
+            font-size: 1.5rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+            letter-spacing: 1px;
         }
 
         .battle-card .duration {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-top: 8px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 6px;
         }
 
         .battle-card .quote {
-            font-size: 0.9rem;
-            opacity: 0.95;
-            margin-top: 10px;
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-top: 8px;
             font-style: italic;
             color: currentColor;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .battle-card .status {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            font-size: 0.75rem;
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
+            top: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .battle-card .same-day-warning {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #fbbf24;
             margin-top: 8px;
             font-style: italic;
-            animation: warningPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes warningPulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; text-shadow: 0 0 10px #fbbf24; }
         }
 
         /* Character Colors */
@@ -505,167 +404,114 @@
 
         .battle-container {
             text-align: center;
-            animation: battleEnter 1s ease-out;
-            padding: 40px 20px;
+            animation: battleEnter 0.8s ease-out;
+            padding: 30px 20px;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         @keyframes battleEnter {
             from {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: translateY(0);
             }
         }
 
         .battle-character-image {
-            width: 280px;
-            height: 280px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 40px auto;
-            border: 5px solid #fff;
-            animation: battleImageGlow 3s ease-in-out infinite;
+            margin: 30px auto 25px auto;
+            border: 3px solid #fff;
             display: block;
-        }
-
-        @keyframes battleImageGlow {
-            0%, 100% {
-                box-shadow: 0 0 40px #fff, 0 0 70px #fff, 0 0 100px currentColor, 0 0 130px currentColor;
-                filter: brightness(1);
-                transform: scale(1);
-            }
-            50% {
-                box-shadow: 0 0 60px #fff, 0 0 100px #fff, 0 0 150px currentColor, 0 0 200px currentColor, 0 0 250px currentColor;
-                filter: brightness(1.6) saturate(1.3);
-                transform: scale(1.1);
-            }
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
         .battle-name {
-            font-size: 4rem;
-            margin-bottom: 25px;
-            letter-spacing: 4px;
-            animation: textGlow 3s ease-in-out infinite;
+            font-size: 2.8rem;
+            margin-bottom: 18px;
+            letter-spacing: 3px;
+            font-weight: 300;
         }
 
         .battle-quote {
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             font-style: italic;
-            opacity: 0.95;
-            margin-bottom: 50px;
-            max-width: 700px;
-            line-height: 1.8;
-            animation: quoteFade 2s ease-in-out infinite;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        @keyframes quoteFade {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; text-shadow: 0 0 20px rgba(255, 255, 255, 0.5); }
-        }
-
-        @keyframes textGlow {
-            0%, 100% {
-                text-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff;
-            }
-            50% {
-                text-shadow: 0 0 30px #fff, 0 0 60px #fff, 0 0 90px #fff, 0 0 120px rgba(255, 255, 255, 0.5);
-            }
+            opacity: 0.85;
+            margin-bottom: 35px;
+            line-height: 1.6;
+            padding: 0 15px;
         }
 
         .timer {
-            font-size: 6rem;
-            font-weight: 300;
-            margin-bottom: 50px;
-            font-family: 'Courier New', monospace;
-            animation: timerPulse 1.5s ease-in-out infinite;
-            letter-spacing: 8px;
-        }
-
-        @keyframes timerPulse {
-            0%, 100% { 
-                transform: scale(1);
-                text-shadow: 0 0 30px #fff, 0 0 50px #fff;
-            }
-            50% { 
-                transform: scale(1.08);
-                text-shadow: 0 0 50px #fff, 0 0 80px #fff, 0 0 120px currentColor;
-            }
+            font-size: 4.5rem;
+            font-weight: 200;
+            margin-bottom: 35px;
+            font-family: -apple-system, BlinkMacSystemFont, monospace;
+            letter-spacing: 6px;
         }
 
         .pause-info {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            opacity: 0.8;
-            letter-spacing: 1px;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            opacity: 0.75;
+            letter-spacing: 0.5px;
         }
 
         .battle-buttons {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
+            padding: 0 15px;
         }
 
         .pause-btn, .give-up-btn, .resume-btn {
-            padding: 18px 60px;
-            font-size: 1.2rem;
-            border: 3px solid;
+            padding: 16px 50px;
+            font-size: 1.05rem;
+            border: 2px solid;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 3px;
-            border-radius: 10px;
-            font-weight: bold;
+            letter-spacing: 2px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .pause-btn, .give-up-btn, .resume-btn {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pause-btn:active, .give-up-btn:active, .resume-btn:active {
+            transform: scale(0.95);
         }
 
         .pause-btn {
-            background: linear-gradient(135deg, #0891b2, #06b6d4);
-            color: #fff;
+            background: rgba(6, 182, 212, 0.15);
+            color: #06b6d4;
             border-color: #06b6d4;
-            box-shadow: 0 5px 30px rgba(6, 182, 212, 0.4);
-        }
-
-        .pause-btn:hover {
-            background: linear-gradient(135deg, #06b6d4, #22d3ee);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 50px rgba(6, 182, 212, 0.6);
         }
 
         .pause-btn:disabled {
             opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
+            pointer-events: none;
         }
 
         .give-up-btn {
-            background: linear-gradient(135deg, #7f1d1d, #991b1b);
-            color: #fff;
+            background: rgba(127, 29, 29, 0.2);
+            color: #dc2626;
             border-color: #991b1b;
-            box-shadow: 0 5px 30px rgba(127, 29, 29, 0.5);
-        }
-
-        .give-up-btn:hover {
-            background: linear-gradient(135deg, #991b1b, #b91c1c);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 50px rgba(127, 29, 29, 0.7);
         }
 
         .resume-btn {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
             border-color: #22c55e;
-            box-shadow: 0 5px 30px rgba(34, 197, 94, 0.4);
-        }
-
-        .resume-btn:hover {
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 50px rgba(34, 197, 94, 0.6);
         }
 
         .paused-overlay {
@@ -674,12 +520,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 10;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
 
         .paused-overlay.active {
@@ -688,33 +535,29 @@
 
         .paused-content {
             text-align: center;
-            animation: pausePulse 2s ease-in-out infinite;
+            padding: 20px;
         }
 
         .paused-content h2 {
-            font-size: 4rem;
-            margin-bottom: 30px;
-            letter-spacing: 6px;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            letter-spacing: 4px;
+            font-weight: 300;
         }
 
         .pause-timer {
-            font-size: 5rem;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 40px;
+            font-size: 4rem;
+            font-family: -apple-system, BlinkMacSystemFont, monospace;
+            margin-bottom: 30px;
             color: #06b6d4;
-            text-shadow: 0 0 40px #06b6d4;
+            letter-spacing: 4px;
         }
 
         .pause-message {
-            font-size: 1.3rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 25px;
             font-style: italic;
-        }
-
-        @keyframes pausePulse {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 1; }
         }
 
         /* RESULT SCREEN */
@@ -724,68 +567,60 @@
         }
 
         .result-container {
-            animation: resultEnter 1s ease-out;
+            animation: resultEnter 0.8s ease-out;
+            padding: 20px;
         }
 
         @keyframes resultEnter {
             from {
                 opacity: 0;
-                transform: translateY(50px) scale(0.9);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
 
         .result-message {
-            font-size: 2.2rem;
-            line-height: 2;
-            max-width: 800px;
-            margin-bottom: 70px;
+            font-size: 1.6rem;
+            line-height: 1.8;
+            max-width: 500px;
+            margin: 0 auto 50px auto;
             white-space: pre-line;
-            animation: messageFade 3s ease-in-out;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.6);
-            letter-spacing: 1px;
-        }
-
-        @keyframes messageFade {
-            0% { opacity: 0; transform: scale(0.9); }
-            100% { opacity: 1; transform: scale(1); }
+            letter-spacing: 0.5px;
+            font-weight: 300;
         }
 
         .continue-btn {
-            padding: 22px 80px;
-            font-size: 1.4rem;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+            padding: 18px 70px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            border: 3px solid #fff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-transform: uppercase;
-            letter-spacing: 4px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 5px 40px rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+            letter-spacing: 3px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 12px;
+            font-weight: 500;
         }
 
-        .continue-btn:hover {
-            background: #fff;
-            color: #000;
-            transform: translateY(-8px);
-            box-shadow: 0 15px 60px rgba(255, 255, 255, 0.5);
+        .continue-btn:active {
+            transform: scale(0.96);
         }
 
-        /* Mobile responsiveness */
-        @media (max-width: 600px) {
-            #startScreen h1 { font-size: 3rem; }
-            .battle-name { font-size: 2.8rem; }
-            .battle-quote { font-size: 1.2rem; }
+        /* iPhone 12 Specific Optimizations */
+        @media screen and (max-width: 390px) and (max-height: 844px) {
+            #startScreen h1 { font-size: 3rem; margin-bottom: 40px; }
+            .battle-name { font-size: 2.4rem; }
             .timer { font-size: 4rem; }
-            .battle-character-image { width: 200px; height: 200px; }
-            .battle-card h2 { font-size: 1.6rem; }
-            .battle-card-image { width: 80px; height: 80px; }
-            .pause-btn, .give-up-btn, .resume-btn { padding: 15px 40px; font-size: 1rem; }
+            .battle-character-image { width: 180px; height: 180px; }
+            .battle-card { padding: 16px; }
+            .battle-card-image { width: 75px; height: 75px; }
+            .battle-card h2 { font-size: 1.35rem; }
         }
     </style>
 </head>
@@ -796,85 +631,76 @@
     <!-- START SCREEN -->
     <div id="startScreen" class="screen active">
         <h1>Hi.</h1>
-        <button class="btn" onclick="game.enterGame()"><span>ENTER</span></button>
-        <button class="rules-btn" onclick="game.showRules()"><span>RULES</span></button>
-        <button class="reset-btn" onclick="game.resetProgress()"><span>RESET PROGRESS</span></button>
+        <button class="btn" onclick="game.enterGame()">ENTER</button>
+        <button class="rules-btn" onclick="game.showRules()">RULES</button>
+        <button class="reset-btn" onclick="game.resetProgress()">RESET</button>
     </div>
 
     <!-- RULES POPUP -->
     <div class="rules-popup" id="rulesPopup">
+        <div class="rules-close" onclick="game.hideRules()">✕</div>
         <div class="rules-content">
-            <div class="rules-close" onclick="game.hideRules()">✕</div>
-            <h2>📜 GAME RULES</h2>
+            <h2>📜 RULES</h2>
 
             <div class="rules-section">
                 <h3>🎮 HOW TO PLAY</h3>
                 <ul>
-                    <li>Complete the timer countdown to defeat each character</li>
-                    <li>Characters unlock in sequential order</li>
-                    <li>Closing tab/browser = Battle continues in background</li>
-                    <li>Click "Give Up" to restart that character</li>
-                    <li>Progress is automatically saved</li>
+                    <li>Complete timer to defeat character</li>
+                    <li>Characters unlock in order</li>
+                    <li>Close tab = battle continues</li>
+                    <li>Give up = restart character</li>
                 </ul>
             </div>
 
             <div class="rules-section">
                 <h3>⚡ SPECIAL CHALLENGES</h3>
                 <ul>
-                    <li><strong>Zenitsu 11th Form:</strong> Must defeat on SAME DAY as Zenitsu (24 hours)</li>
-                    <li><strong>Rengoku Final:</strong> Must defeat on SAME DAY as Rengoku (24 hours)</li>
-                    <li><strong>Demon Kokushibo:</strong> Must defeat WITHIN 2 DAYS of Kokushibo (48 hours)</li>
+                    <li><strong>Zenitsu 11th:</strong> Same day as Zenitsu</li>
+                    <li><strong>Rengoku Final:</strong> Same day as Rengoku</li>
+                    <li><strong>Demon Koku:</strong> Within 2 days of Kokushibo</li>
                 </ul>
             </div>
 
             <div class="rules-section">
                 <h3>⏸️ PAUSE SYSTEM</h3>
                 <ul>
-                    <li>Pauses are <strong>OPTIONAL</strong> - use them or push through!</li>
-                    <li>Pause allocation based on battle duration</li>
-                    <li>Unused pauses = badge of honor at victory</li>
-                    <li>Each pause has a time limit (auto-resume)</li>
+                    <li>Pauses are <strong>optional</strong></li>
+                    <li>Based on battle duration</li>
+                    <li>Shows at victory screen</li>
                 </ul>
                 <table class="pause-table">
-                    <tr>
-                        <th>Duration</th>
-                        <th>Pauses</th>
-                        <th>Each Pause</th>
-                    </tr>
-                    <tr><td>0-30 min</td><td>0</td><td>None</td></tr>
-                    <tr><td>30m-1h</td><td>1</td><td>5 min</td></tr>
-                    <tr><td>1-2h</td><td>2</td><td>5 min</td></tr>
-                    <tr><td>2-3h</td><td>2</td><td>10 min</td></tr>
-                    <tr><td>3-4h</td><td>3</td><td>10 min</td></tr>
-                    <tr><td>4-5h</td><td>3</td><td>15 min</td></tr>
-                    <tr><td>5-6h</td><td>4</td><td>15 min</td></tr>
-                    <tr><td>6-8h</td><td>4</td><td>20 min</td></tr>
-                    <tr><td>8-10h</td><td>5</td><td>20 min</td></tr>
-                    <tr><td>10-12h</td><td>5</td><td>25 min</td></tr>
-                    <tr><td>12-14h</td><td>6</td><td>25 min</td></tr>
-                    <tr><td>14-16h</td><td>6</td><td>30 min</td></tr>
+                    <tr><th>Time</th><th>Pauses</th><th>Each</th></tr>
+                    <tr><td>0-30m</td><td>0</td><td>-</td></tr>
+                    <tr><td>30m-1h</td><td>1</td><td>5m</td></tr>
+                    <tr><td>1-2h</td><td>2</td><td>5m</td></tr>
+                    <tr><td>2-3h</td><td>2</td><td>10m</td></tr>
+                    <tr><td>3-4h</td><td>3</td><td>10m</td></tr>
+                    <tr><td>4-5h</td><td>3</td><td>15m</td></tr>
+                    <tr><td>5-6h</td><td>4</td><td>15m</td></tr>
+                    <tr><td>6-8h</td><td>4</td><td>20m</td></tr>
+                    <tr><td>8-10h</td><td>5</td><td>20m</td></tr>
+                    <tr><td>10-12h</td><td>5</td><td>25m</td></tr>
+                    <tr><td>12-14h</td><td>6</td><td>25m</td></tr>
+                    <tr><td>14-16h</td><td>6</td><td>30m</td></tr>
                 </table>
             </div>
 
             <div class="rules-section">
-                <h3>❌ DISCIPLINE RULES (During Battle)</h3>
+                <h3>❌ DISCIPLINE RULES</h3>
                 <ul>
-                    <li><strong>FORBIDDEN:</strong> Social media (Instagram, TikTok, Twitter, etc.)</li>
-                    <li><strong>FORBIDDEN:</strong> Phone scrolling (only emergency calls allowed)</li>
-                    <li><strong>FORBIDDEN:</strong> Entertainment (YouTube, Netflix, games, etc.)</li>
-                    <li><strong>FORBIDDEN:</strong> Lying down or sleeping</li>
-                    <li><strong>ALLOWED:</strong> Productive work, studying, working out</li>
-                    <li><strong>ALLOWED:</strong> Walking, drinking water, bathroom breaks</li>
+                    <li><strong>NO:</strong> Social media, phone scrolling</li>
+                    <li><strong>NO:</strong> Entertainment, lying down</li>
+                    <li><strong>YES:</strong> Work, study, workout</li>
+                    <li><strong>YES:</strong> Water, bathroom breaks</li>
                 </ul>
             </div>
 
             <div class="rules-section">
-                <h3>🏆 CONSEQUENCES</h3>
+                <h3>🏆 HONOR SYSTEM</h3>
                 <ul>
-                    <li>Break a rule = You must click "Give Up" yourself</li>
-                    <li>This is a self-discipline journey - honor system</li>
-                    <li>Cheating = You only cheat yourself</li>
-                    <li>Victory means nothing without honesty</li>
+                    <li>Break rule = click Give Up</li>
+                    <li>Self-discipline journey</li>
+                    <li>You only cheat yourself</li>
                 </ul>
             </div>
         </div>
@@ -904,9 +730,9 @@
             <div class="paused-content">
                 <h2>⏸️ PAUSED</h2>
                 <div class="pause-timer" id="pauseTimer">05:00</div>
-                <div class="pause-message">Breathe. Stretch. Come back stronger.</div>
-                <div class="pause-info" id="pausedInfo"></div>
-                <button class="resume-btn" onclick="game.resumeBattle()">RESUME BATTLE</button>
+                <div class="pause-message">Breathe. Stretch. Return stronger.</div>
+                <div class="pause-info" id="pausedInfo" style="margin-bottom: 25px;"></div>
+                <button class="resume-btn" onclick="game.resumeBattle()">RESUME</button>
             </div>
         </div>
     </div>
@@ -930,7 +756,6 @@
     <script>
         const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
 
-        // Pause allocation function
         function getPauseAllocation(durationInSeconds) {
             const minutes = durationInSeconds / 60;
             const hours = minutes / 60;
@@ -953,7 +778,7 @@
             {
                 id: 'soldiers',
                 name: 'Soldiers',
-                duration: 30 * 60, // 30 minutes
+                duration: 30 * 60,
                 colorClass: 'card-soldiers',
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
                 voiceLine: 'https://files.catbox.moe/idsp2v.mp3',
@@ -964,7 +789,7 @@
             {
                 id: 'inosuke',
                 name: 'Inosuke',
-                duration: 1 * 60 * 60, // 1 hour
+                duration: 1 * 60 * 60,
                 colorClass: 'card-inosuke',
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
                 voiceLine: 'https://files.catbox.moe/ycdvin.mp3',
@@ -975,7 +800,7 @@
             {
                 id: 'zenitsu',
                 name: 'Zenitsu',
-                duration: 2 * 60 * 60, // 2 hours
+                duration: 2 * 60 * 60,
                 colorClass: 'card-zenitsu',
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
                 voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
@@ -987,7 +812,7 @@
             {
                 id: 'zenitsu-11',
                 name: 'Zenitsu – 11th Form',
-                duration: 2 * 60 * 60, // 2 hours
+                duration: 2 * 60 * 60,
                 colorClass: 'card-zenitsu-11',
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
                 voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
@@ -1000,7 +825,7 @@
             {
                 id: 'rengoku',
                 name: 'Rengoku',
-                duration: 3 * 60 * 60, // 3 hours
+                duration: 3 * 60 * 60,
                 colorClass: 'card-rengoku',
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
                 voiceLine: 'https://files.catbox.moe/omycwe.mp3',
@@ -1012,7 +837,7 @@
             {
                 id: 'rengoku-final',
                 name: 'Rengoku – Final',
-                duration: 3 * 60 * 60, // 3 hours
+                duration: 3 * 60 * 60,
                 colorClass: 'card-rengoku-final',
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
                 voiceLine: 'https://files.catbox.moe/nd8ic3.mp3',
@@ -1025,7 +850,7 @@
             {
                 id: 'sanemi',
                 name: 'Sanemi',
-                duration: 5 * 60 * 60, // 5 hours
+                duration: 5 * 60 * 60,
                 colorClass: 'card-sanemi',
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
                 voiceLine: 'https://files.catbox.moe/jfx6zv.mp3',
@@ -1036,7 +861,7 @@
             {
                 id: 'toji',
                 name: 'Toji',
-                duration: 6 * 60 * 60, // 6 hours
+                duration: 6 * 60 * 60,
                 colorClass: 'card-toji',
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
                 voiceLine: 'https://files.catbox.moe/f8g7bl.mp3',
@@ -1047,7 +872,7 @@
             {
                 id: 'kokushibo',
                 name: 'Kokushibo',
-                duration: 8 * 60 * 60, // 8 hours
+                duration: 8 * 60 * 60,
                 colorClass: 'card-kokushibo',
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
                 voiceLine: 'https://files.catbox.moe/708qso.mp3',
@@ -1058,7 +883,7 @@
             {
                 id: 'demon-koku',
                 name: 'Demon Kokushibo',
-                duration: 10 * 60 * 60, // 10 hours
+                duration: 10 * 60 * 60,
                 colorClass: 'card-demon-koku',
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
                 voiceLine: 'https://files.catbox.moe/jl7v03.mp3',
@@ -1071,7 +896,7 @@
             {
                 id: 'evil-yoriichi',
                 name: 'Evil Yoriichi',
-                duration: 12 * 60 * 60, // 12 hours
+                duration: 12 * 60 * 60,
                 colorClass: 'card-evil-yoriichi',
                 image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
                 voiceLine: 'https://files.catbox.moe/bdnb4b.mp3',
@@ -1082,7 +907,7 @@
             {
                 id: 'secret',
                 name: 'YOU',
-                duration: 16 * 60 * 60, // 16 hours
+                duration: 16 * 60 * 60,
                 colorClass: 'card-secret',
                 image: 'https://files.catbox.moe/f1hggk.jpg',
                 voiceLine: '',
@@ -1149,7 +974,7 @@
             }
 
             resetProgress() {
-                if (confirm('⚠️ Are you sure you want to RESET ALL PROGRESS?\n\nThis will erase everything and cannot be undone!')) {
+                if (confirm('⚠️ Reset ALL progress? Cannot be undone!')) {
                     localStorage.clear();
                     location.reload();
                 }
@@ -1157,10 +982,12 @@
 
             showRules() {
                 document.getElementById('rulesPopup').classList.add('active');
+                document.body.style.overflow = 'hidden';
             }
 
             hideRules() {
                 document.getElementById('rulesPopup').classList.remove('active');
+                document.body.style.overflow = '';
             }
 
             toggleMusic() {
@@ -1229,24 +1056,24 @@
                     if (char.requiresSameDay) {
                         const parentCompleted = this.checkParentCompletedToday(char.parentCharacter);
                         if (!parentCompleted && index === this.currentCharacterIndex) {
-                            sameDayWarning = '<div class="same-day-warning">⚠️ Same day as ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + ' required</div>';
+                            sameDayWarning = '<div class="same-day-warning">⚠️ Same day as ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + '</div>';
                         }
                     }
 
                     if (char.requiresTwoDays) {
                         const parentCompletedWithin2Days = this.checkParentCompletedWithin2Days(char.parentCharacter);
                         if (!parentCompletedWithin2Days && index === this.currentCharacterIndex) {
-                            sameDayWarning = '<div class="same-day-warning">⚠️ Within 2 days of ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + ' required</div>';
+                            sameDayWarning = '<div class="same-day-warning">⚠️ Within 2 days of ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + '</div>';
                         }
                     }
                     
                     if (index < this.currentCharacterIndex) {
                         card.classList.add('completed');
-                        statusBadge = '<div class="status">✓ COMPLETED</div>';
+                        statusBadge = '<div class="status">✓ DONE</div>';
                     } else if (index === this.currentCharacterIndex) {
                         card.classList.add('unlocked');
                         card.onclick = () => this.startBattle(index);
-                        statusBadge = '<div class="status">▶ AVAILABLE</div>';
+                        statusBadge = '<div class="status">▶ NOW</div>';
                     } else {
                         card.classList.add('locked');
                         statusBadge = '<div class="status">🔒 LOCKED</div>';
@@ -1262,7 +1089,7 @@
                     let pauseText = '';
                     if (pauseAlloc.count > 0) {
                         const pauseMins = pauseAlloc.duration / 60;
-                        pauseText = ` • ${pauseAlloc.count} pause${pauseAlloc.count > 1 ? 's' : ''} (${pauseMins}m each)`;
+                        pauseText = ` • ${pauseAlloc.count}×${pauseMins}m`;
                     }
 
                     const imageHtml = char.image ? `<img src="${char.image}" class="battle-card-image" alt="${char.name}" onerror="this.style.display='none'">` : '';
@@ -1309,7 +1136,7 @@
                 if (character.requiresSameDay) {
                     const parentCompleted = this.checkParentCompletedToday(character.parentCharacter);
                     if (!parentCompleted) {
-                        alert(`You must complete ${character.parentCharacter.charAt(0).toUpperCase() + character.parentCharacter.slice(1)} first, on the same day!`);
+                        alert(`Complete ${character.parentCharacter.charAt(0).toUpperCase() + character.parentCharacter.slice(1)} first, same day!`);
                         return;
                     }
                 }
@@ -1317,7 +1144,7 @@
                 if (character.requiresTwoDays) {
                     const parentCompleted = this.checkParentCompletedWithin2Days(character.parentCharacter);
                     if (!parentCompleted) {
-                        alert(`You must complete ${character.parentCharacter.charAt(0).toUpperCase() + character.parentCharacter.slice(1)} within 2 days!`);
+                        alert(`Complete ${character.parentCharacter.charAt(0).toUpperCase() + character.parentCharacter.slice(1)} within 2 days!`);
                         return;
                     }
                 }
@@ -1364,14 +1191,14 @@
                     this.updatePauseInfo();
                 } else {
                     pauseBtn.style.display = 'none';
-                    document.getElementById('pauseInfo').textContent = 'No pauses available - Push through!';
+                    document.getElementById('pauseInfo').textContent = 'No pauses - Push through!';
                 }
             }
 
             updatePauseInfo() {
                 const remaining = this.pausesAvailable - this.pausesUsed;
                 const pauseMins = this.pauseDuration / 60;
-                document.getElementById('pauseInfo').textContent = `Pauses: ${remaining}/${this.pausesAvailable} (${pauseMins} min each)`;
+                document.getElementById('pauseInfo').textContent = `${remaining}/${this.pausesAvailable} pauses (${pauseMins}m each)`;
             }
 
             startBattleTimer() {
@@ -1408,23 +1235,19 @@
                 this.pauseStartTime = Date.now();
                 this.pausesUsed++;
 
-                // Update UI
                 document.getElementById('pausedOverlay').classList.add('active');
                 document.getElementById('pauseBtn').disabled = true;
                 this.updatePauseInfo();
                 
                 const remaining = this.pausesAvailable - this.pausesUsed;
-                document.getElementById('pausedInfo').textContent = `Pauses Left: ${remaining}/${this.pausesAvailable}`;
+                document.getElementById('pausedInfo').textContent = `${remaining}/${this.pausesAvailable} pauses left`;
 
-                // Lower music
                 if (this.musicPlaying) {
                     this.bgMusic.volume = 0.3;
                 }
 
-                // Start pause timer
                 this.startPauseTimer();
 
-                // Save state
                 const battleData = JSON.parse(localStorage.getItem('currentBattle'));
                 battleData.pausesUsed = this.pausesUsed;
                 localStorage.setItem('currentBattle', JSON.stringify(battleData));
@@ -1457,19 +1280,15 @@
                 const pausedDuration = Date.now() - this.pauseStartTime;
                 this.totalPausedTime += pausedDuration;
 
-                // Update UI
                 document.getElementById('pausedOverlay').classList.remove('active');
                 document.getElementById('pauseBtn').disabled = false;
 
-                // Restore music
                 if (this.musicPlaying) {
                     this.bgMusic.volume = 1.0;
                 }
 
-                // Stop pause timer
                 clearInterval(this.pauseInterval);
 
-                // Save state
                 const battleData = JSON.parse(localStorage.getItem('currentBattle'));
                 battleData.totalPausedTime = this.totalPausedTime;
                 localStorage.setItem('currentBattle', JSON.stringify(battleData));
@@ -1503,17 +1322,16 @@
                     this.saveProgress();
                 }
 
-                // Build victory message with pause stats
                 let victoryMsg = character.victoryMessage;
                 
                 if (this.pausesAvailable > 0) {
                     victoryMsg += '\n\n';
                     if (this.pausesUsed === 0) {
-                        victoryMsg += '🔥 FLAWLESS VICTORY! 🔥\nYou didn\'t need a single pause!\nPure discipline. Pure power.';
+                        victoryMsg += '🔥 FLAWLESS! 🔥\nNo pauses used!\nPure discipline.';
                     } else if (this.pausesUsed < this.pausesAvailable) {
-                        victoryMsg += `✓ Pauses Used: ${this.pausesUsed}/${this.pausesAvailable}\nYou showed restraint and strength.`;
+                        victoryMsg += `✓ Pauses: ${this.pausesUsed}/${this.pausesAvailable}\nStrong restraint.`;
                     } else {
-                        victoryMsg += `✓ Pauses Used: ${this.pausesUsed}/${this.pausesAvailable}\nYou used your resources wisely.`;
+                        victoryMsg += `✓ Pauses: ${this.pausesUsed}/${this.pausesAvailable}\nWise resource use.`;
                     }
                 }
 
@@ -1532,6 +1350,7 @@
     </script>
 </body>
 </html>
+
 
 
 
