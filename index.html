@@ -111,6 +111,23 @@
             box-shadow: 0 0 20px currentColor;
         }
 
+        /* Glowing animation for unlocked cards */
+        .battle-card.unlocked {
+            animation: cardGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes cardGlow {
+            0%, 100% {
+                box-shadow: 0 0 5px currentColor;
+                border-color: currentColor;
+            }
+            50% {
+                box-shadow: 0 0 25px currentColor, 0 0 35px currentColor;
+                border-color: currentColor;
+                filter: brightness(1.3);
+            }
+        }
+
         .battle-card-image {
             width: 80px;
             height: 80px;
@@ -184,12 +201,36 @@
             object-fit: cover;
             margin-bottom: 30px;
             border: 3px solid #fff;
+            animation: battleImageGlow 2s ease-in-out infinite;
+        }
+
+        /* Glowing pulse animation for battle character */
+        @keyframes battleImageGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px #fff, 0 0 20px #fff;
+                filter: brightness(1);
+            }
+            50% {
+                box-shadow: 0 0 30px #fff, 0 0 50px #fff, 0 0 70px currentColor;
+                filter: brightness(1.4);
+                transform: scale(1.05);
+            }
         }
 
         .battle-name {
             font-size: 3rem;
             margin-bottom: 40px;
             letter-spacing: 2px;
+            animation: textGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 0 5px #fff;
+            }
+            50% {
+                text-shadow: 0 0 20px #fff, 0 0 30px #fff;
+            }
         }
 
         .timer {
@@ -242,11 +283,6 @@
             color: #000;
         }
 
-        /* Audio Control (hidden) */
-        audio {
-            display: none;
-        }
-
         /* Mobile responsiveness */
         @media (max-width: 600px) {
             .battle-name {
@@ -293,7 +329,7 @@
         <button class="continue-btn" onclick="game.continueToBattlePath()">Continue</button>
     </div>
 
-    <!-- Audio -->
+    <!-- Audio Player -->
     <audio id="audioPlayer" loop></audio>
 
     <script>
@@ -304,6 +340,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-soldiers',
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
+                music: '',
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
             },
             {
@@ -312,23 +349,26 @@
                 duration: 1 * 60,
                 colorClass: 'card-inosuke',
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
+                music: '',
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
             },
             {
                 id: 'zenitsu',
                 name: 'Zenitsu',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-zenitsu',
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
+                music: '',
                 defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
                 requiresSameDay: false
             },
             {
                 id: 'zenitsu-11',
                 name: 'Zenitsu – 11th Form',
-                duration: 60 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-zenitsu-11',
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
+                music: '',
                 defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
                 requiresSameDay: true,
                 parentCharacter: 'zenitsu'
@@ -339,15 +379,17 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku',
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
+                music: '',
                 defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
                 requiresSameDay: false
             },
             {
                 id: 'rengoku-final',
                 name: 'Rengoku – Final',
-                duration: 2 * 60 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-rengoku-final',
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
+                music: '',
                 defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
                 requiresSameDay: true,
                 parentCharacter: 'rengoku'
@@ -355,49 +397,55 @@
             {
                 id: 'sanemi',
                 name: 'Sanemi',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-sanemi',
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
+                music: '',
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
             },
             {
                 id: 'toji',
                 name: 'Toji',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-toji',
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
+                music: '',
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
             },
             {
                 id: 'kokushibo',
                 name: 'Kokushibo',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-kokushibo',
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
+                music: '',
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
             },
             {
                 id: 'demon-koku',
                 name: 'Demon Kokushibo',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-demon-koku',
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
+                music: '',
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
             },
             {
                 id: 'evil-yoriichi',
                 name: 'Evil Yoriichi',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-evil-yoriichi',
-                image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
+                image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
+                music: '',
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
             {
                 id: 'secret',
                 name: '???',
-                duration: 2 * 60,
+                duration: 1 * 60,
                 colorClass: 'card-secret',
                 image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
+                music: '',
                 specialRule: 'Must start at 5:00 AM',
                 defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
             }
@@ -409,6 +457,7 @@
                 this.currentCharacterIndex = 0;
                 this.battleStartTime = null;
                 this.timerInterval = null;
+                this.audioPlayer = document.getElementById('audioPlayer');
                 this.loadProgress();
                 this.init();
             }
@@ -444,6 +493,22 @@
                 localStorage.setItem('gameProgress', JSON.stringify({
                     currentCharacterIndex: this.currentCharacterIndex
                 }));
+            }
+
+            playMusic(url) {
+                if (!url) return;
+                
+                this.audioPlayer.pause();
+                this.audioPlayer.src = url;
+                this.audioPlayer.load();
+                this.audioPlayer.play().catch(e => {
+                    console.log('Audio autoplay prevented. User interaction required.');
+                });
+            }
+
+            stopMusic() {
+                this.audioPlayer.pause();
+                this.audioPlayer.currentTime = 0;
             }
 
             showScreen(screenId) {
@@ -553,6 +618,10 @@
                 this.loadBattleScreen(character);
                 this.showScreen('battleScreen');
                 this.startBattleTimer();
+                
+                if (character.music) {
+                    this.playMusic(character.music);
+                }
             }
 
             loadBattleScreen(character) {
@@ -595,6 +664,7 @@
             giveUp() {
                 clearInterval(this.timerInterval);
                 localStorage.removeItem('currentBattle');
+                this.stopMusic();
                 
                 const character = CHARACTERS[this.currentCharacterIndex];
                 document.getElementById('resultMessage').textContent = character.defeatMessage;
@@ -605,6 +675,7 @@
             victory() {
                 clearInterval(this.timerInterval);
                 localStorage.removeItem('currentBattle');
+                this.stopMusic();
                 this.completeVictory(this.currentCharacterIndex);
             }
 
@@ -642,6 +713,7 @@
     </script>
 </body>
 </html>
+
 
 
 
