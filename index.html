@@ -40,6 +40,39 @@
             to { opacity: 1; }
         }
 
+        /* Music Control Button */
+        .music-toggle {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .music-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .music-toggle.playing {
+            animation: musicPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 0 10px #fff; }
+            50% { box-shadow: 0 0 25px #fff; }
+        }
+
         /* START SCREEN */
         #startScreen {
             background: #000;
@@ -111,7 +144,6 @@
             box-shadow: 0 0 20px currentColor;
         }
 
-        /* Glowing animation for unlocked cards */
         .battle-card.unlocked {
             animation: cardGlow 3s ease-in-out infinite;
         }
@@ -150,6 +182,14 @@
             font-size: 0.9rem;
             opacity: 0.7;
             margin-top: 5px;
+        }
+
+        .battle-card .quote {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-top: 8px;
+            font-style: italic;
+            color: currentColor;
         }
 
         .battle-card .status {
@@ -204,7 +244,6 @@
             animation: battleImageGlow 2s ease-in-out infinite;
         }
 
-        /* Glowing pulse animation for battle character */
         @keyframes battleImageGlow {
             0%, 100% {
                 box-shadow: 0 0 10px #fff, 0 0 20px #fff;
@@ -219,9 +258,17 @@
 
         .battle-name {
             font-size: 3rem;
-            margin-bottom: 40px;
+            margin-bottom: 20px;
             letter-spacing: 2px;
             animation: textGlow 2s ease-in-out infinite;
+        }
+
+        .battle-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            max-width: 500px;
         }
 
         @keyframes textGlow {
@@ -283,10 +330,12 @@
             color: #000;
         }
 
-        /* Mobile responsiveness */
         @media (max-width: 600px) {
             .battle-name {
                 font-size: 2rem;
+            }
+            .battle-quote {
+                font-size: 1rem;
             }
             .timer {
                 font-size: 3rem;
@@ -302,6 +351,9 @@
     </style>
 </head>
 <body>
+    <!-- Music Toggle Button -->
+    <div class="music-toggle" id="musicToggle" onclick="game.toggleMusic()">🔇</div>
+
     <!-- START SCREEN -->
     <div id="startScreen" class="screen active">
         <h1>Hi.</h1>
@@ -318,6 +370,7 @@
         <div class="battle-container">
             <img id="battleImage" class="battle-character-image" src="" alt="" style="display:none;">
             <h2 class="battle-name" id="battleName"></h2>
+            <div class="battle-quote" id="battleQuote"></div>
             <div class="timer" id="timer">00:00:00</div>
             <button class="give-up-btn" onclick="game.giveUp()">Give Up</button>
         </div>
@@ -335,7 +388,6 @@
     </audio>
 
     <script>
-        // Background Music URL from Google Drive
         const BACKGROUND_MUSIC_URL = 'https://docs.google.com/uc?export=open&id=1M21Ko1vIYef-dTvVaKkoHju8zjEykYVg';
 
         const CHARACTERS = [
@@ -345,6 +397,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-soldiers',
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
+                quote: "Discipline is doing what needs to be done, even when you don't want to.",
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
             },
             {
@@ -353,6 +406,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-inosuke',
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
+                quote: "I'm the king of the mountains! Show me your strength!",
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
             },
             {
@@ -361,6 +415,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-zenitsu',
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
+                quote: "Even when you're scared, keep moving forward.",
                 defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
                 requiresSameDay: false
             },
@@ -370,6 +425,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-zenitsu-11',
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
+                quote: "When you have no choice, you discover your true power.",
                 defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
                 requiresSameDay: true,
                 parentCharacter: 'zenitsu'
@@ -380,6 +436,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku',
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
+                quote: "Set your heart ablaze!",
                 defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
                 requiresSameDay: false
             },
@@ -389,6 +446,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku-final',
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
+                quote: "Go ahead and live with your head held high.",
                 defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
                 requiresSameDay: true,
                 parentCharacter: 'rengoku'
@@ -399,6 +457,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-sanemi',
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
+                quote: "Survive. No matter what it takes.",
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
             },
             {
@@ -407,6 +466,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-toji',
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
+                quote: "I don't believe in hard work. I believe in results.",
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
             },
             {
@@ -415,6 +475,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-kokushibo',
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
+                quote: "Perfection is achieved through endless pursuit.",
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
             },
             {
@@ -423,6 +484,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-demon-koku',
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
+                quote: "The strong devour the weak. That is the law of nature.",
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
             },
             {
@@ -431,6 +493,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-evil-yoriichi',
                 image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
+                quote: "Talent without discipline is nothing.",
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
             {
@@ -439,7 +502,7 @@
                 duration: 1 * 60,
                 colorClass: 'card-secret',
                 image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
-                specialRule: 'Must start at 5:00 AM',
+                quote: "The ultimate test awaits...",
                 defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
             }
         ];
@@ -451,6 +514,8 @@
                 this.battleStartTime = null;
                 this.timerInterval = null;
                 this.bgMusic = document.getElementById('bgMusic');
+                this.musicToggle = document.getElementById('musicToggle');
+                this.musicPlaying = false;
                 this.loadProgress();
                 this.init();
             }
@@ -488,12 +553,23 @@
                 }));
             }
 
-            playBackgroundMusic() {
-                if (BACKGROUND_MUSIC_URL) {
-                    this.bgMusic.src = BACKGROUND_MUSIC_URL;
-                    this.bgMusic.load();
-                    this.bgMusic.play().catch(e => {
-                        console.log('Music autoplay prevented - will play after user interaction');
+            toggleMusic() {
+                if (this.musicPlaying) {
+                    this.bgMusic.pause();
+                    this.musicToggle.textContent = '🔇';
+                    this.musicToggle.classList.remove('playing');
+                    this.musicPlaying = false;
+                } else {
+                    if (!this.bgMusic.src || this.bgMusic.src === '') {
+                        this.bgMusic.src = BACKGROUND_MUSIC_URL;
+                        this.bgMusic.load();
+                    }
+                    this.bgMusic.play().then(() => {
+                        this.musicToggle.textContent = '🔊';
+                        this.musicToggle.classList.add('playing');
+                        this.musicPlaying = true;
+                    }).catch(e => {
+                        alert('Tap the music button to play audio!');
                     });
                 }
             }
@@ -507,7 +583,6 @@
             enterGame() {
                 this.showScreen('battlePath');
                 this.renderBattlePath();
-                this.playBackgroundMusic();
             }
 
             renderBattlePath() {
@@ -554,7 +629,7 @@
                         <div class="battle-card-content">
                             <h2>${char.name}</h2>
                             <div class="duration">${durationText.trim()}</div>
-                            ${char.specialRule ? `<div class="duration">${char.specialRule}</div>` : ''}
+                            <div class="quote">"${char.quote}"</div>
                             ${sameDayWarning}
                         </div>
                     `;
@@ -583,17 +658,6 @@
                         return;
                     }
                 }
-                
-                if (character.id === 'secret') {
-                    const now = new Date();
-                    const hour = now.getHours();
-                    const minute = now.getMinutes();
-                    
-                    if (hour !== 5 || minute !== 0) {
-                        alert('This battle can only be started at exactly 5:00 AM.');
-                        return;
-                    }
-                }
 
                 this.currentCharacterIndex = characterIndex;
                 this.battleStartTime = Date.now();
@@ -610,6 +674,7 @@
 
             loadBattleScreen(character) {
                 document.getElementById('battleName').textContent = character.name;
+                document.getElementById('battleQuote').textContent = `"${character.quote}"`;
                 
                 const battleImage = document.getElementById('battleImage');
                 if (character.image) {
@@ -695,6 +760,7 @@
     </script>
 </body>
 </html>
+
 
 
 
