@@ -25,7 +25,7 @@
             display: none;
             min-height: 100vh;
             padding: 20px;
-            animation: fadeIn 0.5s ease-in;
+            animation: fadeIn 0.8s ease-in;
         }
 
         .screen.active {
@@ -36,8 +36,14 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Music Control Button */
@@ -47,8 +53,8 @@
             right: 30px;
             width: 60px;
             height: 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid #fff;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -57,116 +63,189 @@
             font-size: 1.5rem;
             z-index: 1000;
             transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
         }
 
         .music-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
             transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
         }
 
         .music-toggle.playing {
-            animation: musicPulse 1s ease-in-out infinite;
+            animation: musicPulse 2s ease-in-out infinite;
         }
 
         @keyframes musicPulse {
-            0%, 100% { box-shadow: 0 0 10px #fff; }
-            50% { box-shadow: 0 0 25px #fff; }
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 255, 255, 0.6), 0 0 60px rgba(255, 255, 255, 0.3);
+                transform: scale(1.05);
+            }
         }
 
         /* START SCREEN */
         #startScreen {
-            background: #000;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
         }
 
         #startScreen h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 300;
             margin-bottom: 60px;
-            letter-spacing: 2px;
+            letter-spacing: 8px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff;
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff;
+                transform: scale(1.02);
+            }
         }
 
         .btn {
-            padding: 15px 60px;
-            font-size: 1.2rem;
-            background: transparent;
+            padding: 20px 80px;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
             color: #fff;
-            border: 2px solid #fff;
+            border: 3px solid #fff;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 5px;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: #fff;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn:hover {
-            background: #fff;
             color: #000;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
         }
 
         /* BATTLE PATH */
         #battlePath {
-            background: #0a0a0a;
-            padding: 40px 20px;
+            background: radial-gradient(circle at center, #0f0f0f 0%, #000 100%);
+            padding: 60px 20px;
             overflow-y: auto;
         }
 
         .battle-cards {
-            max-width: 600px;
+            max-width: 700px;
             width: 100%;
         }
 
         .battle-card {
-            background: #1a1a1a;
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(10, 10, 10, 0.9));
             border: 2px solid;
-            padding: 20px;
-            margin: 20px 0;
+            padding: 25px;
+            margin: 25px 0;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .battle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .battle-card:hover::before {
+            left: 100%;
         }
 
         .battle-card.locked {
-            opacity: 0.3;
-            filter: grayscale(100%);
+            opacity: 0.25;
+            filter: grayscale(100%) blur(2px);
             pointer-events: none;
+            transform: scale(0.95);
         }
 
         .battle-card.completed {
-            opacity: 0.5;
-            filter: grayscale(70%);
+            opacity: 0.6;
+            filter: grayscale(50%);
             pointer-events: none;
         }
 
         .battle-card.unlocked:hover {
-            transform: translateX(10px);
-            box-shadow: 0 0 20px currentColor;
+            transform: translateX(15px) scale(1.02);
+            box-shadow: 0 0 40px currentColor, 0 0 60px currentColor;
         }
 
         .battle-card.unlocked {
-            animation: cardGlow 3s ease-in-out infinite;
+            animation: cardGlow 4s ease-in-out infinite;
         }
 
         @keyframes cardGlow {
             0%, 100% {
-                box-shadow: 0 0 5px currentColor;
+                box-shadow: 0 0 10px currentColor, 0 5px 30px rgba(0, 0, 0, 0.5);
                 border-color: currentColor;
             }
             50% {
-                box-shadow: 0 0 25px currentColor, 0 0 35px currentColor;
+                box-shadow: 0 0 30px currentColor, 0 0 50px currentColor, 0 5px 40px rgba(0, 0, 0, 0.7);
                 border-color: currentColor;
                 filter: brightness(1.3);
             }
         }
 
         .battle-card-image {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid currentColor;
+            border: 3px solid currentColor;
             flex-shrink: 0;
+            transition: all 0.4s;
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .battle-card.unlocked:hover .battle-card-image {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow: 0 0 40px currentColor;
         }
 
         .battle-card-content {
@@ -174,41 +253,50 @@
         }
 
         .battle-card h2 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 2rem;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px currentColor;
         }
 
         .battle-card .duration {
-            font-size: 0.9rem;
-            opacity: 0.7;
-            margin-top: 5px;
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 8px;
         }
 
         .battle-card .quote {
-            font-size: 0.85rem;
-            opacity: 0.8;
-            margin-top: 8px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 10px;
             font-style: italic;
             color: currentColor;
+            line-height: 1.4;
         }
 
         .battle-card .status {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 15px;
+            right: 15px;
             font-size: 0.7rem;
-            padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            backdrop-filter: blur(10px);
         }
 
         .battle-card .same-day-warning {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: #fbbf24;
-            margin-top: 5px;
+            margin-top: 8px;
             font-style: italic;
+            animation: warningPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
 
         /* Character Colors */
@@ -227,126 +315,185 @@
 
         /* BATTLE SCREEN */
         #battleScreen {
-            background: #000;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
         }
 
         .battle-container {
             text-align: center;
+            animation: battleEnter 1s ease-out;
+        }
+
+        @keyframes battleEnter {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .battle-character-image {
-            width: 200px;
-            height: 200px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 30px;
-            border: 3px solid #fff;
-            animation: battleImageGlow 2s ease-in-out infinite;
+            margin-bottom: 40px;
+            border: 4px solid #fff;
+            animation: battleImageGlow 3s ease-in-out infinite;
+            box-shadow: 0 0 50px currentColor;
         }
 
         @keyframes battleImageGlow {
             0%, 100% {
-                box-shadow: 0 0 10px #fff, 0 0 20px #fff;
+                box-shadow: 0 0 30px #fff, 0 0 50px #fff, 0 0 70px currentColor;
                 filter: brightness(1);
+                transform: scale(1);
             }
             50% {
-                box-shadow: 0 0 30px #fff, 0 0 50px #fff, 0 0 70px currentColor;
-                filter: brightness(1.4);
-                transform: scale(1.05);
+                box-shadow: 0 0 50px #fff, 0 0 80px #fff, 0 0 120px currentColor, 0 0 150px currentColor;
+                filter: brightness(1.5);
+                transform: scale(1.08);
             }
         }
 
         .battle-name {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-            animation: textGlow 2s ease-in-out infinite;
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+            animation: textGlow 3s ease-in-out infinite;
         }
 
         .battle-quote {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-style: italic;
-            opacity: 0.9;
-            margin-bottom: 40px;
-            max-width: 500px;
+            opacity: 0.95;
+            margin-bottom: 50px;
+            max-width: 600px;
+            line-height: 1.6;
+            animation: quoteFade 2s ease-in-out infinite;
+        }
+
+        @keyframes quoteFade {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
         }
 
         @keyframes textGlow {
             0%, 100% {
-                text-shadow: 0 0 5px #fff;
+                text-shadow: 0 0 10px #fff, 0 0 20px #fff;
             }
             50% {
-                text-shadow: 0 0 20px #fff, 0 0 30px #fff;
+                text-shadow: 0 0 25px #fff, 0 0 40px #fff, 0 0 60px #fff;
             }
         }
 
         .timer {
-            font-size: 4rem;
+            font-size: 5rem;
             font-weight: 300;
-            margin-bottom: 60px;
+            margin-bottom: 70px;
             font-family: 'Courier New', monospace;
+            animation: timerPulse 1s ease-in-out infinite;
+            text-shadow: 0 0 30px currentColor;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { 
+                transform: scale(1);
+                text-shadow: 0 0 20px #fff;
+            }
+            50% { 
+                transform: scale(1.05);
+                text-shadow: 0 0 40px #fff, 0 0 60px currentColor;
+            }
         }
 
         .give-up-btn {
-            padding: 12px 40px;
-            font-size: 1rem;
-            background: #7f1d1d;
+            padding: 15px 50px;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #7f1d1d, #991b1b);
             color: #fff;
             border: 2px solid #991b1b;
             cursor: pointer;
             transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 20px rgba(127, 29, 29, 0.5);
         }
 
         .give-up-btn:hover {
-            background: #991b1b;
+            background: linear-gradient(135deg, #991b1b, #b91c1c);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(127, 29, 29, 0.7);
         }
 
         /* RESULT SCREEN */
         #resultScreen {
-            background: #000;
+            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
             text-align: center;
         }
 
+        .result-container {
+            animation: resultEnter 1s ease-out;
+        }
+
+        @keyframes resultEnter {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .result-message {
-            font-size: 1.8rem;
-            line-height: 1.6;
-            max-width: 600px;
-            margin-bottom: 60px;
+            font-size: 2rem;
+            line-height: 1.8;
+            max-width: 700px;
+            margin-bottom: 70px;
             white-space: pre-line;
+            animation: messageFade 3s ease-in-out;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes messageFade {
+            0% { opacity: 0; transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .continue-btn {
-            padding: 15px 60px;
-            font-size: 1.2rem;
-            background: #1a1a1a;
+            padding: 20px 70px;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             color: #fff;
-            border: 2px solid #fff;
+            border: 3px solid #fff;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 30px rgba(255, 255, 255, 0.2);
         }
 
         .continue-btn:hover {
             background: #fff;
             color: #000;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 255, 255, 0.4);
         }
 
+        /* Mobile responsiveness */
         @media (max-width: 600px) {
-            .battle-name {
-                font-size: 2rem;
-            }
-            .battle-quote {
-                font-size: 1rem;
-            }
-            .timer {
-                font-size: 3rem;
-            }
-            .battle-character-image {
-                width: 150px;
-                height: 150px;
-            }
-            .battle-card h2 {
-                font-size: 1.4rem;
-            }
+            #startScreen h1 { font-size: 3rem; }
+            .battle-name { font-size: 2.5rem; }
+            .battle-quote { font-size: 1.1rem; }
+            .timer { font-size: 3.5rem; }
+            .battle-character-image { width: 180px; height: 180px; }
+            .battle-card h2 { font-size: 1.6rem; }
+            .battle-card-image { width: 80px; height: 80px; }
         }
     </style>
 </head>
@@ -357,7 +504,7 @@
     <!-- START SCREEN -->
     <div id="startScreen" class="screen active">
         <h1>Hi.</h1>
-        <button class="btn" onclick="game.enterGame()">Enter</button>
+        <button class="btn" onclick="game.enterGame()"><span>ENTER</span></button>
     </div>
 
     <!-- BATTLE PATH -->
@@ -378,17 +525,19 @@
 
     <!-- RESULT SCREEN -->
     <div id="resultScreen" class="screen">
-        <div class="result-message" id="resultMessage"></div>
-        <button class="continue-btn" onclick="game.continueToBattlePath()">Continue</button>
+        <div class="result-container">
+            <div class="result-message" id="resultMessage"></div>
+            <button class="continue-btn" onclick="game.continueToBattlePath()">Continue</button>
+        </div>
     </div>
 
     <!-- Background Music -->
     <audio id="bgMusic" loop>
-        <source src="https://docs.google.com/uc?export=open&id=1M21Ko1vIYef-dTvVaKkoHju8zjEykYVg" type="audio/mpeg">
+        <source src="https://files.catbox.moe/4bbwn0.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        const BACKGROUND_MUSIC_URL = 'https://docs.google.com/uc?export=open&id=1M21Ko1vIYef-dTvVaKkoHju8zjEykYVg';
+        const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
 
         const CHARACTERS = [
             {
@@ -398,6 +547,7 @@
                 colorClass: 'card-soldiers',
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
                 quote: "Discipline is doing what needs to be done, even when you don't want to.",
+                victoryMessage: "Not bad... for a beginner.\nYou showed basic discipline.\nNow prove it wasn't luck.",
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
             },
             {
@@ -407,6 +557,7 @@
                 colorClass: 'card-inosuke',
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
                 quote: "I'm the king of the mountains! Show me your strength!",
+                victoryMessage: "HAHAHAHA! You got guts!\nI respect that raw endurance!\nKeep that wild spirit burning!",
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
             },
             {
@@ -416,6 +567,7 @@
                 colorClass: 'card-zenitsu',
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
                 quote: "Even when you're scared, keep moving forward.",
+                victoryMessage: "You... you actually did it!\nEven when it got hard, you didn't run away.\nThat takes real courage.",
                 defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
                 requiresSameDay: false
             },
@@ -426,6 +578,7 @@
                 colorClass: 'card-zenitsu-11',
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
                 quote: "When you have no choice, you discover your true power.",
+                victoryMessage: "Incredible...\nYou pushed beyond your limits when it mattered most.\nThis is what true strength looks like.",
                 defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
                 requiresSameDay: true,
                 parentCharacter: 'zenitsu'
@@ -437,6 +590,7 @@
                 colorClass: 'card-rengoku',
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
                 quote: "Set your heart ablaze!",
+                victoryMessage: "MAGNIFICENT!\nYour flame burned bright and true!\nYou have a warrior's spirit! Well done!",
                 defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
                 requiresSameDay: false
             },
@@ -447,6 +601,7 @@
                 colorClass: 'card-rengoku-final',
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
                 quote: "Go ahead and live with your head held high.",
+                victoryMessage: "You stood your ground until the very end.\nYour resolve is unbreakable.\nI'm proud of you.",
                 defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
                 requiresSameDay: true,
                 parentCharacter: 'rengoku'
@@ -458,6 +613,7 @@
                 colorClass: 'card-sanemi',
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
                 quote: "Survive. No matter what it takes.",
+                victoryMessage: "Hm. You're tougher than you look.\nYou survived when others would've quit.\nRespect.",
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
             },
             {
@@ -467,6 +623,7 @@
                 colorClass: 'card-toji',
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
                 quote: "I don't believe in hard work. I believe in results.",
+                victoryMessage: "You delivered results.\nNo excuses, no drama.\nThat's what I call efficient.",
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
             },
             {
@@ -476,6 +633,7 @@
                 colorClass: 'card-kokushibo',
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
                 quote: "Perfection is achieved through endless pursuit.",
+                victoryMessage: "Impressive...\nYou've demonstrated discipline worthy of recognition.\nContinue this pursuit.",
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
             },
             {
@@ -485,6 +643,7 @@
                 colorClass: 'card-demon-koku',
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
                 quote: "The strong devour the weak. That is the law of nature.",
+                victoryMessage: "You have proven yourself strong.\nYour endurance rivals that of demons.\nYou have earned my acknowledgment.",
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
             },
             {
@@ -494,6 +653,7 @@
                 colorClass: 'card-evil-yoriichi',
                 image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
                 quote: "Talent without discipline is nothing.",
+                victoryMessage: "...\nYou have transcended.\nFew reach this level.\nYou may proceed.",
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
             {
@@ -503,6 +663,7 @@
                 colorClass: 'card-secret',
                 image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
                 quote: "The ultimate test awaits...",
+                victoryMessage: "You have conquered all.\nYour discipline is absolute.\nYou are worthy.\n\nThere is nothing left to prove.",
                 defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
             }
         ];
@@ -569,7 +730,7 @@
                         this.musicToggle.classList.add('playing');
                         this.musicPlaying = true;
                     }).catch(e => {
-                        alert('Tap the music button to play audio!');
+                        console.log('Music play error:', e);
                     });
                 }
             }
@@ -605,14 +766,14 @@
                     
                     if (index < this.currentCharacterIndex) {
                         card.classList.add('completed');
-                        statusBadge = '<div class="status">COMPLETED</div>';
+                        statusBadge = '<div class="status">✓ COMPLETED</div>';
                     } else if (index === this.currentCharacterIndex) {
                         card.classList.add('unlocked');
                         card.onclick = () => this.startBattle(index);
-                        statusBadge = '<div class="status">AVAILABLE</div>';
+                        statusBadge = '<div class="status">▶ AVAILABLE</div>';
                     } else {
                         card.classList.add('locked');
-                        statusBadge = '<div class="status">LOCKED</div>';
+                        statusBadge = '<div class="status">🔒 LOCKED</div>';
                     }
 
                     const hours = Math.floor(char.duration / 3600);
@@ -628,7 +789,7 @@
                         ${imageHtml}
                         <div class="battle-card-content">
                             <h2>${char.name}</h2>
-                            <div class="duration">${durationText.trim()}</div>
+                            <div class="duration">⏱️ ${durationText.trim()}</div>
                             <div class="quote">"${char.quote}"</div>
                             ${sameDayWarning}
                         </div>
@@ -736,16 +897,7 @@
                     this.saveProgress();
                 }
 
-                const victoryMessages = [
-                    "You endured.",
-                    "Move forward.",
-                    "It's done.",
-                    "You survived.",
-                    "Acceptable."
-                ];
-
-                const randomMessage = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
-                document.getElementById('resultMessage').textContent = randomMessage;
+                document.getElementById('resultMessage').textContent = character.victoryMessage;
                 
                 this.showScreen('resultScreen');
             }
@@ -760,6 +912,7 @@
     </script>
 </body>
 </html>
+
 
 
 
