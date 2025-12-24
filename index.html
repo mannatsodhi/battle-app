@@ -329,10 +329,15 @@
         <button class="continue-btn" onclick="game.continueToBattlePath()">Continue</button>
     </div>
 
-    <!-- Audio Player -->
-    <audio id="audioPlayer" loop></audio>
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="https://docs.google.com/uc?export=open&id=1M21Ko1vIYef-dTvVaKkoHju8zjEykYVg" type="audio/mpeg">
+    </audio>
 
     <script>
+        // Background Music URL from Google Drive
+        const BACKGROUND_MUSIC_URL = 'https://docs.google.com/uc?export=open&id=1M21Ko1vIYef-dTvVaKkoHju8zjEykYVg';
+
         const CHARACTERS = [
             {
                 id: 'soldiers',
@@ -340,7 +345,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-soldiers',
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
-                music: '',
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
             },
             {
@@ -349,7 +353,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-inosuke',
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
-                music: '',
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
             },
             {
@@ -358,7 +361,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-zenitsu',
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
-                music: '',
                 defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
                 requiresSameDay: false
             },
@@ -368,7 +370,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-zenitsu-11',
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
-                music: '',
                 defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
                 requiresSameDay: true,
                 parentCharacter: 'zenitsu'
@@ -379,7 +380,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku',
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
-                music: '',
                 defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
                 requiresSameDay: false
             },
@@ -389,7 +389,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-rengoku-final',
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
-                music: '',
                 defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
                 requiresSameDay: true,
                 parentCharacter: 'rengoku'
@@ -400,7 +399,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-sanemi',
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
-                music: '',
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
             },
             {
@@ -409,7 +407,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-toji',
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
-                music: '',
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
             },
             {
@@ -418,7 +415,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-kokushibo',
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
-                music: '',
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
             },
             {
@@ -427,7 +423,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-demon-koku',
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
-                music: '',
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
             },
             {
@@ -436,7 +431,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-evil-yoriichi',
                 image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
-                music: '',
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
             {
@@ -445,7 +439,6 @@
                 duration: 1 * 60,
                 colorClass: 'card-secret',
                 image: 'https://i.pinimg.com/1200x/82/60/99/8260991fed325be76d355c9445ddebbf.jpg',
-                music: '',
                 specialRule: 'Must start at 5:00 AM',
                 defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
             }
@@ -457,7 +450,7 @@
                 this.currentCharacterIndex = 0;
                 this.battleStartTime = null;
                 this.timerInterval = null;
-                this.audioPlayer = document.getElementById('audioPlayer');
+                this.bgMusic = document.getElementById('bgMusic');
                 this.loadProgress();
                 this.init();
             }
@@ -495,20 +488,14 @@
                 }));
             }
 
-            playMusic(url) {
-                if (!url) return;
-                
-                this.audioPlayer.pause();
-                this.audioPlayer.src = url;
-                this.audioPlayer.load();
-                this.audioPlayer.play().catch(e => {
-                    console.log('Audio autoplay prevented. User interaction required.');
-                });
-            }
-
-            stopMusic() {
-                this.audioPlayer.pause();
-                this.audioPlayer.currentTime = 0;
+            playBackgroundMusic() {
+                if (BACKGROUND_MUSIC_URL) {
+                    this.bgMusic.src = BACKGROUND_MUSIC_URL;
+                    this.bgMusic.load();
+                    this.bgMusic.play().catch(e => {
+                        console.log('Music autoplay prevented - will play after user interaction');
+                    });
+                }
             }
 
             showScreen(screenId) {
@@ -520,6 +507,7 @@
             enterGame() {
                 this.showScreen('battlePath');
                 this.renderBattlePath();
+                this.playBackgroundMusic();
             }
 
             renderBattlePath() {
@@ -618,10 +606,6 @@
                 this.loadBattleScreen(character);
                 this.showScreen('battleScreen');
                 this.startBattleTimer();
-                
-                if (character.music) {
-                    this.playMusic(character.music);
-                }
             }
 
             loadBattleScreen(character) {
@@ -664,7 +648,6 @@
             giveUp() {
                 clearInterval(this.timerInterval);
                 localStorage.removeItem('currentBattle');
-                this.stopMusic();
                 
                 const character = CHARACTERS[this.currentCharacterIndex];
                 document.getElementById('resultMessage').textContent = character.defeatMessage;
@@ -675,7 +658,6 @@
             victory() {
                 clearInterval(this.timerInterval);
                 localStorage.removeItem('currentBattle');
-                this.stopMusic();
                 this.completeVictory(this.currentCharacterIndex);
             }
 
@@ -713,6 +695,7 @@
     </script>
 </body>
 </html>
+
 
 
 
