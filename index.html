@@ -92,17 +92,20 @@
         }
 
         .battle-card.locked {
-            filter: blur(8px);
             opacity: 0.3;
+            filter: grayscale(100%);
             pointer-events: none;
         }
 
-        .battle-card.hidden {
-            display: none;
+        .battle-card.completed {
+            opacity: 0.5;
+            filter: grayscale(70%);
+            pointer-events: none;
         }
 
         .battle-card.unlocked:hover {
             transform: translateX(10px);
+            box-shadow: 0 0 20px currentColor;
         }
 
         .battle-card h2 {
@@ -114,6 +117,18 @@
             font-size: 1rem;
             opacity: 0.7;
             margin-top: 10px;
+        }
+
+        .battle-card .status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Character Colors */
@@ -177,6 +192,7 @@
             line-height: 1.6;
             max-width: 600px;
             margin-bottom: 60px;
+            white-space: pre-line;
         }
 
         .continue-btn {
@@ -232,177 +248,295 @@
 
     <script>
         const CHARACTERS = [
-  { id:'soldiers', name:'Soldiers', duration:1800, tier:1,
-    defeat:"You couldn't even beat fodder.\nPathetic." },
+            {
+                id: 'soldiers',
+                name: 'Soldiers',
+                duration: 30 * 60, // 30 minutes in seconds
+                colorClass: 'card-soldiers',
+                defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
+            },
+            {
+                id: 'inosuke',
+                name: 'Inosuke',
+                duration: 2 * 60 * 60, // 2 hours
+                colorClass: 'card-inosuke',
+                defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
+            },
+            {
+                id: 'zenitsu',
+                name: 'Zenitsu',
+                duration: 2 * 60 * 60,
+                colorClass: 'card-zenitsu',
+                defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose."
+            },
+            {
+                id: 'zenitsu-11',
+                name: 'Zenitsu – 11th Form',
+                duration: 3 * 60 * 60, // +1 hour
+                colorClass: 'card-zenitsu-11',
+                defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered."
+            },
+            {
+                id: 'rengoku',
+                name: 'Rengoku',
+                duration: 5 * 60 * 60,
+                colorClass: 'card-rengoku',
+                defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back."
+            },
+            {
+                id: 'rengoku-final',
+                name: 'Rengoku – Final',
+                duration: 7 * 60 * 60, // +2 hours
+                colorClass: 'card-rengoku-final',
+                defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real."
+            },
+            {
+                id: 'sanemi',
+                name: 'Sanemi',
+                duration: 7 * 60 * 60,
+                colorClass: 'card-sanemi',
+                defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
+            },
+            {
+                id: 'toji',
+                name: 'Toji',
+                duration: 8 * 60 * 60,
+                colorClass: 'card-toji',
+                defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
+            },
+            {
+                id: 'kokushibo',
+                name: 'Kokushibo',
+                duration: 11 * 60 * 60,
+                colorClass: 'card-kokushibo',
+                defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
+            },
+            {
+                id: 'demon-koku',
+                name: 'Demon Kokushibo',
+                duration: 13 * 60 * 60,
+                colorClass: 'card-demon-koku',
+                defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
+            },
+            {
+                id: 'evil-yoriichi',
+                name: 'Evil Yoriichi',
+                duration: 16 * 60 * 60,
+                colorClass: 'card-evil-yoriichi',
+                defeatMessage: "......\nYou were never on my level.\nDon't return."
+            },
+            {
+                id: 'secret',
+                name: '???',
+                duration: 16 * 60 * 60,
+                colorClass: 'card-secret',
+                specialRule: 'Must start at 5:00 AM',
+                defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
+            }
+        ];
 
-  { id:'inosuke', name:'Inosuke', duration:7200, tier:1,
-    defeat:"Wild noise. No control." },
+        class DisciplineGame {
+            constructor() {
+                this.currentScreen = 'startScreen';
+                this.currentCharacterIndex = 0;
+                this.battleStartTime = null;
+                this.timerInterval = null;
+                this.loadProgress();
+                this.init();
+            }
 
-  { id:'zenitsu', name:'Zenitsu', duration:7200, tier:1,
-    defeat:"Fear won." },
+            init() {
+                // Check if battle is in progress on page load
+                const savedBattle = localStorage.getItem('currentBattle');
+                if (savedBattle) {
+                    const battleData = JSON.parse(savedBattle);
+                    const elapsed = Math.floor((Date.now() - battleData.startTime) / 1000);
+                    const character = CHARACTERS[battleData.characterIndex];
+                    
+                    if (elapsed >= character.duration) {
+                        // Auto victory
+                        this.completeVictory(battleData.characterIndex);
+                    } else {
+                        // Resume battle
+                        this.currentCharacterIndex = battleData.characterIndex;
+                        this.battleStartTime = battleData.startTime;
+                        this.showScreen('battleScreen');
+                        this.startBattleTimer();
+                    }
+                }
+            }
 
-  { id:'zenitsu11', name:'Zenitsu – 11th Form', duration:10800, tier:2,
-    requiresSameDay:'zenitsu',
-    defeat:"You couldn't push further." },
+            loadProgress() {
+                const saved = localStorage.getItem('gameProgress');
+                if (saved) {
+                    const progress = JSON.parse(saved);
+                    this.currentCharacterIndex = progress.currentCharacterIndex || 0;
+                }
+            }
 
-  { id:'rengoku', name:'Rengoku', duration:18000, tier:2,
-    defeat:"Your flame faded." },
+            saveProgress() {
+                localStorage.setItem('gameProgress', JSON.stringify({
+                    currentCharacterIndex: this.currentCharacterIndex
+                }));
+            }
 
-  { id:'rengokuFinal', name:'Rengoku – Final', duration:25200, tier:2,
-    requiresSameDay:'rengoku',
-    defeat:"Your resolve cracked." },
+            showScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(screenId).classList.add('active');
+                this.currentScreen = screenId;
+            }
 
-  { id:'sanemi', name:'Sanemi', duration:25200, tier:3,
-    defeat:"Soft. Weak." },
+            enterGame() {
+                this.showScreen('battlePath');
+                this.renderBattlePath();
+            }
 
-  { id:'toji', name:'Toji', duration:28800, tier:3,
-    defeat:"Not efficient." },
+            renderBattlePath() {
+                const container = document.getElementById('battleCards');
+                container.innerHTML = '';
 
-  { id:'kokushibo', name:'Kokushibo', duration:39600, tier:3,
-    defeat:"Insignificant human." },
+                CHARACTERS.forEach((char, index) => {
+                    const card = document.createElement('div');
+                    card.className = `battle-card ${char.colorClass}`;
 
-  { id:'demon', name:'Demon Kokushibo', duration:46800, tier:4,
-    defeat:"All progress was meaningless." },
+                    let statusBadge = '';
+                    
+                    // Determine card state - ALL VISIBLE NOW
+                    if (index < this.currentCharacterIndex) {
+                        // Completed characters
+                        card.classList.add('completed');
+                        statusBadge = '<div class="status">COMPLETED</div>';
+                    } else if (index === this.currentCharacterIndex) {
+                        // Current unlocked character
+                        card.classList.add('unlocked');
+                        card.onclick = () => this.startBattle(index);
+                        statusBadge = '<div class="status">AVAILABLE</div>';
+                    } else {
+                        // Locked future characters
+                        card.classList.add('locked');
+                        statusBadge = '<div class="status">LOCKED</div>';
+                    }
 
-  { id:'yoriichi', name:'Evil Yoriichi', duration:57600, tier:5,
-    defeat:"......\nNever worthy." },
+                    const hours = Math.floor(char.duration / 3600);
+                    const minutes = Math.floor((char.duration % 3600) / 60);
+                    let durationText = '';
+                    if (hours > 0) durationText += `${hours}h `;
+                    if (minutes > 0) durationText += `${minutes}m`;
 
-  { id:'secret', name:'???', duration:57600, tier:6,
-    special:'5am',
-    defeat:"You were never chosen." }
-];
+                    card.innerHTML = `
+                        ${statusBadge}
+                        <h2>${char.name}</h2>
+                        <div class="duration">${durationText.trim()}</div>
+                        ${char.specialRule ? `<div class="duration">${char.specialRule}</div>` : ''}
+                    `;
 
-class DisciplineGame {
-  constructor(){
-    this.progress = JSON.parse(localStorage.getItem('progress')) || {
-      index:0,
-      today:new Date().toDateString(),
-      completions:{},
-      secretMiss:0
-    };
+                    container.appendChild(card);
+                });
+            }
 
-    this.battle = JSON.parse(localStorage.getItem('battle'));
-    this.checkResume();
-    this.renderPath();
-  }
+            startBattle(characterIndex) {
+                const character = CHARACTERS[characterIndex];
+                
+                // Check secret boss timing
+                if (character.id === 'secret') {
+                    const now = new Date();
+                    const hour = now.getHours();
+                    const minute = now.getMinutes();
+                    
+                    if (hour !== 5 || minute !== 0) {
+                        alert('This battle can only be started at exactly 5:00 AM.');
+                        return;
+                    }
+                }
 
-  checkResume(){
-    if(!this.battle) return;
-    const char = CHARACTERS[this.battle.index];
-    const elapsed = (Date.now() - this.battle.start)/1000;
-    if(elapsed >= char.duration){
-      this.win();
-    } else {
-      this.show('battleScreen');
-      this.startTimer();
-    }
-  }
+                this.currentCharacterIndex = characterIndex;
+                this.battleStartTime = Date.now();
+                
+                // Save battle state
+                localStorage.setItem('currentBattle', JSON.stringify({
+                    characterIndex: characterIndex,
+                    startTime: this.battleStartTime
+                }));
 
-  start(index){
-    const char = CHARACTERS[index];
+                document.getElementById('battleName').textContent = character.name;
+                this.showScreen('battleScreen');
+                this.startBattleTimer();
+            }
 
-    // Same-day gate
-    if(char.requiresSameDay){
-      const req = this.progress.completions[char.requiresSameDay];
-      if(req !== this.progress.today){
-        alert("This must be completed the same day.");
-        return;
-      }
-    }
+            startBattleTimer() {
+                const character = CHARACTERS[this.currentCharacterIndex];
+                
+                this.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.battleStartTime) / 1000);
+                    const remaining = character.duration - elapsed;
 
-    // Secret boss timing
-    if(char.special==='5am'){
-      const now = new Date();
-      if(now.getHours()!==5 || now.getMinutes()!==0){
-        this.progress.secretMiss++;
-        if(this.progress.secretMiss>=3){
-          this.progress.index = CHARACTERS.findIndex(c=>c.id==='yoriichi');
+                    if (remaining <= 0) {
+                        this.victory();
+                    } else {
+                        this.updateTimerDisplay(remaining);
+                    }
+                }, 1000);
+            }
+
+            updateTimerDisplay(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+
+                const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                document.getElementById('timer').textContent = display;
+            }
+
+            giveUp() {
+                clearInterval(this.timerInterval);
+                localStorage.removeItem('currentBattle');
+                
+                const character = CHARACTERS[this.currentCharacterIndex];
+                document.getElementById('resultMessage').textContent = character.defeatMessage;
+                
+                this.showScreen('resultScreen');
+            }
+
+            victory() {
+                clearInterval(this.timerInterval);
+                localStorage.removeItem('currentBattle');
+                this.completeVictory(this.currentCharacterIndex);
+            }
+
+            completeVictory(characterIndex) {
+                const character = CHARACTERS[characterIndex];
+                
+                // Unlock next character
+                if (this.currentCharacterIndex === characterIndex) {
+                    this.currentCharacterIndex++;
+                    this.saveProgress();
+                }
+
+                const victoryMessages = [
+                    "You endured.",
+                    "Move forward.",
+                    "It's done.",
+                    "You survived.",
+                    "Acceptable."
+                ];
+
+                const randomMessage = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
+                document.getElementById('resultMessage').textContent = randomMessage;
+                
+                this.showScreen('resultScreen');
+            }
+
+            continueToBattlePath() {
+                this.showScreen('battlePath');
+                this.renderBattlePath();
+            }
         }
-        this.save();
-        alert("You missed the moment.");
-        return;
-      }
-    }
 
-    this.battle = { index, start:Date.now() };
-    localStorage.setItem('battle',JSON.stringify(this.battle));
-    document.getElementById('battleName').innerText = char.name;
-    this.show('battleScreen');
-    this.startTimer();
-  }
-
-  startTimer(){
-    clearInterval(this.timer);
-    this.timer = setInterval(()=>{
-      const char = CHARACTERS[this.battle.index];
-      const remain = char.duration - ((Date.now()-this.battle.start)/1000);
-      if(remain<=0) this.win();
-      else document.getElementById('timer').innerText =
-        new Date(remain*1000).toISOString().substr(11,8);
-    },1000);
-  }
-
-  giveUp(){
-    clearInterval(this.timer);
-    const char = CHARACTERS[this.battle.index];
-    this.applyPunishment(char);
-    document.getElementById('resultMessage').innerText = char.defeat;
-    localStorage.removeItem('battle');
-    this.show('resultScreen');
-  }
-
-  applyPunishment(char){
-    if(char.tier<=1) return;
-    if(char.tier===2) return;
-    if(char.tier===3) this.progress.index = Math.max(0,this.progress.index-1);
-    if(char.tier===4) this.progress.index = Math.max(0,this.progress.index-2);
-    if(char.tier===5)
-      this.progress.index = CHARACTERS.findIndex(c=>c.id==='demon');
-    this.save();
-  }
-
-  win(){
-    clearInterval(this.timer);
-    const char = CHARACTERS[this.battle.index];
-    this.progress.completions[char.id] = this.progress.today;
-    if(this.progress.index===this.battle.index) this.progress.index++;
-    this.progress.secretMiss=0;
-    this.save();
-    localStorage.removeItem('battle');
-    document.getElementById('resultMessage').innerText="You endured.";
-    this.show('resultScreen');
-  }
-
-  save(){ localStorage.setItem('progress',JSON.stringify(this.progress)); }
-
-  show(id){
-    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-  }
-
-  renderPath(){
-    const c = document.getElementById('battleCards');
-    c.innerHTML='';
-    CHARACTERS.forEach((ch,i)=>{
-      if(i>this.progress.index+1) return;
-      const d=document.createElement('div');
-      d.className='battle-card';
-      if(i===this.progress.index) d.onclick=()=>this.start(i);
-      else if(i>this.progress.index) d.style.opacity=.3;
-      d.innerHTML=`<h2>${ch.name}</h2>`;
-      c.appendChild(d);
-    });
-  }
-
-  continue(){
-    this.show('battlePath');
-    this.renderPath();
-  }
-}
-
-const game = new DisciplineGame();
+        // Initialize game
+        const game = new DisciplineGame();
     </script>
 </body>
 </html>
+
 
 
