@@ -1,134 +1,519 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Battle Path</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-fullscreen">
+    <title>Discipline Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<style>
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: black;
-    color: white;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  .screen {
-    display: none;
-    min-height: 100vh;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    padding: 20px;
-  }
+        .screen {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
 
-  .screen.active {
-    display: flex;
-  }
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-  h1 { margin-bottom: 20px; }
-  button {
-    background: #ff3b3b;
-    border: none;
-    padding: 14px 24px;
-    border-radius: 14px;
-    color: black;
-    font-size: 16px;
-    margin: 10px;
-    cursor: pointer;
-  }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-  .level {
-    width: 260px;
-  }
+        /* START SCREEN */
+        #startScreen {
+            background: #000;
+        }
 
-  .locked {
-    opacity: 0.3;
-    filter: blur(4px);
-    pointer-events: none;
-  }
+        #startScreen h1 {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+        }
 
-  #timer {
-    font-size: 32px;
-    margin: 20px 0;
-  }
-</style>
+        .btn {
+            padding: 15px 60px;
+            font-size: 1.2rem;
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* BATTLE PATH */
+        #battlePath {
+            background: #0a0a0a;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .battle-cards {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .battle-card {
+            background: #1a1a1a;
+            border: 2px solid;
+            padding: 30px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .battle-card.locked {
+            filter: blur(8px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .battle-card.hidden {
+            display: none;
+        }
+
+        .battle-card.unlocked:hover {
+            transform: translateX(10px);
+        }
+
+        .battle-card h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .battle-card .duration {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+
+        /* Character Colors */
+        .card-soldiers { border-color: #6b7280; color: #6b7280; }
+        .card-inosuke { border-color: #06b6d4; color: #06b6d4; }
+        .card-zenitsu { border-color: #fbbf24; color: #fbbf24; }
+        .card-zenitsu-11 { border-color: #facc15; color: #facc15; }
+        .card-rengoku { border-color: #f97316; color: #f97316; }
+        .card-rengoku-final { border-color: #dc2626; color: #dc2626; }
+        .card-sanemi { border-color: #22c55e; color: #22c55e; }
+        .card-toji { border-color: #0891b2; color: #0891b2; }
+        .card-kokushibo { border-color: #a855f7; color: #a855f7; }
+        .card-demon-koku { border-color: #7c3aed; color: #7c3aed; }
+        .card-evil-yoriichi { border-color: #ef4444; color: #ef4444; }
+        .card-secret { border-color: #fef9c3; color: #fef9c3; }
+
+        /* BATTLE SCREEN */
+        #battleScreen {
+            background: #000;
+        }
+
+        .battle-container {
+            text-align: center;
+        }
+
+        .battle-name {
+            font-size: 3rem;
+            margin-bottom: 60px;
+            letter-spacing: 2px;
+        }
+
+        .timer {
+            font-size: 4rem;
+            font-weight: 300;
+            margin-bottom: 80px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .give-up-btn {
+            padding: 12px 40px;
+            font-size: 1rem;
+            background: #7f1d1d;
+            color: #fff;
+            border: 2px solid #991b1b;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .give-up-btn:hover {
+            background: #991b1b;
+        }
+
+        /* RESULT SCREEN */
+        #resultScreen {
+            background: #000;
+            text-align: center;
+        }
+
+        .result-message {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-bottom: 60px;
+        }
+
+        .continue-btn {
+            padding: 15px 60px;
+            font-size: 1.2rem;
+            background: #1a1a1a;
+            color: #fff;
+            border: 2px solid #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .continue-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Audio Control (hidden) */
+        audio {
+            display: none;
+        }
+    </style>
 </head>
-
 <body>
+    <!-- START SCREEN -->
+    <div id="startScreen" class="screen active">
+        <h1>Hi.</h1>
+        <button class="btn" onclick="game.enterGame()">Enter</button>
+    </div>
 
-<!-- SCREEN 1 -->
-<div id="screen-start" class="screen active">
-  <h1>Hi.</h1>
-  <button onclick="go('screen-menu')">Enter</button>
-</div>
+    <!-- BATTLE PATH -->
+    <div id="battlePath" class="screen">
+        <div class="battle-cards" id="battleCards"></div>
+    </div>
 
-<!-- SCREEN 2 -->
-<div id="screen-menu" class="screen">
-  <h1>Battle Path</h1>
+    <!-- BATTLE SCREEN -->
+    <div id="battleScreen" class="screen">
+        <div class="battle-container">
+            <h2 class="battle-name" id="battleName"></h2>
+            <div class="timer" id="timer">00:00:00</div>
+            <button class="give-up-btn" onclick="game.giveUp()">Give Up</button>
+        </div>
+    </div>
 
-  <button class="level" onclick="startBattle(1800)">Soldiers (30 min)</button>
-  <button class="level locked">Inosuke (2h)</button>
-  <button class="level locked">Zenitsu (2h)</button>
-  <button class="level locked">Rengoku (5h)</button>
-</div>
+    <!-- RESULT SCREEN -->
+    <div id="resultScreen" class="screen">
+        <div class="result-message" id="resultMessage"></div>
+        <button class="continue-btn" onclick="game.continueToBattlePath()">Continue</button>
+    </div>
 
-<!-- SCREEN 3 -->
-<div id="screen-battle" class="screen">
-  <h1>Battle Ongoing</h1>
-  <div id="timer">00:00</div>
-  <button onclick="giveUp()">Give up</button>
-</div>
+    <!-- Audio -->
+    <audio id="audioPlayer" loop></audio>
 
-<!-- SCREEN 4 -->
-<div id="screen-result" class="screen">
-  <h1 id="resultText"></h1>
-  <button onclick="go('screen-menu')">Continue</button>
-</div>
+    <script>
+        const CHARACTERS = [
+            {
+                id: 'soldiers',
+                name: 'Soldiers',
+                duration: 30 * 60, // 30 minutes in seconds
+                colorClass: 'card-soldiers',
+                defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
+            },
+            {
+                id: 'inosuke',
+                name: 'Inosuke',
+                duration: 2 * 60 * 60, // 2 hours
+                colorClass: 'card-inosuke',
+                defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
+            },
+            {
+                id: 'zenitsu',
+                name: 'Zenitsu',
+                duration: 2 * 60 * 60,
+                colorClass: 'card-zenitsu',
+                defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose."
+            },
+            {
+                id: 'zenitsu-11',
+                name: 'Zenitsu – 11th Form',
+                duration: 3 * 60 * 60, // +1 hour
+                colorClass: 'card-zenitsu-11',
+                defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered."
+            },
+            {
+                id: 'rengoku',
+                name: 'Rengoku',
+                duration: 5 * 60 * 60,
+                colorClass: 'card-rengoku',
+                defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back."
+            },
+            {
+                id: 'rengoku-final',
+                name: 'Rengoku – Final',
+                duration: 7 * 60 * 60, // +2 hours
+                colorClass: 'card-rengoku-final',
+                defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real."
+            },
+            {
+                id: 'sanemi',
+                name: 'Sanemi',
+                duration: 7 * 60 * 60,
+                colorClass: 'card-sanemi',
+                defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
+            },
+            {
+                id: 'toji',
+                name: 'Toji',
+                duration: 8 * 60 * 60,
+                colorClass: 'card-toji',
+                defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
+            },
+            {
+                id: 'kokushibo',
+                name: 'Kokushibo',
+                duration: 11 * 60 * 60,
+                colorClass: 'card-kokushibo',
+                defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
+            },
+            {
+                id: 'demon-koku',
+                name: 'Demon Kokushibo',
+                duration: 13 * 60 * 60,
+                colorClass: 'card-demon-koku',
+                defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant."
+            },
+            {
+                id: 'evil-yoriichi',
+                name: 'Evil Yoriichi',
+                duration: 16 * 60 * 60,
+                colorClass: 'card-evil-yoriichi',
+                defeatMessage: "......\nYou were never on my level.\nDon't return."
+            },
+            {
+                id: 'secret',
+                name: '???',
+                duration: 16 * 60 * 60,
+                colorClass: 'card-secret',
+                specialRule: 'Must start at 5:00 AM',
+                defeatMessage: "You were chosen.\nYou failed.\nThere's nothing left to say.\nYou were never worthy."
+            }
+        ];
 
-<script>
-let currentTimer;
-let remaining;
+        class DisciplineGame {
+            constructor() {
+                this.currentScreen = 'startScreen';
+                this.currentCharacterIndex = 0;
+                this.battleStartTime = null;
+                this.timerInterval = null;
+                this.loadProgress();
+                this.init();
+            }
 
-function go(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+            init() {
+                // Check if battle is in progress on page load
+                const savedBattle = localStorage.getItem('currentBattle');
+                if (savedBattle) {
+                    const battleData = JSON.parse(savedBattle);
+                    const elapsed = Math.floor((Date.now() - battleData.startTime) / 1000);
+                    const character = CHARACTERS[battleData.characterIndex];
+                    
+                    if (elapsed >= character.duration) {
+                        // Auto victory
+                        this.completeVictory(battleData.characterIndex);
+                    } else {
+                        // Resume battle
+                        this.currentCharacterIndex = battleData.characterIndex;
+                        this.battleStartTime = battleData.startTime;
+                        this.showScreen('battleScreen');
+                        this.startBattleTimer();
+                    }
+                }
+            }
 
-function startBattle(seconds) {
-  remaining = seconds;
-  go('screen-battle');
-  updateTimer();
-  currentTimer = setInterval(() => {
-    remaining--;
-    updateTimer();
-    if (remaining <= 0) {
-      clearInterval(currentTimer);
-      win();
-    }
-  }, 1000);
-}
+            loadProgress() {
+                const saved = localStorage.getItem('gameProgress');
+                if (saved) {
+                    const progress = JSON.parse(saved);
+                    this.currentCharacterIndex = progress.currentCharacterIndex || 0;
+                }
+            }
 
-function updateTimer() {
-  const m = Math.floor(remaining / 60).toString().padStart(2,'0');
-  const s = (remaining % 60).toString().padStart(2,'0');
-  document.getElementById('timer').innerText = `${m}:${s}`;
-}
+            saveProgress() {
+                localStorage.setItem('gameProgress', JSON.stringify({
+                    currentCharacterIndex: this.currentCharacterIndex
+                }));
+            }
 
-function giveUp() {
-  clearInterval(currentTimer);
-  document.getElementById('resultText').innerText = "Defeated.\nToo weak.";
-  go('screen-result');
-}
+            showScreen(screenId) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                document.getElementById(screenId).classList.add('active');
+                this.currentScreen = screenId;
+            }
 
-function win() {
-  document.getElementById('resultText').innerText = "Victory.\nYou endured.";
-  go('screen-result');
-}
-</script>
+            enterGame() {
+                this.showScreen('battlePath');
+                this.renderBattlePath();
+            }
 
+            renderBattlePath() {
+                const container = document.getElementById('battleCards');
+                container.innerHTML = '';
+
+                CHARACTERS.forEach((char, index) => {
+                    const card = document.createElement('div');
+                    card.className = `battle-card ${char.colorClass}`;
+
+                    // Determine card state
+                    if (index === this.currentCharacterIndex) {
+                        card.classList.add('unlocked');
+                        card.onclick = () => this.startBattle(index);
+                    } else if (index === this.currentCharacterIndex + 1) {
+                        card.classList.add('locked');
+                    } else if (index > this.currentCharacterIndex + 1) {
+                        card.classList.add('hidden');
+                    } else {
+                        card.classList.add('completed');
+                        card.style.opacity = '0.5';
+                    }
+
+                    const hours = Math.floor(char.duration / 3600);
+                    const minutes = Math.floor((char.duration % 3600) / 60);
+                    let durationText = '';
+                    if (hours > 0) durationText += `${hours}h `;
+                    if (minutes > 0) durationText += `${minutes}m`;
+
+                    card.innerHTML = `
+                        <h2>${char.name}</h2>
+                        <div class="duration">${durationText.trim()}</div>
+                        ${char.specialRule ? `<div class="duration">${char.specialRule}</div>` : ''}
+                    `;
+
+                    container.appendChild(card);
+                });
+            }
+
+            startBattle(characterIndex) {
+                const character = CHARACTERS[characterIndex];
+                
+                // Check secret boss timing
+                if (character.id === 'secret') {
+                    const now = new Date();
+                    const hour = now.getHours();
+                    const minute = now.getMinutes();
+                    
+                    if (hour !== 5 || minute !== 0) {
+                        alert('This battle can only be started at exactly 5:00 AM.');
+                        return;
+                    }
+                }
+
+                this.currentCharacterIndex = characterIndex;
+                this.battleStartTime = Date.now();
+                
+                // Save battle state
+                localStorage.setItem('currentBattle', JSON.stringify({
+                    characterIndex: characterIndex,
+                    startTime: this.battleStartTime
+                }));
+
+                document.getElementById('battleName').textContent = character.name;
+                this.showScreen('battleScreen');
+                this.startBattleTimer();
+            }
+
+            startBattleTimer() {
+                const character = CHARACTERS[this.currentCharacterIndex];
+                
+                this.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.battleStartTime) / 1000);
+                    const remaining = character.duration - elapsed;
+
+                    if (remaining <= 0) {
+                        this.victory();
+                    } else {
+                        this.updateTimerDisplay(remaining);
+                    }
+                }, 1000);
+            }
+
+            updateTimerDisplay(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+
+                const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                document.getElementById('timer').textContent = display;
+            }
+
+            giveUp() {
+                clearInterval(this.timerInterval);
+                localStorage.removeItem('currentBattle');
+                
+                const character = CHARACTERS[this.currentCharacterIndex];
+                document.getElementById('resultMessage').textContent = character.defeatMessage;
+                
+                this.showScreen('resultScreen');
+            }
+
+            victory() {
+                clearInterval(this.timerInterval);
+                localStorage.removeItem('currentBattle');
+                this.completeVictory(this.currentCharacterIndex);
+            }
+
+            completeVictory(characterIndex) {
+                const character = CHARACTERS[characterIndex];
+                
+                // Unlock next character
+                if (this.currentCharacterIndex === characterIndex) {
+                    this.currentCharacterIndex++;
+                    this.saveProgress();
+                }
+
+                const victoryMessages = [
+                    "You endured.",
+                    "Move forward.",
+                    "It's done.",
+                    "You survived.",
+                    "Acceptable."
+                ];
+
+                const randomMessage = victoryMessages[Math.floor(Math.random() * victoryMessages.length)];
+                document.getElementById('resultMessage').textContent = randomMessage;
+                
+                this.showScreen('resultScreen');
+            }
+
+            continueToBattlePath() {
+                this.showScreen('battlePath');
+                this.renderBattlePath();
+            }
+        }
+
+        // Initialize game
+        const game = new DisciplineGame();
+    </script>
 </body>
 </html>
+
 
