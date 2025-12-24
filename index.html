@@ -21,6 +21,45 @@
             min-height: 100vh;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            position: relative;
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
         }
 
         .screen {
@@ -28,6 +67,8 @@
             min-height: 100vh;
             padding: 20px;
             animation: fadeIn 0.6s ease-out;
+            position: relative;
+            z-index: 1;
         }
 
         .screen.active {
@@ -89,15 +130,59 @@
 
         /* START SCREEN */
         #startScreen {
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+            background: radial-gradient(ellipse at top, #1a1a2e 0%, #000000 50%, #000000 100%);
+            position: relative;
+        }
+
+        #startScreen::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(106, 17, 203, 0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        #startScreen .content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
         }
 
         #startScreen h1 {
-            font-size: 3.5rem;
-            font-weight: 200;
-            margin-bottom: 50px;
-            letter-spacing: 10px;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            font-size: 4.5rem;
+            font-weight: 100;
+            margin-bottom: 15px;
+            letter-spacing: 18px;
+            text-shadow: 0 0 40px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.3);
+            animation: titlePulse 4s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% {
+                text-shadow: 0 0 40px rgba(255, 255, 255, 0.5), 0 0 80px rgba(255, 255, 255, 0.3);
+                transform: scale(1);
+            }
+            50% {
+                text-shadow: 0 0 60px rgba(255, 255, 255, 0.8), 0 0 120px rgba(255, 255, 255, 0.5), 0 0 160px rgba(106, 17, 203, 0.3);
+                transform: scale(1.02);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            opacity: 0.7;
+            margin-bottom: 60px;
+            font-weight: 300;
+            text-transform: uppercase;
         }
 
         .btn {
@@ -115,6 +200,26 @@
             margin: 8px;
             border-radius: 12px;
             font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn:active {
@@ -140,6 +245,135 @@
 
         .btn:active, .reset-btn:active, .rules-btn:active {
             opacity: 0.8;
+        }
+
+        /* Confirmation Popup */
+        .confirm-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            animation: fadeIn 0.3s ease-in;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 40px 20px;
+        }
+
+        .confirm-popup.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirm-content {
+            background: rgba(20, 20, 20, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 35px 25px;
+            max-width: 500px;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .confirm-content h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .confirm-content .character-name {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 500;
+            letter-spacing: 3px;
+        }
+
+        .confirm-rules {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .confirm-rules h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .confirm-rules ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .confirm-rules li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .confirm-rules li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            opacity: 0.7;
+        }
+
+        .confirm-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .confirm-btn, .cancel-btn {
+            flex: 1;
+            padding: 16px;
+            font-size: 1.1rem;
+            border: 2px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .confirm-btn {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border-color: #22c55e;
+        }
+
+        .cancel-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .confirm-btn:active, .cancel-btn:active {
+            transform: scale(0.95);
         }
 
         /* Rules Popup */
@@ -190,6 +424,7 @@
             transition: all 0.3s;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            z-index: 2001;
         }
 
         .rules-close:active {
@@ -239,6 +474,10 @@
             position: absolute;
             left: 0;
             opacity: 0.6;
+        }
+
+        .rules-section strong {
+            color: #fbbf24;
         }
 
         .pause-table {
@@ -373,6 +612,16 @@
             letter-spacing: 1px;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+        }
+
+        .battle-card .special-rules {
+            font-size: 0.75rem;
+            color: #fbbf24;
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(251, 191, 36, 0.1);
+            border-radius: 8px;
+            border-left: 2px solid #fbbf24;
         }
 
         .battle-card .same-day-warning {
@@ -614,26 +863,48 @@
 
         /* iPhone 12 Specific Optimizations */
         @media screen and (max-width: 390px) and (max-height: 844px) {
-            #startScreen h1 { font-size: 3rem; margin-bottom: 40px; }
+            #startScreen h1 { font-size: 3.5rem; margin-bottom: 10px; }
+            .subtitle { font-size: 1rem; margin-bottom: 50px; }
             .battle-name { font-size: 2.4rem; }
             .timer { font-size: 4rem; }
             .battle-character-image { width: 180px; height: 180px; }
             .battle-card { padding: 16px; }
             .battle-card-image { width: 75px; height: 75px; }
             .battle-card h2 { font-size: 1.35rem; }
+            .confirm-content { padding: 25px 20px; }
+            .confirm-content h2 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
     <!-- Music Toggle Button -->
     <div class="music-toggle" id="musicToggle" onclick="game.toggleMusic()">🔇</div>
 
     <!-- START SCREEN -->
     <div id="startScreen" class="screen active">
-        <h1>Hi.</h1>
-        <button class="btn" onclick="game.enterGame()">ENTER</button>
-        <button class="rules-btn" onclick="game.showRules()">RULES</button>
-        <button class="reset-btn" onclick="game.resetProgress()">RESET</button>
+        <div class="content">
+            <h1>Hi.</h1>
+            <div class="subtitle">The Path of Discipline</div>
+            <button class="btn" onclick="game.enterGame()">ENTER</button>
+            <button class="rules-btn" onclick="game.showRules()">RULES</button>
+            <button class="reset-btn" onclick="game.resetProgress()">RESET</button>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION POPUP -->
+    <div class="confirm-popup" id="confirmPopup">
+        <div class="confirm-content">
+            <h2>Ready to Battle?</h2>
+            <div class="character-name" id="confirmCharName" style="color: #fff;"></div>
+            <div class="confirm-rules" id="confirmRules"></div>
+            <div class="confirm-buttons">
+                <button class="cancel-btn" onclick="game.cancelBattle()">CANCEL</button>
+                <button class="confirm-btn" onclick="game.confirmBattle()">START</button>
+            </div>
+        </div>
     </div>
 
     <!-- RULES POPUP -->
@@ -658,6 +929,13 @@
                     <li><strong>Zenitsu 11th:</strong> Same day as Zenitsu</li>
                     <li><strong>Rengoku Final:</strong> Same day as Rengoku</li>
                     <li><strong>Demon Koku:</strong> Within 2 days of Kokushibo</li>
+                    <li><strong>YOU (Final Boss):</strong>
+                        <ul style="margin-top: 8px;">
+                            <li>Defeat Koku → Demon Koku → Yoriichi in 4 days</li>
+                            <li>Must start between 5:00-5:10 AM ONLY</li>
+                            <li>Give up = Restart from Kokushibo!</li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
 
@@ -721,7 +999,7 @@
             <div class="pause-info" id="pauseInfo"></div>
             <div class="battle-buttons">
                 <button class="pause-btn" id="pauseBtn" onclick="game.pauseBattle()" style="display:none;">PAUSE</button>
-                <button class="give-up-btn" onclick="game.giveUp()">GIVE UP</button>
+                <button class="give-up-btn" onclick="game.confirmGiveUp()">GIVE UP</button>
             </div>
         </div>
 
@@ -754,6 +1032,24 @@
     <audio id="characterVoice"></audio>
 
     <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
         const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
 
         function getPauseAllocation(durationInSeconds) {
@@ -783,6 +1079,11 @@
                 image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
                 voiceLine: 'https://files.catbox.moe/idsp2v.mp3',
                 quote: "Discipline is doing what needs to be done, even when you don't want to.",
+                rules: [
+                    "Complete 30-minute timer",
+                    "No phone scrolling",
+                    "Stay focused and productive"
+                ],
                 victoryMessage: "Not bad... for a beginner.\nYou showed basic discipline.\nNow prove it wasn't luck.",
                 defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
             },
@@ -794,6 +1095,11 @@
                 image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
                 voiceLine: 'https://files.catbox.moe/ycdvin.mp3',
                 quote: "I'm the king of the mountains! Show me your strength!",
+                rules: [
+                    "Complete 1-hour timer",
+                    "1 pause available (5 minutes)",
+                    "Stay wild, stay focused"
+                ],
                 victoryMessage: "HAHAHAHA! You got guts!\nI respect that raw endurance!\nKeep that wild spirit burning!",
                 defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
             },
@@ -805,6 +1111,11 @@
                 image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
                 voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
                 quote: "Even when you're scared, keep moving forward.",
+                rules: [
+                    "Complete 2-hour timer",
+                    "2 pauses available (5 min each)",
+                    "Push through the fear"
+                ],
                 victoryMessage: "You... you actually did it!\nEven when it got hard, you didn't run away.\nThat takes real courage.",
                 defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
                 requiresSameDay: false
@@ -817,6 +1128,11 @@
                 image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
                 voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
                 quote: "When you have no choice, you discover your true power.",
+                rules: [
+                    "Complete 2-hour timer",
+                    "2 pauses available (5 min each)",
+                    "MUST defeat on SAME DAY as Zenitsu"
+                ],
                 victoryMessage: "Incredible...\nYou pushed beyond your limits when it mattered most.\nThis is what true strength looks like.",
                 defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
                 requiresSameDay: true,
@@ -830,6 +1146,11 @@
                 image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
                 voiceLine: 'https://files.catbox.moe/omycwe.mp3',
                 quote: "Set your heart ablaze!",
+                rules: [
+                    "Complete 3-hour timer",
+                    "3 pauses available (10 min each)",
+                    "Keep your flame burning bright"
+                ],
                 victoryMessage: "MAGNIFICENT!\nYour flame burned bright and true!\nYou have a warrior's spirit! Well done!",
                 defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
                 requiresSameDay: false
@@ -842,6 +1163,11 @@
                 image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
                 voiceLine: 'https://files.catbox.moe/nd8ic3.mp3',
                 quote: "Go ahead and live with your head held high.",
+                rules: [
+                    "Complete 3-hour timer",
+                    "3 pauses available (10 min each)",
+                    "MUST defeat on SAME DAY as Rengoku"
+                ],
                 victoryMessage: "You stood your ground until the very end.\nYour resolve is unbreakable.\nI'm proud of you.",
                 defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
                 requiresSameDay: true,
@@ -855,6 +1181,11 @@
                 image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
                 voiceLine: 'https://files.catbox.moe/jfx6zv.mp3',
                 quote: "Survive. No matter what it takes.",
+                rules: [
+                    "Complete 5-hour timer",
+                    "4 pauses available (15 min each)",
+                    "Prove you can survive"
+                ],
                 victoryMessage: "Hm. You're tougher than you look.\nYou survived when others would've quit.\nRespect.",
                 defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
             },
@@ -866,6 +1197,11 @@
                 image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
                 voiceLine: 'https://files.catbox.moe/f8g7bl.mp3',
                 quote: "I don't believe in hard work. I believe in results.",
+                rules: [
+                    "Complete 6-hour timer",
+                    "4 pauses available (20 min each)",
+                    "Deliver results, no excuses"
+                ],
                 victoryMessage: "You delivered results.\nNo excuses, no drama.\nThat's what I call efficient.",
                 defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
             },
@@ -877,6 +1213,11 @@
                 image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
                 voiceLine: 'https://files.catbox.moe/708qso.mp3',
                 quote: "Perfection is achieved through endless pursuit.",
+                rules: [
+                    "Complete 8-hour timer",
+                    "5 pauses available (20 min each)",
+                    "Pursue perfection relentlessly"
+                ],
                 victoryMessage: "Impressive...\nYou've demonstrated discipline worthy of recognition.\nContinue this pursuit.",
                 defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
             },
@@ -888,6 +1229,11 @@
                 image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
                 voiceLine: 'https://files.catbox.moe/jl7v03.mp3',
                 quote: "The strong devour the weak. That is the law of nature.",
+                rules: [
+                    "Complete 10-hour timer",
+                    "5 pauses available (25 min each)",
+                    "MUST defeat WITHIN 2 DAYS of Kokushibo"
+                ],
                 victoryMessage: "You have proven yourself strong.\nYour endurance rivals that of demons.\nYou have earned my acknowledgment.",
                 defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant.",
                 requiresTwoDays: true,
@@ -901,6 +1247,11 @@
                 image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
                 voiceLine: 'https://files.catbox.moe/bdnb4b.mp3',
                 quote: "Talent without discipline is nothing.",
+                rules: [
+                    "Complete 12-hour timer",
+                    "6 pauses available (25 min each)",
+                    "The penultimate test"
+                ],
                 victoryMessage: "...\nYou have transcended.\nFew reach this level.\nYou may proceed.",
                 defeatMessage: "......\nYou were never on my level.\nDon't return."
             },
@@ -912,8 +1263,18 @@
                 image: 'https://files.catbox.moe/f1hggk.jpg',
                 voiceLine: '',
                 quote: "Your only true enemy has always been yourself.",
+                rules: [
+                    "Complete 16-hour timer",
+                    "6 pauses available (30 min each)",
+                    "MUST defeat Koku + Demon Koku + Yoriichi in 4 DAYS",
+                    "MUST START between 5:00-5:10 AM ONLY",
+                    "⚠️ GIVE UP = RESTART FROM KOKUSHIBO"
+                ],
+                specialRules: "🔥 ULTIMATE CHALLENGE:\n• Defeat last 3 bosses in 4 days\n• Start 5:00-5:10 AM only\n• Fail = Restart from Koku",
                 victoryMessage: "You defeated yourself.\n\nYour greatest obstacle.\nYour harshest critic.\nYour final test.\n\nYou are now unstoppable.",
-                defeatMessage: "You couldn't even beat yourself.\n\nThe excuses.\nThe doubt.\nThe weakness.\n\nThey won."
+                defeatMessage: "You couldn't even beat yourself.\n\nThe excuses.\nThe doubt.\nThe weakness.\n\nThey won.",
+                requiresFourDayChallenge: true,
+                requiresTimeWindow: { start: 5, end: 5.166667 } // 5:00-5:10 AM
             }
         ];
 
@@ -934,6 +1295,7 @@
                 this.pausesUsed = 0;
                 this.pausesAvailable = 0;
                 this.pauseDuration = 0;
+                this.pendingBattleIndex = null;
                 this.loadProgress();
                 this.init();
             }
@@ -988,6 +1350,45 @@
             hideRules() {
                 document.getElementById('rulesPopup').classList.remove('active');
                 document.body.style.overflow = '';
+            }
+
+            showConfirmPopup(characterIndex) {
+                const character = CHARACTERS[characterIndex];
+                const popup = document.getElementById('confirmPopup');
+                const charName = document.getElementById('confirmCharName');
+                const rulesDiv = document.getElementById('confirmRules');
+
+                charName.textContent = character.name;
+                charName.style.color = getComputedStyle(document.querySelector(`.${character.colorClass}`)).color;
+
+                let rulesHTML = '<h3>⚡ Battle Requirements:</h3><ul>';
+                character.rules.forEach(rule => {
+                    rulesHTML += `<li>${rule}</li>`;
+                });
+                rulesHTML += '</ul>';
+
+                rulesDiv.innerHTML = rulesHTML;
+                rulesDiv.style.borderColor = getComputedStyle(document.querySelector(`.${character.colorClass}`)).color;
+
+                popup.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            hideConfirmPopup() {
+                document.getElementById('confirmPopup').classList.remove('active');
+                document.body.style.overflow = '';
+                this.pendingBattleIndex = null;
+            }
+
+            cancelBattle() {
+                this.hideConfirmPopup();
+            }
+
+            confirmBattle() {
+                if (this.pendingBattleIndex !== null) {
+                    this.hideConfirmPopup();
+                    this.actuallyStartBattle(this.pendingBattleIndex);
+                }
             }
 
             toggleMusic() {
@@ -1051,6 +1452,7 @@
                     card.className = `battle-card ${char.colorClass}`;
 
                     let statusBadge = '';
+                    let specialRulesHTML = '';
                     let sameDayWarning = '';
                     
                     if (char.requiresSameDay) {
@@ -1065,6 +1467,10 @@
                         if (!parentCompletedWithin2Days && index === this.currentCharacterIndex) {
                             sameDayWarning = '<div class="same-day-warning">⚠️ Within 2 days of ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + '</div>';
                         }
+                    }
+
+                    if (char.requiresFourDayChallenge && index === this.currentCharacterIndex) {
+                        specialRulesHTML = `<div class="special-rules">${char.specialRules}</div>`;
                     }
                     
                     if (index < this.currentCharacterIndex) {
@@ -1101,6 +1507,7 @@
                             <h2>${char.name}</h2>
                             <div class="duration">⏱️ ${durationText.trim()}${pauseText}</div>
                             <div class="quote">"${char.quote}"</div>
+                            ${specialRulesHTML}
                             ${sameDayWarning}
                         </div>
                     `;
@@ -1130,9 +1537,29 @@
                 return (now - completionTime) <= twoDays;
             }
 
+            checkFourDayChallenge() {
+                const kokuTime = localStorage.getItem('completed_kokushibo');
+                if (!kokuTime) return false;
+
+                const fourDays = 4 * 24 * 60 * 60 * 1000;
+                const elapsed = Date.now() - parseInt(kokuTime);
+
+                return elapsed <= fourDays;
+            }
+
+            checkTimeWindow() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const currentTime = hours + (minutes / 60);
+
+                return currentTime >= 5 && currentTime <= 5.166667; // 5:00-5:10 AM
+            }
+
             startBattle(characterIndex) {
                 const character = CHARACTERS[characterIndex];
                 
+                // Check same day requirement
                 if (character.requiresSameDay) {
                     const parentCompleted = this.checkParentCompletedToday(character.parentCharacter);
                     if (!parentCompleted) {
@@ -1141,6 +1568,7 @@
                     }
                 }
 
+                // Check 2-day requirement
                 if (character.requiresTwoDays) {
                     const parentCompleted = this.checkParentCompletedWithin2Days(character.parentCharacter);
                     if (!parentCompleted) {
@@ -1148,6 +1576,27 @@
                         return;
                     }
                 }
+
+                // Check 4-day challenge for final boss
+                if (character.requiresFourDayChallenge) {
+                    if (!this.checkFourDayChallenge()) {
+                        alert('⚠️ YOU MUST:\n\n• Defeat Kokushibo\n• Defeat Demon Kokushibo\n• Defeat Evil Yoriichi\n\nAll within 4 DAYS!');
+                        return;
+                    }
+
+                    if (!this.checkTimeWindow()) {
+                        alert('⚠️ FINAL BOSS TIME WINDOW:\n\nYOU can only be challenged between 5:00-5:10 AM!\n\nCome back at the right time.');
+                        return;
+                    }
+                }
+
+                // Show confirmation popup
+                this.pendingBattleIndex = characterIndex;
+                this.showConfirmPopup(characterIndex);
+            }
+
+            actuallyStartBattle(characterIndex) {
+                const character = CHARACTERS[characterIndex];
 
                 this.playCharacterVoice(character.voiceLine);
 
@@ -1294,6 +1743,39 @@
                 localStorage.setItem('currentBattle', JSON.stringify(battleData));
             }
 
+            confirmGiveUp() {
+                const character = CHARACTERS[this.currentCharacterIndex];
+                
+                if (character.id === 'secret') {
+                    if (confirm('⚠️ GIVE UP ON FINAL BOSS?\n\nYou will RESTART from KOKUSHIBO!\n\nAll progress on last 3 bosses will be LOST!')) {
+                        this.giveUpFinalBoss();
+                    }
+                } else {
+                    this.giveUp();
+                }
+            }
+
+            giveUpFinalBoss() {
+                clearInterval(this.timerInterval);
+                clearInterval(this.pauseInterval);
+                localStorage.removeItem('currentBattle');
+
+                // Reset to Kokushibo
+                this.currentCharacterIndex = CHARACTERS.findIndex(c => c.id === 'kokushibo');
+                
+                // Clear completions for last 3 bosses
+                localStorage.removeItem('completed_kokushibo');
+                localStorage.removeItem('completed_demon-koku');
+                localStorage.removeItem('completed_evil-yoriichi');
+                
+                this.saveProgress();
+
+                alert('💀 RESET TO KOKUSHIBO\n\nYou must complete the 4-day challenge again.');
+                
+                this.showScreen('battlePath');
+                this.renderBattlePath();
+            }
+
             giveUp() {
                 clearInterval(this.timerInterval);
                 clearInterval(this.pauseInterval);
@@ -1350,15 +1832,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
