@@ -1015,16 +1015,16 @@
     <div class="particles" id="particles"></div>
 
     <!-- Music Toggle Button -->
-    <div class="music-toggle" id="musicToggle" onclick="game.toggleMusic()">🔇</div>
+    <div class="music-toggle" id="musicToggle">🔇</div>
 
     <!-- START SCREEN -->
     <div id="startScreen" class="screen active">
         <div class="content">
             <h1>Hi.</h1>
             <div class="subtitle">The Path of Discipline</div>
-            <button class="btn" onclick="game.enterGame()">ENTER</button>
-            <button class="rules-btn" onclick="game.showRules()">RULES</button>
-            <button class="reset-btn" onclick="game.resetProgress()">RESET</button>
+            <button class="btn" id="enterBtn">ENTER</button>
+            <button class="rules-btn" id="rulesBtn">RULES</button>
+            <button class="reset-btn" id="resetBtn">RESET</button>
         </div>
     </div>
 
@@ -1035,15 +1035,15 @@
             <div class="character-name" id="confirmCharName"></div>
             <div class="confirm-rules" id="confirmRules"></div>
             <div class="confirm-buttons">
-                <button class="cancel-btn" onclick="game.cancelBattle()">CANCEL</button>
-                <button class="confirm-btn" onclick="game.confirmBattle()">START</button>
+                <button class="cancel-btn" id="cancelBtn">CANCEL</button>
+                <button class="confirm-btn" id="startBtn">START</button>
             </div>
         </div>
     </div>
 
     <!-- RULES POPUP -->
     <div class="rules-popup" id="rulesPopup">
-        <div class="rules-close" onclick="game.hideRules()">✕</div>
+        <div class="rules-close" id="rulesClose">✕</div>
         <div class="rules-content">
             <h2>📜 RULES</h2>
 
@@ -1132,8 +1132,8 @@
             <div class="timer" id="timer">00:00:00</div>
             <div class="pause-info" id="pauseInfo"></div>
             <div class="battle-buttons">
-                <button class="pause-btn" id="pauseBtn" onclick="game.pauseBattle()" style="display:none;">PAUSE</button>
-                <button class="give-up-btn" onclick="game.confirmGiveUp()">GIVE UP</button>
+                <button class="pause-btn" id="pauseBtn" style="display:none;">PAUSE</button>
+                <button class="give-up-btn" id="giveUpBtn">GIVE UP</button>
             </div>
         </div>
 
@@ -1144,7 +1144,7 @@
                 <div class="pause-timer" id="pauseTimer">05:00</div>
                 <div class="pause-message">Breathe. Stretch. Return stronger.</div>
                 <div class="pause-info" id="pausedInfo" style="margin-bottom: 25px;"></div>
-                <button class="resume-btn" onclick="game.resumeBattle()">RESUME</button>
+                <button class="resume-btn" id="resumeBtn">RESUME</button>
             </div>
         </div>
     </div>
@@ -1153,7 +1153,7 @@
     <div id="resultScreen" class="screen">
         <div class="result-container">
             <div class="result-message" id="resultMessage"></div>
-            <button class="continue-btn" onclick="game.continueToBattlePath()">CONTINUE</button>
+            <button class="continue-btn" id="continueBtn">CONTINUE</button>
         </div>
     </div>
 
@@ -1175,12 +1175,10 @@
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 
-                // Random size
                 const size = Math.random() * 4 + 2;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
                 
-                // Random color with glow
                 const colors = [
                     'rgba(255, 255, 255, 0.4)',
                     'rgba(106, 17, 203, 0.5)',
@@ -1202,7 +1200,6 @@
 
         const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
 
-        // Character color map
         const CHARACTER_COLORS = {
             'card-soldiers': '#6b7280',
             'card-inosuke': '#06b6d4',
@@ -1462,8 +1459,24 @@
                 this.pausesAvailable = 0;
                 this.pauseDuration = 0;
                 this.pendingBattleIndex = null;
+                
                 this.loadProgress();
+                this.setupEventListeners();
                 this.init();
+            }
+
+            setupEventListeners() {
+                document.getElementById('musicToggle').addEventListener('click', () => this.toggleMusic());
+                document.getElementById('enterBtn').addEventListener('click', () => this.enterGame());
+                document.getElementById('rulesBtn').addEventListener('click', () => this.showRules());
+                document.getElementById('resetBtn').addEventListener('click', () => this.resetProgress());
+                document.getElementById('rulesClose').addEventListener('click', () => this.hideRules());
+                document.getElementById('cancelBtn').addEventListener('click', () => this.cancelBattle());
+                document.getElementById('startBtn').addEventListener('click', () => this.confirmBattle());
+                document.getElementById('pauseBtn').addEventListener('click', () => this.pauseBattle());
+                document.getElementById('giveUpBtn').addEventListener('click', () => this.confirmGiveUp());
+                document.getElementById('resumeBtn').addEventListener('click', () => this.resumeBattle());
+                document.getElementById('continueBtn').addEventListener('click', () => this.continueToBattlePath());
             }
 
             init() {
@@ -1519,6 +1532,7 @@
             }
 
             showConfirmPopup(characterIndex) {
+                console.log('Showing popup for character:', characterIndex);
                 const character = CHARACTERS[characterIndex];
                 const popup = document.getElementById('confirmPopup');
                 const charName = document.getElementById('confirmCharName');
@@ -1526,7 +1540,6 @@
 
                 charName.textContent = character.name;
                 
-                // Get color from the map
                 const color = CHARACTER_COLORS[character.colorClass] || '#fff';
                 charName.style.color = color;
 
@@ -1550,14 +1563,17 @@
             }
 
             cancelBattle() {
+                console.log('Cancel clicked');
                 this.hideConfirmPopup();
             }
 
             confirmBattle() {
-                console.log('Confirm battle clicked, pending index:', this.pendingBattleIndex);
+                console.log('START CLICKED! Pending index:', this.pendingBattleIndex);
                 if (this.pendingBattleIndex !== null) {
                     this.hideConfirmPopup();
                     this.actuallyStartBattle(this.pendingBattleIndex);
+                } else {
+                    console.error('Pending battle index is null!');
                 }
             }
 
@@ -1648,7 +1664,7 @@
                         statusBadge = '<div class="status">✓ DONE</div>';
                     } else if (index === this.currentCharacterIndex) {
                         card.classList.add('unlocked');
-                        card.onclick = () => this.startBattle(index);
+                        card.addEventListener('click', () => this.startBattle(index));
                         statusBadge = '<div class="status">▶ NOW</div>';
                     } else {
                         card.classList.add('locked');
@@ -1759,7 +1775,7 @@
                 }
 
                 this.pendingBattleIndex = characterIndex;
-                console.log('Set pending battle index to:', this.pendingBattleIndex);
+                console.log('Set pending to:', this.pendingBattleIndex);
                 this.showConfirmPopup(characterIndex);
             }
 
@@ -1995,8 +2011,11 @@
             }
         }
 
-        const game = new DisciplineGame();
+        // Initialize game
+        let game;
+        window.addEventListener('DOMContentLoaded', () => {
+            game = new DisciplineGame();
+        });
     </script>
 </body>
 </html>
-
