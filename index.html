@@ -622,6 +622,7 @@
             background: rgba(251, 191, 36, 0.1);
             border-radius: 8px;
             border-left: 2px solid #fbbf24;
+            white-space: pre-line;
         }
 
         .battle-card .same-day-warning {
@@ -898,7 +899,7 @@
     <div class="confirm-popup" id="confirmPopup">
         <div class="confirm-content">
             <h2>Ready to Battle?</h2>
-            <div class="character-name" id="confirmCharName" style="color: #fff;"></div>
+            <div class="character-name" id="confirmCharName"></div>
             <div class="confirm-rules" id="confirmRules"></div>
             <div class="confirm-buttons">
                 <button class="cancel-btn" onclick="game.cancelBattle()">CANCEL</button>
@@ -1051,6 +1052,22 @@
         createParticles();
 
         const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
+
+        // Character color map
+        const CHARACTER_COLORS = {
+            'card-soldiers': '#6b7280',
+            'card-inosuke': '#06b6d4',
+            'card-zenitsu': '#fbbf24',
+            'card-zenitsu-11': '#facc15',
+            'card-rengoku': '#f97316',
+            'card-rengoku-final': '#dc2626',
+            'card-sanemi': '#22c55e',
+            'card-toji': '#0891b2',
+            'card-kokushibo': '#a855f7',
+            'card-demon-koku': '#7c3aed',
+            'card-evil-yoriichi': '#ef4444',
+            'card-secret': '#fef9c3'
+        };
 
         function getPauseAllocation(durationInSeconds) {
             const minutes = durationInSeconds / 60;
@@ -1274,7 +1291,7 @@
                 victoryMessage: "You defeated yourself.\n\nYour greatest obstacle.\nYour harshest critic.\nYour final test.\n\nYou are now unstoppable.",
                 defeatMessage: "You couldn't even beat yourself.\n\nThe excuses.\nThe doubt.\nThe weakness.\n\nThey won.",
                 requiresFourDayChallenge: true,
-                requiresTimeWindow: { start: 5, end: 5.166667 } // 5:00-5:10 AM
+                requiresTimeWindow: { start: 5, end: 5.166667 }
             }
         ];
 
@@ -1359,7 +1376,10 @@
                 const rulesDiv = document.getElementById('confirmRules');
 
                 charName.textContent = character.name;
-                charName.style.color = getComputedStyle(document.querySelector(`.${character.colorClass}`)).color;
+                
+                // Get color from the map
+                const color = CHARACTER_COLORS[character.colorClass] || '#fff';
+                charName.style.color = color;
 
                 let rulesHTML = '<h3>⚡ Battle Requirements:</h3><ul>';
                 character.rules.forEach(rule => {
@@ -1368,7 +1388,7 @@
                 rulesHTML += '</ul>';
 
                 rulesDiv.innerHTML = rulesHTML;
-                rulesDiv.style.borderColor = getComputedStyle(document.querySelector(`.${character.colorClass}`)).color;
+                rulesDiv.style.borderColor = color;
 
                 popup.classList.add('active');
                 document.body.style.overflow = 'hidden';
@@ -1553,13 +1573,12 @@
                 const minutes = now.getMinutes();
                 const currentTime = hours + (minutes / 60);
 
-                return currentTime >= 5 && currentTime <= 5.166667; // 5:00-5:10 AM
+                return currentTime >= 5 && currentTime <= 5.166667;
             }
 
             startBattle(characterIndex) {
                 const character = CHARACTERS[characterIndex];
                 
-                // Check same day requirement
                 if (character.requiresSameDay) {
                     const parentCompleted = this.checkParentCompletedToday(character.parentCharacter);
                     if (!parentCompleted) {
@@ -1568,7 +1587,6 @@
                     }
                 }
 
-                // Check 2-day requirement
                 if (character.requiresTwoDays) {
                     const parentCompleted = this.checkParentCompletedWithin2Days(character.parentCharacter);
                     if (!parentCompleted) {
@@ -1577,7 +1595,6 @@
                     }
                 }
 
-                // Check 4-day challenge for final boss
                 if (character.requiresFourDayChallenge) {
                     if (!this.checkFourDayChallenge()) {
                         alert('⚠️ YOU MUST:\n\n• Defeat Kokushibo\n• Defeat Demon Kokushibo\n• Defeat Evil Yoriichi\n\nAll within 4 DAYS!');
@@ -1590,7 +1607,6 @@
                     }
                 }
 
-                // Show confirmation popup
                 this.pendingBattleIndex = characterIndex;
                 this.showConfirmPopup(characterIndex);
             }
@@ -1760,10 +1776,8 @@
                 clearInterval(this.pauseInterval);
                 localStorage.removeItem('currentBattle');
 
-                // Reset to Kokushibo
                 this.currentCharacterIndex = CHARACTERS.findIndex(c => c.id === 'kokushibo');
                 
-                // Clear completions for last 3 bosses
                 localStorage.removeItem('completed_kokushibo');
                 localStorage.removeItem('completed_demon-koku');
                 localStorage.removeItem('completed_evil-yoriichi');
