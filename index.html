@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* INSANE Floating Particles */
         .particles {
             position: fixed;
             top: 0;
@@ -43,20 +42,10 @@
         }
 
         @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0) scale(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-150px) translateX(150px) scale(1);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-150px) translateX(150px) scale(1); opacity: 0; }
         }
 
         .screen {
@@ -76,17 +65,10 @@
         }
 
         @keyframes fadeIn {
-            from { 
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Music Control Button */
         .music-toggle {
             position: fixed;
             bottom: 25px;
@@ -108,25 +90,14 @@
             box-shadow: 0 5px 25px rgba(255, 255, 255, 0.15);
         }
 
-        .music-toggle:active {
-            transform: scale(0.9);
-        }
-
-        .music-toggle.playing {
-            animation: musicPulse 2s ease-in-out infinite;
-            background: rgba(255, 255, 255, 0.18);
-        }
+        .music-toggle:active { transform: scale(0.9); }
+        .music-toggle.playing { animation: musicPulse 2s ease-in-out infinite; background: rgba(255, 255, 255, 0.18); }
 
         @keyframes musicPulse {
-            0%, 100% { 
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6), 0 5px 25px rgba(255, 255, 255, 0.15);
-            }
-            50% { 
-                box-shadow: 0 0 0 12px rgba(255, 255, 255, 0), 0 5px 35px rgba(255, 255, 255, 0.3);
-            }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.6), 0 5px 25px rgba(255, 255, 255, 0.15); }
+            50% { box-shadow: 0 0 0 12px rgba(255, 255, 255, 0), 0 5px 35px rgba(255, 255, 255, 0.3); }
         }
 
-        /* START SCREEN - EXTREME */
         #startScreen {
             background: radial-gradient(ellipse at top, #1a1a2e 0%, #000000 50%, #000000 100%);
             position: relative;
@@ -140,9 +111,7 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(106, 17, 203, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(17, 106, 203, 0.15) 0%, transparent 50%);
+            background: radial-gradient(circle at 20% 50%, rgba(106, 17, 203, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(17, 106, 203, 0.15) 0%, transparent 50%);
             animation: rotate 25s linear infinite;
         }
 
@@ -153,22 +122,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, 
-                transparent 30%, 
-                rgba(255, 255, 255, 0.03) 50%, 
-                transparent 70%);
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.03) 50%, transparent 70%);
             animation: shimmer 3s ease-in-out infinite;
         }
 
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes shimmer {
-            0%, 100% { transform: translateX(-100%); }
-            50% { transform: translateX(100%); }
-        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes shimmer { 0%, 100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
 
         #startScreen .content {
             position: relative;
@@ -181,35 +140,13 @@
             font-weight: 100;
             margin-bottom: 20px;
             letter-spacing: 25px;
-            text-shadow: 
-                0 0 10px rgba(255, 255, 255, 0.8),
-                0 0 20px rgba(255, 255, 255, 0.6),
-                0 0 40px rgba(255, 255, 255, 0.4),
-                0 0 80px rgba(106, 17, 203, 0.3),
-                0 0 120px rgba(106, 17, 203, 0.2);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4), 0 0 80px rgba(106, 17, 203, 0.3), 0 0 120px rgba(106, 17, 203, 0.2);
             animation: titlePulse 3s ease-in-out infinite;
         }
 
         @keyframes titlePulse {
-            0%, 100% {
-                text-shadow: 
-                    0 0 10px rgba(255, 255, 255, 0.8),
-                    0 0 20px rgba(255, 255, 255, 0.6),
-                    0 0 40px rgba(255, 255, 255, 0.4),
-                    0 0 80px rgba(106, 17, 203, 0.3);
-                transform: scale(1);
-                filter: brightness(1);
-            }
-            50% {
-                text-shadow: 
-                    0 0 20px rgba(255, 255, 255, 1),
-                    0 0 40px rgba(255, 255, 255, 0.8),
-                    0 0 80px rgba(255, 255, 255, 0.6),
-                    0 0 120px rgba(106, 17, 203, 0.5),
-                    0 0 160px rgba(106, 17, 203, 0.3);
-                transform: scale(1.05);
-                filter: brightness(1.3);
-            }
+            0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.4), 0 0 80px rgba(106, 17, 203, 0.3); transform: scale(1); filter: brightness(1); }
+            50% { text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 40px rgba(255, 255, 255, 0.8), 0 0 80px rgba(255, 255, 255, 0.6), 0 0 120px rgba(106, 17, 203, 0.5), 0 0 160px rgba(106, 17, 203, 0.3); transform: scale(1.05); filter: brightness(1.3); }
         }
 
         .subtitle {
@@ -224,14 +161,8 @@
         }
 
         @keyframes subtitleGlow {
-            from {
-                text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-                letter-spacing: 12px;
-            }
-            to {
-                text-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
-                letter-spacing: 14px;
-            }
+            from { text-shadow: 0 0 10px rgba(255, 255, 255, 0.2); letter-spacing: 12px; }
+            to { text-shadow: 0 0 25px rgba(255, 255, 255, 0.5); letter-spacing: 14px; }
         }
 
         .btn {
@@ -251,17 +182,11 @@
             font-weight: 600;
             position: relative;
             overflow: hidden;
-            box-shadow: 
-                0 0 20px rgba(255, 255, 255, 0.2),
-                0 10px 40px rgba(0, 0, 0, 0.5),
-                inset 0 0 20px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2), 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.05);
             animation: btnFloat 3s ease-in-out infinite;
         }
 
-        @keyframes btnFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
+        @keyframes btnFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-5px); } }
 
         .btn::before {
             content: '';
@@ -276,23 +201,9 @@
             transition: width 0.8s, height 0.8s;
         }
 
-        .btn:active::before {
-            width: 500px;
-            height: 500px;
-        }
-
-        .btn:hover {
-            border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 
-                0 0 40px rgba(255, 255, 255, 0.4),
-                0 0 80px rgba(255, 255, 255, 0.2),
-                0 15px 50px rgba(0, 0, 0, 0.6);
-            transform: translateY(-3px);
-        }
-
-        .btn:active {
-            transform: scale(0.96) translateY(0);
-        }
+        .btn:active::before { width: 500px; height: 500px; }
+        .btn:hover { border-color: rgba(255, 255, 255, 0.8); box-shadow: 0 0 40px rgba(255, 255, 255, 0.4), 0 0 80px rgba(255, 255, 255, 0.2), 0 15px 50px rgba(0, 0, 0, 0.6); transform: translateY(-3px); }
+        .btn:active { transform: scale(0.96) translateY(0); }
 
         .reset-btn, .rules-btn {
             padding: 16px 50px;
@@ -312,18 +223,8 @@
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .reset-btn:hover, .rules-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
+        .reset-btn:hover, .rules-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 30px rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
 
-        .btn:active, .reset-btn:active, .rules-btn:active {
-            opacity: 0.8;
-        }
-
-        /* Confirmation Popup - EXTREME */
         .confirm-popup {
             display: none;
             position: fixed;
@@ -357,22 +258,10 @@
             backdrop-filter: blur(30px);
             -webkit-backdrop-filter: blur(30px);
             animation: popupEnter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 
-                0 0 60px rgba(255, 255, 255, 0.1),
-                0 20px 80px rgba(0, 0, 0, 0.8),
-                inset 0 0 40px rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.1), 0 20px 80px rgba(0, 0, 0, 0.8), inset 0 0 40px rgba(255, 255, 255, 0.03);
         }
 
-        @keyframes popupEnter {
-            from {
-                opacity: 0;
-                transform: translateY(50px) scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
+        @keyframes popupEnter { from { opacity: 0; transform: translateY(50px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
         .confirm-content h2 {
             font-size: 2.5rem;
@@ -390,22 +279,10 @@
             font-weight: 600;
             letter-spacing: 4px;
             animation: namePulse 2s ease-in-out infinite;
-            text-shadow: 
-                0 0 20px currentColor,
-                0 0 40px currentColor,
-                0 0 60px currentColor;
+            text-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
         }
 
-        @keyframes namePulse {
-            0%, 100% {
-                transform: scale(1);
-                filter: brightness(1);
-            }
-            50% {
-                transform: scale(1.05);
-                filter: brightness(1.3);
-            }
-        }
+        @keyframes namePulse { 0%, 100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.05); filter: brightness(1.3); } }
 
         .confirm-rules {
             background: rgba(255, 255, 255, 0.05);
@@ -444,10 +321,7 @@
             animation: arrowPulse 2s ease-in-out infinite;
         }
 
-        @keyframes arrowPulse {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(5px); }
-        }
+        @keyframes arrowPulse { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
 
         .confirm-buttons {
             display: flex;
@@ -474,16 +348,11 @@
             background: linear-gradient(135deg, rgba(34, 197, 94, 0.25), rgba(34, 197, 94, 0.1));
             color: #22c55e;
             border-color: #22c55e;
-            box-shadow: 
-                0 0 20px rgba(34, 197, 94, 0.3),
-                0 5px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3), 0 5px 25px rgba(0, 0, 0, 0.5);
         }
 
         .confirm-btn:hover {
-            box-shadow: 
-                0 0 40px rgba(34, 197, 94, 0.5),
-                0 0 80px rgba(34, 197, 94, 0.3),
-                0 8px 35px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 40px rgba(34, 197, 94, 0.5), 0 0 80px rgba(34, 197, 94, 0.3), 0 8px 35px rgba(0, 0, 0, 0.6);
             transform: translateY(-3px);
         }
 
@@ -491,16 +360,11 @@
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(239, 68, 68, 0.1));
             color: #ef4444;
             border-color: #ef4444;
-            box-shadow: 
-                0 0 20px rgba(239, 68, 68, 0.3),
-                0 5px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), 0 5px 25px rgba(0, 0, 0, 0.5);
         }
 
         .cancel-btn:hover {
-            box-shadow: 
-                0 0 40px rgba(239, 68, 68, 0.5),
-                0 0 80px rgba(239, 68, 68, 0.3),
-                0 8px 35px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.5), 0 0 80px rgba(239, 68, 68, 0.3), 0 8px 35px rgba(0, 0, 0, 0.6);
             transform: translateY(-3px);
         }
 
@@ -508,7 +372,6 @@
             transform: scale(0.95) translateY(0);
         }
 
-        /* Rules Popup */
         .rules-popup {
             display: none;
             position: fixed;
@@ -559,9 +422,7 @@
             z-index: 2001;
         }
 
-        .rules-close:active {
-            transform: scale(0.9);
-        }
+        .rules-close:active { transform: scale(0.9); }
 
         .rules-content h2 {
             font-size: 2rem;
@@ -593,8 +454,7 @@
         }
 
         .rules-section li {
-            padding: 6px 0;
-            padding-left: 22px;
+            padding: 6px 0 6px 22px;
             position: relative;
             line-height: 1.6;
             font-size: 0.95rem;
@@ -630,7 +490,6 @@
             font-weight: 500;
         }
 
-        /* BATTLE PATH */
         #battlePath {
             background: radial-gradient(circle at center, #0f0f0f 0%, #000 100%);
             padding: 80px 20px 30px 20px;
@@ -682,14 +541,8 @@
         }
 
         @keyframes cardGlow {
-            0%, 100% {
-                box-shadow: 0 0 15px currentColor, 0 4px 20px rgba(0, 0, 0, 0.6);
-                border-color: currentColor;
-            }
-            50% {
-                box-shadow: 0 0 35px currentColor, 0 0 55px currentColor, 0 4px 25px rgba(0, 0, 0, 0.8);
-                filter: brightness(1.25);
-            }
+            0%, 100% { box-shadow: 0 0 15px currentColor, 0 4px 20px rgba(0, 0, 0, 0.6); border-color: currentColor; }
+            50% { box-shadow: 0 0 35px currentColor, 0 0 55px currentColor, 0 4px 25px rgba(0, 0, 0, 0.8); filter: brightness(1.25); }
         }
 
         .battle-card-image {
@@ -764,7 +617,6 @@
             font-style: italic;
         }
 
-        /* Character Colors */
         .card-soldiers { border-color: #6b7280; color: #6b7280; }
         .card-inosuke { border-color: #06b6d4; color: #06b6d4; }
         .card-zenitsu { border-color: #fbbf24; color: #fbbf24; }
@@ -778,7 +630,6 @@
         .card-evil-yoriichi { border-color: #ef4444; color: #ef4444; }
         .card-secret { border-color: #fef9c3; color: #fef9c3; }
 
-        /* BATTLE SCREEN */
         #battleScreen {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
             position: relative;
@@ -793,14 +644,8 @@
         }
 
         @keyframes battleEnter {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .battle-character-image {
@@ -863,10 +708,6 @@
             letter-spacing: 2px;
             border-radius: 12px;
             font-weight: 500;
-        }
-
-        .pause-btn, .give-up-btn, .resume-btn {
-            -webkit-tap-highlight-color: transparent;
         }
 
         .pause-btn:active, .give-up-btn:active, .resume-btn:active {
@@ -942,7 +783,6 @@
             font-style: italic;
         }
 
-        /* RESULT SCREEN */
         #resultScreen {
             background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
             text-align: center;
@@ -954,14 +794,8 @@
         }
 
         @keyframes resultEnter {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .result-message {
@@ -994,7 +828,6 @@
             transform: scale(0.96);
         }
 
-        /* iPhone 12 Specific Optimizations */
         @media screen and (max-width: 390px) and (max-height: 844px) {
             #startScreen h1 { font-size: 4rem; margin-bottom: 15px; }
             .subtitle { font-size: 1.1rem; margin-bottom: 60px; }
@@ -1011,13 +844,9 @@
     </style>
 </head>
 <body>
-    <!-- Floating Particles -->
     <div class="particles" id="particles"></div>
-
-    <!-- Music Toggle Button -->
     <div class="music-toggle" id="musicToggle">🔇</div>
 
-    <!-- START SCREEN -->
     <div id="startScreen" class="screen active">
         <div class="content">
             <h1>Hi.</h1>
@@ -1028,7 +857,6 @@
         </div>
     </div>
 
-    <!-- CONFIRMATION POPUP -->
     <div class="confirm-popup" id="confirmPopup">
         <div class="confirm-content">
             <h2>Ready to Battle?</h2>
@@ -1041,12 +869,10 @@
         </div>
     </div>
 
-    <!-- RULES POPUP -->
     <div class="rules-popup" id="rulesPopup">
         <div class="rules-close" id="rulesClose">✕</div>
         <div class="rules-content">
             <h2>📜 RULES</h2>
-
             <div class="rules-section">
                 <h3>🎮 HOW TO PLAY</h3>
                 <ul>
@@ -1056,7 +882,6 @@
                     <li>Give up = restart character</li>
                 </ul>
             </div>
-
             <div class="rules-section">
                 <h3>⚡ SPECIAL CHALLENGES</h3>
                 <ul>
@@ -1072,7 +897,6 @@
                     </li>
                 </ul>
             </div>
-
             <div class="rules-section">
                 <h3>⏸️ PAUSE SYSTEM</h3>
                 <ul>
@@ -1096,7 +920,6 @@
                     <tr><td>14-16h</td><td>6</td><td>30m</td></tr>
                 </table>
             </div>
-
             <div class="rules-section">
                 <h3>❌ DISCIPLINE RULES</h3>
                 <ul>
@@ -1106,7 +929,6 @@
                     <li><strong>YES:</strong> Water, bathroom breaks</li>
                 </ul>
             </div>
-
             <div class="rules-section">
                 <h3>🏆 HONOR SYSTEM</h3>
                 <ul>
@@ -1118,12 +940,10 @@
         </div>
     </div>
 
-    <!-- BATTLE PATH -->
     <div id="battlePath" class="screen">
         <div class="battle-cards" id="battleCards"></div>
     </div>
 
-    <!-- BATTLE SCREEN -->
     <div id="battleScreen" class="screen">
         <div class="battle-container">
             <img id="battleImage" class="battle-character-image" src="" alt="" style="display:none;">
@@ -1136,8 +956,6 @@
                 <button class="give-up-btn" id="giveUpBtn">GIVE UP</button>
             </div>
         </div>
-
-        <!-- Paused Overlay -->
         <div class="paused-overlay" id="pausedOverlay">
             <div class="paused-content">
                 <h2>⏸️ PAUSED</h2>
@@ -1149,7 +967,6 @@
         </div>
     </div>
 
-    <!-- RESULT SCREEN -->
     <div id="resultScreen" class="screen">
         <div class="result-container">
             <div class="result-message" id="resultMessage"></div>
@@ -1157,68 +974,43 @@
         </div>
     </div>
 
-    <!-- Background Music -->
     <audio id="bgMusic" loop>
         <source src="https://files.catbox.moe/4bbwn0.mp3" type="audio/mpeg">
     </audio>
-
-    <!-- Character Voice Lines -->
     <audio id="characterVoice"></audio>
 
     <script>
-        // Create INSANE floating particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = 80;
-
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
-                
                 const size = Math.random() * 4 + 2;
                 particle.style.width = size + 'px';
                 particle.style.height = size + 'px';
-                
-                const colors = [
-                    'rgba(255, 255, 255, 0.4)',
-                    'rgba(106, 17, 203, 0.5)',
-                    'rgba(17, 106, 203, 0.5)',
-                    'rgba(255, 255, 255, 0.6)'
-                ];
+                const colors = ['rgba(255, 255, 255, 0.4)', 'rgba(106, 17, 203, 0.5)', 'rgba(17, 106, 203, 0.5)', 'rgba(255, 255, 255, 0.6)'];
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 particle.style.background = color;
                 particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
-                
                 particle.style.left = Math.random() * 100 + '%';
                 particle.style.animationDuration = (Math.random() * 8 + 8) + 's';
                 particle.style.animationDelay = Math.random() * 5 + 's';
                 particlesContainer.appendChild(particle);
             }
         }
-
         createParticles();
 
         const BACKGROUND_MUSIC_URL = 'https://files.catbox.moe/4bbwn0.mp3';
-
         const CHARACTER_COLORS = {
-            'card-soldiers': '#6b7280',
-            'card-inosuke': '#06b6d4',
-            'card-zenitsu': '#fbbf24',
-            'card-zenitsu-11': '#facc15',
-            'card-rengoku': '#f97316',
-            'card-rengoku-final': '#dc2626',
-            'card-sanemi': '#22c55e',
-            'card-toji': '#0891b2',
-            'card-kokushibo': '#a855f7',
-            'card-demon-koku': '#7c3aed',
-            'card-evil-yoriichi': '#ef4444',
-            'card-secret': '#fef9c3'
+            'card-soldiers': '#6b7280', 'card-inosuke': '#06b6d4', 'card-zenitsu': '#fbbf24', 'card-zenitsu-11': '#facc15',
+            'card-rengoku': '#f97316', 'card-rengoku-final': '#dc2626', 'card-sanemi': '#22c55e', 'card-toji': '#0891b2',
+            'card-kokushibo': '#a855f7', 'card-demon-koku': '#7c3aed', 'card-evil-yoriichi': '#ef4444', 'card-secret': '#fef9c3'
         };
 
         function getPauseAllocation(durationInSeconds) {
             const minutes = durationInSeconds / 60;
             const hours = minutes / 60;
-
             if (minutes < 30) return { count: 0, duration: 0 };
             if (hours < 1) return { count: 1, duration: 5 * 60 };
             if (hours < 2) return { count: 2, duration: 5 * 60 };
@@ -1234,211 +1026,18 @@
         }
 
         const CHARACTERS = [
-            {
-                id: 'soldiers',
-                name: 'Soldiers',
-                duration: 30 * 60,
-                colorClass: 'card-soldiers',
-                image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg',
-                voiceLine: 'https://files.catbox.moe/idsp2v.mp3',
-                quote: "Discipline is doing what needs to be done, even when you don't want to.",
-                rules: [
-                    "Complete 30-minute timer",
-                    "No phone scrolling",
-                    "Stay focused and productive"
-                ],
-                victoryMessage: "Not bad... for a beginner.\nYou showed basic discipline.\nNow prove it wasn't luck.",
-                defeatMessage: "You couldn't even beat fodder.\nThis was supposed to be easy.\nPathetic."
-            },
-            {
-                id: 'inosuke',
-                name: 'Inosuke',
-                duration: 1 * 60 * 60,
-                colorClass: 'card-inosuke',
-                image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg',
-                voiceLine: 'https://files.catbox.moe/ycdvin.mp3',
-                quote: "I'm the king of the mountains! Show me your strength!",
-                rules: [
-                    "Complete 1-hour timer",
-                    "1 pause available (5 minutes)",
-                    "Stay wild, stay focused"
-                ],
-                victoryMessage: "HAHAHAHA! You got guts!\nI respect that raw endurance!\nKeep that wild spirit burning!",
-                defeatMessage: "All that noise, no strength.\nYou're just pretending to be wild.\nCome back when you mean it."
-            },
-            {
-                id: 'zenitsu',
-                name: 'Zenitsu',
-                duration: 2 * 60 * 60,
-                colorClass: 'card-zenitsu',
-                image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg',
-                voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
-                quote: "Even when you're scared, keep moving forward.",
-                rules: [
-                    "Complete 2-hour timer",
-                    "2 pauses available (5 min each)",
-                    "Push through the fear"
-                ],
-                victoryMessage: "You... you actually did it!\nEven when it got hard, you didn't run away.\nThat takes real courage.",
-                defeatMessage: "Fear won.\nYou hesitated.\nThat's all it takes to lose.",
-                requiresSameDay: false
-            },
-            {
-                id: 'zenitsu-11',
-                name: 'Zenitsu – 11th Form',
-                duration: 2 * 60 * 60,
-                colorClass: 'card-zenitsu-11',
-                image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg',
-                voiceLine: 'https://files.catbox.moe/lv1fiq.mp3',
-                quote: "When you have no choice, you discover your true power.",
-                rules: [
-                    "Complete 2-hour timer",
-                    "2 pauses available (5 min each)",
-                    "MUST defeat on SAME DAY as Zenitsu"
-                ],
-                victoryMessage: "Incredible...\nYou pushed beyond your limits when it mattered most.\nThis is what true strength looks like.",
-                defeatMessage: "The 11th form wasn't meant for the weak.\nYou couldn't push past yourself.\nYou failed where it mattered.",
-                requiresSameDay: true,
-                parentCharacter: 'zenitsu'
-            },
-            {
-                id: 'rengoku',
-                name: 'Rengoku',
-                duration: 3 * 60 * 60,
-                colorClass: 'card-rengoku',
-                image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg',
-                voiceLine: 'https://files.catbox.moe/omycwe.mp3',
-                quote: "Set your heart ablaze!",
-                rules: [
-                    "Complete 3-hour timer",
-                    "3 pauses available (10 min each)",
-                    "Keep your flame burning bright"
-                ],
-                victoryMessage: "MAGNIFICENT!\nYour flame burned bright and true!\nYou have a warrior's spirit! Well done!",
-                defeatMessage: "Your flame wasn't strong enough.\nI expected more.\nSet your heart ablaze... or don't come back.",
-                requiresSameDay: false
-            },
-            {
-                id: 'rengoku-final',
-                name: 'Rengoku – Final',
-                duration: 3 * 60 * 60,
-                colorClass: 'card-rengoku-final',
-                image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg',
-                voiceLine: 'https://files.catbox.moe/nd8ic3.mp3',
-                quote: "Go ahead and live with your head held high.",
-                rules: [
-                    "Complete 3-hour timer",
-                    "3 pauses available (10 min each)",
-                    "MUST defeat on SAME DAY as Rengoku"
-                ],
-                victoryMessage: "You stood your ground until the very end.\nYour resolve is unbreakable.\nI'm proud of you.",
-                defeatMessage: "I stood until the end.\nYou... gave up.\nYour resolve wasn't real.",
-                requiresSameDay: true,
-                parentCharacter: 'rengoku'
-            },
-            {
-                id: 'sanemi',
-                name: 'Sanemi',
-                duration: 5 * 60 * 60,
-                colorClass: 'card-sanemi',
-                image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg',
-                voiceLine: 'https://files.catbox.moe/jfx6zv.mp3',
-                quote: "Survive. No matter what it takes.",
-                rules: [
-                    "Complete 5-hour timer",
-                    "4 pauses available (15 min each)",
-                    "Prove you can survive"
-                ],
-                victoryMessage: "Hm. You're tougher than you look.\nYou survived when others would've quit.\nRespect.",
-                defeatMessage: "Soft.\nWeak.\nYou don't belong here.\nGet out."
-            },
-            {
-                id: 'toji',
-                name: 'Toji',
-                duration: 6 * 60 * 60,
-                colorClass: 'card-toji',
-                image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg',
-                voiceLine: 'https://files.catbox.moe/f8g7bl.mp3',
-                quote: "I don't believe in hard work. I believe in results.",
-                rules: [
-                    "Complete 6-hour timer",
-                    "4 pauses available (20 min each)",
-                    "Deliver results, no excuses"
-                ],
-                victoryMessage: "You delivered results.\nNo excuses, no drama.\nThat's what I call efficient.",
-                defeatMessage: "Not efficient.\nNot ruthless.\nNot worth it."
-            },
-            {
-                id: 'kokushibo',
-                name: 'Kokushibo',
-                duration: 8 * 60 * 60,
-                colorClass: 'card-kokushibo',
-                image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg',
-                voiceLine: 'https://files.catbox.moe/708qso.mp3',
-                quote: "Perfection is achieved through endless pursuit.",
-                rules: [
-                    "Complete 8-hour timer",
-                    "5 pauses available (20 min each)",
-                    "Pursue perfection relentlessly"
-                ],
-                victoryMessage: "Impressive...\nYou've demonstrated discipline worthy of recognition.\nContinue this pursuit.",
-                defeatMessage: "You thought you could reach me?\nHumans crumble so easily.\nYou were nothing."
-            },
-            {
-                id: 'demon-koku',
-                name: 'Demon Kokushibo',
-                duration: 10 * 60 * 60,
-                colorClass: 'card-demon-koku',
-                image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg',
-                voiceLine: 'https://files.catbox.moe/jl7v03.mp3',
-                quote: "The strong devour the weak. That is the law of nature.",
-                rules: [
-                    "Complete 10-hour timer",
-                    "5 pauses available (25 min each)",
-                    "MUST defeat WITHIN 2 DAYS of Kokushibo"
-                ],
-                victoryMessage: "You have proven yourself strong.\nYour endurance rivals that of demons.\nYou have earned my acknowledgment.",
-                defeatMessage: "All that progress.\nAll those hours.\nMeaningless.\nYou're still insignificant.",
-                requiresTwoDays: true,
-                parentCharacter: 'kokushibo'
-            },
-            {
-                id: 'evil-yoriichi',
-                name: 'Evil Yoriichi',
-                duration: 12 * 60 * 60,
-                colorClass: 'card-evil-yoriichi',
-                image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg',
-                voiceLine: 'https://files.catbox.moe/bdnb4b.mp3',
-                quote: "Talent without discipline is nothing.",
-                rules: [
-                    "Complete 12-hour timer",
-                    "6 pauses available (25 min each)",
-                    "The penultimate test"
-                ],
-                victoryMessage: "...\nYou have transcended.\nFew reach this level.\nYou may proceed.",
-                defeatMessage: "......\nYou were never on my level.\nDon't return."
-            },
-            {
-                id: 'secret',
-                name: 'YOU',
-                duration: 16 * 60 * 60,
-                colorClass: 'card-secret',
-                image: 'https://files.catbox.moe/f1hggk.jpg',
-                voiceLine: '',
-                quote: "Your only true enemy has always been yourself.",
-                rules: [
-                    "Complete 16-hour timer",
-                    "6 pauses available (30 min each)",
-                    "MUST defeat Koku + Demon Koku + Yoriichi in 4 DAYS",
-                    "MUST START between 5:00-5:10 AM ONLY",
-                    "⚠️ GIVE UP = RESTART FROM KOKUSHIBO"
-                ],
-                specialRules: "🔥 ULTIMATE CHALLENGE:\n• Defeat last 3 bosses in 4 days\n• Start 5:00-5:10 AM only\n• Fail = Restart from Koku",
-                victoryMessage: "You defeated yourself.\n\nYour greatest obstacle.\nYour harshest critic.\nYour final test.\n\nYou are now unstoppable.",
-                defeatMessage: "You couldn't even beat yourself.\n\nThe excuses.\nThe doubt.\nThe weakness.\n\nThey won.",
-                requiresFourDayChallenge: true,
-                requiresTimeWindow: { start: 5, end: 5.166667 }
-            }
+            { id: 'soldiers', name: 'Soldiers', duration: 30*60, colorClass: 'card-soldiers', image: 'https://i.pinimg.com/736x/b5/99/85/b59985a146c50c85116dccc71c04093b.jpg', voiceLine: 'https://files.catbox.moe/idsp2v.mp3', quote: "Discipline is doing what needs to be done, even when you don't want to.", rules: ["Complete 30-minute timer","No phone scrolling","Stay focused and productive"], victoryMessage: "Not bad... for a beginner.\\nYou showed basic discipline.\\nNow prove it wasn't luck.", defeatMessage: "You couldn't even beat fodder.\\nThis was supposed to be easy.\\nPathetic." },
+            { id: 'inosuke', name: 'Inosuke', duration: 1*60*60, colorClass: 'card-inosuke', image: 'https://i.pinimg.com/1200x/60/35/e9/6035e9ed53918a265d03a9cabc56ccb4.jpg', voiceLine: 'https://files.catbox.moe/ycdvin.mp3', quote: "I'm the king of the mountains! Show me your strength!", rules: ["Complete 1-hour timer","1 pause available (5 minutes)","Stay wild, stay focused"], victoryMessage: "HAHAHAHA! You got guts!\\nI respect that raw endurance!\\nKeep that wild spirit burning!", defeatMessage: "All that noise, no strength.\\nYou're just pretending to be wild.\\nCome back when you mean it." },
+            { id: 'zenitsu', name: 'Zenitsu', duration: 2*60*60, colorClass: 'card-zenitsu', image: 'https://i.pinimg.com/1200x/56/f8/52/56f85235cd09686a1ba6370da7e1c66a.jpg', voiceLine: 'https://files.catbox.moe/lv1fiq.mp3', quote: "Even when you're scared, keep moving forward.", rules: ["Complete 2-hour timer","2 pauses available (5 min each)","Push through the fear"], victoryMessage: "You... you actually did it!\\nEven when it got hard, you didn't run away.\\nThat takes real courage.", defeatMessage: "Fear won.\\nYou hesitated.\\nThat's all it takes to lose." },
+            { id: 'zenitsu-11', name: 'Zenitsu – 11th Form', duration: 2*60*60, colorClass: 'card-zenitsu-11', image: 'https://i.pinimg.com/736x/94/2f/e6/942fe674faf2ef24f01fc8b726c5222a.jpg', voiceLine: 'https://files.catbox.moe/lv1fiq.mp3', quote: "When you have no choice, you discover your true power.", rules: ["Complete 2-hour timer","2 pauses available (5 min each)","MUST defeat on SAME DAY as Zenitsu"], victoryMessage: "Incredible...\\nYou pushed beyond your limits when it mattered most.\\nThis is what true strength looks like.", defeatMessage: "The 11th form wasn't meant for the weak.\\nYou couldn't push past yourself.\\nYou failed where it mattered.", requiresSameDay: true, parentCharacter: 'zenitsu' },
+            { id: 'rengoku', name: 'Rengoku', duration: 3*60*60, colorClass: 'card-rengoku', image: 'https://i.pinimg.com/736x/ca/86/1b/ca861b089ca73829421188ddcb1487c8.jpg', voiceLine: 'https://files.catbox.moe/omycwe.mp3', quote: "Set your heart ablaze!", rules: ["Complete 3-hour timer","3 pauses available (10 min each)","Keep your flame burning bright"], victoryMessage: "MAGNIFICENT!\\nYour flame burned bright and true!\\nYou have a warrior's spirit! Well done!", defeatMessage: "Your flame wasn't strong enough.\\nI expected more.\\nSet your heart ablaze... or don't come back." },
+            { id: 'rengoku-final', name: 'Rengoku – Final', duration: 3*60*60, colorClass: 'card-rengoku-final', image: 'https://i.pinimg.com/1200x/da/3c/13/da3c1348fbeb097f3833bae9596905c4.jpg', voiceLine: 'https://files.catbox.moe/nd8ic3.mp3', quote: "Go ahead and live with your head held high.", rules: ["Complete 3-hour timer","3 pauses available (10 min each)","MUST defeat on SAME DAY as Rengoku"], victoryMessage: "You stood your ground until the very end.\\nYour resolve is unbreakable.\\nI'm proud of you.", defeatMessage: "I stood until the end.\\nYou... gave up.\\nYour resolve wasn't real.", requiresSameDay: true, parentCharacter: 'rengoku' },
+            { id: 'sanemi', name: 'Sanemi', duration: 5*60*60, colorClass: 'card-sanemi', image: 'https://i.pinimg.com/736x/a4/c7/66/a4c766e9d7bb3d921cc9f1a035d8b4b8.jpg', voiceLine: 'https://files.catbox.moe/jfx6zv.mp3', quote: "Survive. No matter what it takes.", rules: ["Complete 5-hour timer","4 pauses available (15 min each)","Prove you can survive"], victoryMessage: "Hm. You're tougher than you look.\\nYou survived when others would've quit.\\nRespect.", defeatMessage: "Soft.\\nWeak.\\nYou don't belong here.\\nGet out." },
+            { id: 'toji', name: 'Toji', duration: 6*60*60, colorClass: 'card-toji', image: 'https://i.pinimg.com/736x/33/f5/f9/33f5f9215d5ef1e5327790520036e05d.jpg', voiceLine: 'https://files.catbox.moe/f8g7bl.mp3', quote: "I don't believe in hard work. I believe in results.", rules: ["Complete 6-hour timer","4 pauses available (20 min each)","Deliver results, no excuses"], victoryMessage: "You delivered results.\\nNo excuses, no drama.\\nThat's what I call efficient.", defeatMessage: "Not efficient.\\nNot ruthless.\\nNot worth it." },
+            { id: 'kokushibo', name: 'Kokushibo', duration: 8*60*60, colorClass: 'card-kokushibo', image: 'https://i.pinimg.com/736x/91/7b/b5/917bb597d8062974048298aaad2468ee.jpg', voiceLine: 'https://files.catbox.moe/708qso.mp3', quote: "Perfection is achieved through endless pursuit.", rules: ["Complete 8-hour timer","5 pauses available (20 min each)","Pursue perfection relentlessly"], victoryMessage: "Impressive...\\nYou've demonstrated discipline worthy of recognition.\\nContinue this pursuit.", defeatMessage: "You thought you could reach me?\\nHumans crumble so easily.\\nYou were nothing." },
+            { id: 'demon_koku', name: 'Demon Kokushibo', duration: 10*60*60, colorClass: 'card-demon-koku', image: 'https://i.pinimg.com/736x/f7/c7/cd/f7c7cd012fa1692bf4762cb82aae0c7f.jpg', voiceLine: 'https://files.catbox.moe/jl7v03.mp3', quote: "The strong devour the weak. That is the law of nature.", rules: ["Complete 10-hour timer","5 pauses available (25 min each)","MUST defeat WITHIN 2 DAYS of Kokushibo"], victoryMessage: "You have proven yourself strong.\\nYour endurance rivals that of demons.\\nYou have earned my acknowledgment.", defeatMessage: "All that progress.\\nAll those hours.\\nMeaningless.\\nYou're still insignificant.", requiresTwoDays: true, parentCharacter: 'kokushibo' },
+            { id: 'evil_yoriichi', name: 'Evil Yoriichi', duration: 12*60*60, colorClass: 'card-evil-yoriichi', image: 'https://i.pinimg.com/736x/3b/39/59/3b3959e5b6e740e1072099f00be4940e.jpg', voiceLine: 'https://files.catbox.moe/bdnb4b.mp3', quote: "Talent without discipline is nothing.", rules: ["Complete 12-hour timer","6 pauses available (25 min each)","The penultimate test"], victoryMessage: "...\\nYou have transcended.\\nFew reach this level.\\nYou may proceed.", defeatMessage: "......\\nYou were never on my level.\\nDon't return." },
+            { id: 'secret', name: 'YOU', duration: 16*60*60, colorClass: 'card-secret', image: 'https://files.catbox.moe/f1hggk.jpg', voiceLine: '', quote: "Your only true enemy has always been yourself.", rules: ["Complete 16-hour timer","6 pauses available (30 min each)","MUST defeat Koku + Demon Koku + Yoriichi in 4 DAYS","MUST START between 5:00-5:10 AM ONLY","⚠️ GIVE UP = RESTART FROM KOKUSHIBO"], specialRules: "🔥 ULTIMATE CHALLENGE:\\n• Defeat last 3 bosses in 4 days\\n• Start 5:00-5:10 AM only\\n• Fail = Restart from Koku", victoryMessage: "You defeated yourself.\\n\\nYour greatest obstacle.\\nYour harshest critic.\\nYour final test.\\n\\nYou are now unstoppable.", defeatMessage: "You couldn't even beat yourself.\\n\\nThe excuses.\\nThe doubt.\\nThe weakness.\\n\\nThey won.", requiresFourDayChallenge: true, requiresTimeWindow: { start: 5, end: 5.166667 } }
         ];
 
         class DisciplineGame {
@@ -1482,20 +1081,25 @@
             init() {
                 const savedBattle = localStorage.getItem('currentBattle');
                 if (savedBattle) {
-                    const battleData = JSON.parse(savedBattle);
-                    const elapsed = Math.floor((Date.now() - battleData.startTime - (battleData.totalPausedTime || 0)) / 1000);
-                    const character = CHARACTERS[battleData.characterIndex];
-                    
-                    if (elapsed >= character.duration) {
-                        this.completeVictory(battleData.characterIndex);
-                    } else {
-                        this.currentCharacterIndex = battleData.characterIndex;
-                        this.battleStartTime = battleData.startTime;
-                        this.totalPausedTime = battleData.totalPausedTime || 0;
-                        this.pausesUsed = battleData.pausesUsed || 0;
-                        this.showScreen('battleScreen');
-                        this.loadBattleScreen(character);
-                        this.startBattleTimer();
+                    try {
+                        const battleData = JSON.parse(savedBattle);
+                        const elapsed = Math.floor((Date.now() - battleData.startTime - (battleData.totalPausedTime || 0)) / 1000);
+                        const character = CHARACTERS[battleData.characterIndex];
+                        
+                        if (elapsed >= character.duration) {
+                            this.completeVictory(battleData.characterIndex);
+                        } else {
+                            this.currentCharacterIndex = battleData.characterIndex;
+                            this.battleStartTime = battleData.startTime;
+                            this.totalPausedTime = battleData.totalPausedTime || 0;
+                            this.pausesUsed = battleData.pausesUsed || 0;
+                            this.showScreen('battleScreen');
+                            this.loadBattleScreen(character);
+                            this.startBattleTimer();
+                        }
+                    } catch (e) {
+                        console.error('Error loading saved battle:', e);
+                        localStorage.removeItem('currentBattle');
                     }
                 }
             }
@@ -1503,15 +1107,17 @@
             loadProgress() {
                 const saved = localStorage.getItem('gameProgress');
                 if (saved) {
-                    const progress = JSON.parse(saved);
-                    this.currentCharacterIndex = progress.currentCharacterIndex || 0;
+                    try {
+                        const progress = JSON.parse(saved);
+                        this.currentCharacterIndex = progress.currentCharacterIndex || 0;
+                    } catch (e) {
+                        console.error('Error loading progress:', e);
+                    }
                 }
             }
 
             saveProgress() {
-                localStorage.setItem('gameProgress', JSON.stringify({
-                    currentCharacterIndex: this.currentCharacterIndex
-                }));
+                localStorage.setItem('gameProgress', JSON.stringify({ currentCharacterIndex: this.currentCharacterIndex }));
             }
 
             resetProgress() {
@@ -1532,14 +1138,12 @@
             }
 
             showConfirmPopup(characterIndex) {
-                console.log('Showing popup for character:', characterIndex);
                 const character = CHARACTERS[characterIndex];
                 const popup = document.getElementById('confirmPopup');
                 const charName = document.getElementById('confirmCharName');
                 const rulesDiv = document.getElementById('confirmRules');
 
                 charName.textContent = character.name;
-                
                 const color = CHARACTER_COLORS[character.colorClass] || '#fff';
                 charName.style.color = color;
 
@@ -1563,17 +1167,16 @@
             }
 
             cancelBattle() {
-                console.log('Cancel clicked');
                 this.hideConfirmPopup();
             }
 
             confirmBattle() {
-                console.log('START CLICKED! Pending index:', this.pendingBattleIndex);
+                console.log('START button clicked, pendingBattleIndex:', this.pendingBattleIndex);
                 if (this.pendingBattleIndex !== null) {
                     this.hideConfirmPopup();
                     this.actuallyStartBattle(this.pendingBattleIndex);
                 } else {
-                    console.error('Pending battle index is null!');
+                    console.error('pendingBattleIndex is null, cannot start battle');
                 }
             }
 
@@ -1592,29 +1195,18 @@
                         this.musicToggle.textContent = '🔊';
                         this.musicToggle.classList.add('playing');
                         this.musicPlaying = true;
-                    }).catch(e => {
-                        console.log('Music play error:', e);
-                    });
+                    }).catch(e => console.log('Music play error:', e));
                 }
             }
 
             playCharacterVoice(voiceUrl) {
                 if (!voiceUrl) return;
-                
-                if (this.musicPlaying) {
-                    this.bgMusic.volume = 0.2;
-                }
-                
+                if (this.musicPlaying) this.bgMusic.volume = 0.2;
                 this.characterVoice.src = voiceUrl;
                 this.characterVoice.load();
-                this.characterVoice.play().catch(e => {
-                    console.log('Voice play error:', e);
-                });
-
+                this.characterVoice.play().catch(e => console.log('Voice play error:', e));
                 this.characterVoice.onended = () => {
-                    if (this.musicPlaying) {
-                        this.bgMusic.volume = 1.0;
-                    }
+                    if (this.musicPlaying) this.bgMusic.volume = 1.0;
                 };
             }
 
@@ -1641,17 +1233,17 @@
                     let specialRulesHTML = '';
                     let sameDayWarning = '';
                     
-                    if (char.requiresSameDay) {
+                    if (char.requiresSameDay && index === this.currentCharacterIndex) {
                         const parentCompleted = this.checkParentCompletedToday(char.parentCharacter);
-                        if (!parentCompleted && index === this.currentCharacterIndex) {
-                            sameDayWarning = '<div class="same-day-warning">⚠️ Same day as ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + '</div>';
+                        if (!parentCompleted) {
+                            sameDayWarning = `<div class="same-day-warning">⚠️ Same day as ${char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1)}</div>`;
                         }
                     }
 
-                    if (char.requiresTwoDays) {
-                        const parentCompletedWithin2Days = this.checkParentCompletedWithin2Days(char.parentCharacter);
-                        if (!parentCompletedWithin2Days && index === this.currentCharacterIndex) {
-                            sameDayWarning = '<div class="same-day-warning">⚠️ Within 2 days of ' + char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1) + '</div>';
+                    if (char.requiresTwoDays && index === this.currentCharacterIndex) {
+                        const parentCompleted = this.checkParentCompletedWithin2Days(char.parentCharacter);
+                        if (!parentCompleted) {
+                            sameDayWarning = `<div class="same-day-warning">⚠️ Within 2 days of ${char.parentCharacter.charAt(0).toUpperCase() + char.parentCharacter.slice(1)}</div>`;
                         }
                     }
 
@@ -1705,31 +1297,25 @@
             checkParentCompletedToday(parentId) {
                 const completionData = localStorage.getItem(`completed_${parentId}`);
                 if (!completionData) return false;
-                
                 const completionDate = new Date(parseInt(completionData));
                 const today = new Date();
-                
                 return completionDate.toDateString() === today.toDateString();
             }
 
             checkParentCompletedWithin2Days(parentId) {
                 const completionData = localStorage.getItem(`completed_${parentId}`);
                 if (!completionData) return false;
-                
                 const completionTime = parseInt(completionData);
                 const now = Date.now();
                 const twoDays = 48 * 60 * 60 * 1000;
-                
                 return (now - completionTime) <= twoDays;
             }
 
             checkFourDayChallenge() {
                 const kokuTime = localStorage.getItem('completed_kokushibo');
                 if (!kokuTime) return false;
-
                 const fourDays = 4 * 24 * 60 * 60 * 1000;
                 const elapsed = Date.now() - parseInt(kokuTime);
-
                 return elapsed <= fourDays;
             }
 
@@ -1738,12 +1324,10 @@
                 const hours = now.getHours();
                 const minutes = now.getMinutes();
                 const currentTime = hours + (minutes / 60);
-
                 return currentTime >= 5 && currentTime <= 5.166667;
             }
 
             startBattle(characterIndex) {
-                console.log('Start battle called for index:', characterIndex);
                 const character = CHARACTERS[characterIndex];
                 
                 if (character.requiresSameDay) {
@@ -1764,27 +1348,22 @@
 
                 if (character.requiresFourDayChallenge) {
                     if (!this.checkFourDayChallenge()) {
-                        alert('⚠️ YOU MUST:\n\n• Defeat Kokushibo\n• Defeat Demon Kokushibo\n• Defeat Evil Yoriichi\n\nAll within 4 DAYS!');
+                        alert('⚠️ YOU MUST:\\n\\n• Defeat Kokushibo\\n• Defeat Demon Kokushibo\\n• Defeat Evil Yoriichi\\n\\nAll within 4 DAYS!');
                         return;
                     }
-
                     if (!this.checkTimeWindow()) {
-                        alert('⚠️ FINAL BOSS TIME WINDOW:\n\nYOU can only be challenged between 5:00-5:10 AM!\n\nCome back at the right time.');
+                        alert('⚠️ FINAL BOSS TIME WINDOW:\\n\\nYOU can only be challenged between 5:00-5:10 AM!\\n\\nCome back at the right time.');
                         return;
                     }
                 }
 
                 this.pendingBattleIndex = characterIndex;
-                console.log('Set pending to:', this.pendingBattleIndex);
                 this.showConfirmPopup(characterIndex);
             }
 
             actuallyStartBattle(characterIndex) {
-                console.log('Actually starting battle for index:', characterIndex);
                 const character = CHARACTERS[characterIndex];
-
                 this.playCharacterVoice(character.voiceLine);
-
                 this.currentCharacterIndex = characterIndex;
                 this.battleStartTime = Date.now();
                 this.totalPausedTime = 0;
@@ -1837,13 +1416,10 @@
 
             startBattleTimer() {
                 const character = CHARACTERS[this.currentCharacterIndex];
-                
                 this.timerInterval = setInterval(() => {
                     if (this.isPaused) return;
-
                     const elapsed = Math.floor((Date.now() - this.battleStartTime - this.totalPausedTime) / 1000);
                     const remaining = character.duration - elapsed;
-
                     if (remaining <= 0) {
                         this.victory();
                     } else {
@@ -1856,7 +1432,6 @@
                 const hours = Math.floor(seconds / 3600);
                 const minutes = Math.floor((seconds % 3600) / 60);
                 const secs = seconds % 60;
-
                 const display = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
                 document.getElementById('timer').textContent = display;
             }
@@ -1876,10 +1451,7 @@
                 const remaining = this.pausesAvailable - this.pausesUsed;
                 document.getElementById('pausedInfo').textContent = `${remaining}/${this.pausesAvailable} pauses left`;
 
-                if (this.musicPlaying) {
-                    this.bgMusic.volume = 0.3;
-                }
-
+                if (this.musicPlaying) this.bgMusic.volume = 0.3;
                 this.startPauseTimer();
 
                 const battleData = JSON.parse(localStorage.getItem('currentBattle'));
@@ -1889,10 +1461,8 @@
 
             startPauseTimer() {
                 let pauseRemaining = this.pauseDuration;
-
                 this.pauseInterval = setInterval(() => {
                     pauseRemaining--;
-
                     const mins = Math.floor(pauseRemaining / 60);
                     const secs = pauseRemaining % 60;
                     document.getElementById('pauseTimer').textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
@@ -1900,7 +1470,6 @@
                     if (pauseRemaining === 30) {
                         alert('⚠️ Pause ending in 30 seconds...');
                     }
-
                     if (pauseRemaining <= 0) {
                         this.resumeBattle();
                     }
@@ -1909,18 +1478,13 @@
 
             resumeBattle() {
                 if (!this.isPaused) return;
-
                 this.isPaused = false;
                 const pausedDuration = Date.now() - this.pauseStartTime;
                 this.totalPausedTime += pausedDuration;
 
                 document.getElementById('pausedOverlay').classList.remove('active');
                 document.getElementById('pauseBtn').disabled = false;
-
-                if (this.musicPlaying) {
-                    this.bgMusic.volume = 1.0;
-                }
-
+                if (this.musicPlaying) this.bgMusic.volume = 1.0;
                 clearInterval(this.pauseInterval);
 
                 const battleData = JSON.parse(localStorage.getItem('currentBattle'));
@@ -1930,9 +1494,8 @@
 
             confirmGiveUp() {
                 const character = CHARACTERS[this.currentCharacterIndex];
-                
                 if (character.id === 'secret') {
-                    if (confirm('⚠️ GIVE UP ON FINAL BOSS?\n\nYou will RESTART from KOKUSHIBO!\n\nAll progress on last 3 bosses will be LOST!')) {
+                    if (confirm('⚠️ GIVE UP ON FINAL BOSS?\\n\\nYou will RESTART from KOKUSHIBO!\\n\\nAll progress on last 3 bosses will be LOST!')) {
                         this.giveUpFinalBoss();
                     }
                 } else {
@@ -1944,17 +1507,12 @@
                 clearInterval(this.timerInterval);
                 clearInterval(this.pauseInterval);
                 localStorage.removeItem('currentBattle');
-
                 this.currentCharacterIndex = CHARACTERS.findIndex(c => c.id === 'kokushibo');
-                
                 localStorage.removeItem('completed_kokushibo');
-                localStorage.removeItem('completed_demon-koku');
-                localStorage.removeItem('completed_evil-yoriichi');
-                
+                localStorage.removeItem('completed_demon_koku');
+                localStorage.removeItem('completed_evil_yoriichi');
                 this.saveProgress();
-
-                alert('💀 RESET TO KOKUSHIBO\n\nYou must complete the 4-day challenge again.');
-                
+                alert('💀 RESET TO KOKUSHIBO\\n\\nYou must complete the 4-day challenge again.');
                 this.showScreen('battlePath');
                 this.renderBattlePath();
             }
@@ -1963,10 +1521,8 @@
                 clearInterval(this.timerInterval);
                 clearInterval(this.pauseInterval);
                 localStorage.removeItem('currentBattle');
-                
                 const character = CHARACTERS[this.currentCharacterIndex];
                 document.getElementById('resultMessage').textContent = character.defeatMessage;
-                
                 this.showScreen('resultScreen');
             }
 
@@ -1979,7 +1535,6 @@
 
             completeVictory(characterIndex) {
                 const character = CHARACTERS[characterIndex];
-                
                 localStorage.setItem(`completed_${character.id}`, Date.now().toString());
                 
                 if (this.currentCharacterIndex === characterIndex) {
@@ -1988,20 +1543,18 @@
                 }
 
                 let victoryMsg = character.victoryMessage;
-                
                 if (this.pausesAvailable > 0) {
-                    victoryMsg += '\n\n';
+                    victoryMsg += '\\n\\n';
                     if (this.pausesUsed === 0) {
-                        victoryMsg += '🔥 FLAWLESS! 🔥\nNo pauses used!\nPure discipline.';
+                        victoryMsg += '🔥 FLAWLESS! 🔥\\nNo pauses used!\\nPure discipline.';
                     } else if (this.pausesUsed < this.pausesAvailable) {
-                        victoryMsg += `✓ Pauses: ${this.pausesUsed}/${this.pausesAvailable}\nStrong restraint.`;
+                        victoryMsg += `✓ Pauses: ${this.pausesUsed}/${this.pausesAvailable}\\nStrong restraint.`;
                     } else {
-                        victoryMsg += `✓ Pauses: ${this.pausesUsed}/${this.pausesAvailable}\nWise resource use.`;
+                        victoryMsg += `✓ Pauses: ${this.pausesUsed}/${this.pausesAvailable}\\nWise resource use.`;
                     }
                 }
 
                 document.getElementById('resultMessage').textContent = victoryMsg;
-                
                 this.showScreen('resultScreen');
             }
 
@@ -2011,10 +1564,8 @@
             }
         }
 
-        // Initialize game
-        let game;
         window.addEventListener('DOMContentLoaded', () => {
-            game = new DisciplineGame();
+            window.game = new DisciplineGame();
         });
     </script>
 </body>
